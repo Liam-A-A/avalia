@@ -1,9 +1,9 @@
-avalia-index bte3<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Avalia — Step inside before you decide</title>
+<title>Avalia — Step inside before you decide.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -47,7 +47,7 @@ avalia-index bte3<!DOCTYPE html>
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 5px;
+    gap: 3px;
   }
 
   .logo {
@@ -64,21 +64,22 @@ avalia-index bte3<!DOCTYPE html>
   .logo span { color: var(--teal); }
 
   .tagline {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 400;
-    color: rgba(255,255,255,0.55);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.06em;
     line-height: 1;
   }
 
-  .tagline em { color: var(--teal); font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 13px; letter-spacing: 0.04em; text-transform: none; }
+  .tagline em { color: var(--teal); font-style: italic; }
 
   .banner-nav {
     display: flex;
     gap: 28px;
-    align-items: center;
+    align-items: flex-end;
+    padding-bottom: 2px;
   }
 
   .banner-nav a {
@@ -96,7 +97,8 @@ avalia-index bte3<!DOCTYPE html>
   .banner-ctas {
     display: flex;
     gap: 14px;
-    align-items: center;
+    align-items: flex-end;
+    padding-bottom: 1px;
   }
 
   .btn-ghost {
@@ -226,7 +228,8 @@ avalia-index bte3<!DOCTYPE html>
   }
 
   .about-label {
-    font-size: 10px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 12px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--gold);
@@ -235,7 +238,7 @@ avalia-index bte3<!DOCTYPE html>
   }
 
   .about-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Segoe UI', system-ui, sans-serif;
     font-size: clamp(26px, 3vw, 40px);
     font-weight: 300;
     line-height: 1.2;
@@ -244,6 +247,7 @@ avalia-index bte3<!DOCTYPE html>
   }
 
   .about-body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
     font-size: 15px;
     font-weight: 300;
     line-height: 1.75;
@@ -252,7 +256,7 @@ avalia-index bte3<!DOCTYPE html>
 
   .about-irish {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 16px;
+    font-size: 19px;
     font-style: italic;
     color: var(--gold);
     margin-top: 24px;
@@ -284,6 +288,7 @@ avalia-index bte3<!DOCTYPE html>
 
   .feature-text strong {
     display: block;
+    font-family: 'Segoe UI', system-ui, sans-serif;
     font-size: 13.5px;
     font-weight: 500;
     color: var(--navy);
@@ -291,6 +296,7 @@ avalia-index bte3<!DOCTYPE html>
   }
 
   .feature-text span {
+    font-family: 'Segoe UI', system-ui, sans-serif;
     font-size: 13px;
     color: #667788;
     line-height: 1.55;
@@ -511,7 +517,7 @@ avalia-index bte3<!DOCTYPE html>
     width: 300px;
     z-index: 200;
     opacity: 0;
-    pointer-events: none;
+    pointer-events: none; /* wrapper never captures - card does */
     animation:
       hintIn  0.55s cubic-bezier(0.16, 1, 0.3, 1) 4s    forwards,
       hintOut 0.55s cubic-bezier(0.4,  0, 1,   1) 23.45s forwards;
@@ -519,7 +525,7 @@ avalia-index bte3<!DOCTYPE html>
   }
   @keyframes hintIn {
     from { opacity: 0; transform: scale(0.90) translateX(-8px); }
-    to   { opacity: 1; transform: scale(1)    translateX(0); pointer-events: auto; }
+    to   { opacity: 1; transform: scale(1)    translateX(0); }
   }
   @keyframes hintOut {
     from { opacity: 1; transform: scale(1)    translateX(0);    }
@@ -532,6 +538,7 @@ avalia-index bte3<!DOCTYPE html>
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0,0,0,0.55);
     position: relative;
+    pointer-events: auto;
   }
   .hint-card::before {
     content: '';
@@ -590,9 +597,51 @@ avalia-index bte3<!DOCTYPE html>
     background: none; border: none; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     opacity: 0.35; transition: opacity 0.18s; color: #f5f3ee; padding: 0;
+    pointer-events: auto;
+    z-index: 10;
   }
   .hint-dismiss:hover { opacity: 0.9; }
   .hint-dismiss svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+
+  /* ══════════════════════════════
+     VIEWER CENTRE PULSE
+     ══════════════════════════════ */
+  .viewer-pulse {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  .viewer-pulse-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 6vw, 80px);
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(255,255,255,0.92);
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: 0.03em;
+    text-shadow: 0 2px 40px rgba(0,0,0,0.5);
+    opacity: 0;
+    animation: viewerPulse 7s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+    padding: 0 40px;
+  }
+
+  .viewer-pulse-text em {
+    color: var(--teal);
+    font-style: italic;
+  }
+
+  @keyframes viewerPulse {
+    0%   { opacity: 0; transform: scale(0.92); }
+    15%  { opacity: 1; transform: scale(1); }
+    60%  { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.04); }
+  }
 </style>
 </head>
 <body>
@@ -623,6 +672,10 @@ avalia-index bte3<!DOCTYPE html>
     allowfullscreen
     allow="fullscreen"
   ></iframe>
+  <div class="viewer-pulse">
+    <div class="viewer-pulse-text">Step inside<br><em>before you decide.</em></div>
+  </div>
+
   <div class="viewer-label">
     <div class="viewer-label-text">Demo scene · Navigate freely · Powered by Anderson Digital</div>
     <div class="scroll-cue">
@@ -669,7 +722,7 @@ avalia-index bte3<!DOCTYPE html>
       <div class="feature-dot"></div>
       <div class="feature-text">
         <strong>Powered by Anderson Digital</strong>
-        <span>Captured with XGRIDS Lixel L2 Pro — Ireland's most advanced spatial scanning service.</span>
+        <span>Captured with cutting-edge XGRIDS Scan Technology by Anderson Digital — Ireland's authorised XGRIDS reseller and your trusted spatial scanning partner.</span>
       </div>
     </div>
   </div>
@@ -812,11 +865,11 @@ avalia-index bte3<!DOCTYPE html>
 
   // Quality hint
   const hint = document.getElementById('quality-hint');
-  let enableTimer = setTimeout(() => { hint.style.pointerEvents = 'auto'; }, 4000);
+  let enableTimer = null;
   let removeTimer = setTimeout(() => hint.remove(), 24600);
 
   function dismissHint() {
-    clearTimeout(enableTimer);
+    if (enableTimer) clearTimeout(enableTimer);
     clearTimeout(removeTimer);
     hint.style.animation = 'hintOut 0.35s cubic-bezier(0.4,0,1,1) forwards';
     setTimeout(() => hint.remove(), 380);
