@@ -1,0 +1,872 @@
+avalia-index bte3<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avalia — Step inside before you decide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --teal: #00b4a0;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #f7f4ef;
+    --ink: #1c2b3a;
+    --white: #ffffff;
+    --banner-h: 18vh;
+    --viewer-h: 82vh;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ══════════════════════════════
+     BANNER
+     ══════════════════════════════ */
+  .banner {
+    height: var(--banner-h);
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 36px;
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .banner-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    text-transform: lowercase;
+    color: var(--white);
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .logo span { color: var(--teal); }
+
+  .tagline {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .tagline em { color: var(--teal); font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 13px; letter-spacing: 0.04em; text-transform: none; }
+
+  .banner-nav {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+
+  .banner-nav a {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .banner-nav a:hover { color: var(--white); }
+
+  .banner-ctas {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .btn-ghost {
+    color: rgba(255,255,255,0.55);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-ghost:hover { color: var(--white); border-color: rgba(255,255,255,0.5); }
+
+  .btn-primary {
+    background: var(--teal);
+    color: var(--white);
+    padding: 7px 17px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--gold);
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    white-space: nowrap;
+    animation: btnPulse 3s ease-in-out infinite;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+
+  .btn-primary:hover {
+    background: #00cbb5;
+    animation: none;
+    box-shadow: 0 0 0 2px rgba(201,168,76,0.4);
+  }
+
+  @keyframes btnPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); border-color: var(--gold); }
+    50% { box-shadow: 0 0 8px 2px rgba(201,168,76,0.25); border-color: var(--gold-light); }
+  }
+
+  /* ══════════════════════════════
+     VIEWER FRAME
+     ══════════════════════════════ */
+  .viewer-frame {
+    height: var(--viewer-h);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .viewer-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .viewer-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 14px 36px;
+    background: linear-gradient(to top, rgba(10,22,40,0.65) 0%, transparent 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+
+  .viewer-label-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    font-style: italic;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.06em;
+  }
+
+  .scroll-cue {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .scroll-cue span {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+  }
+
+  .scroll-line {
+    width: 28px; height: 1px;
+    background: rgba(255,255,255,0.12);
+    position: relative; overflow: hidden;
+  }
+
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--gold);
+    animation: scanline 2.5s ease-in-out infinite;
+  }
+
+  @keyframes scanline {
+    0% { left: -100%; }
+    60% { left: 100%; }
+    100% { left: 100%; }
+  }
+
+  /* ══════════════════════════════
+     ABOUT
+     ══════════════════════════════ */
+  .about {
+    background: var(--cream);
+    color: var(--ink);
+    padding: 72px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .about-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .about-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--navy);
+    margin-bottom: 18px;
+  }
+
+  .about-body {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: #445566;
+  }
+
+  .about-irish {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--gold);
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(201,168,76,0.25);
+    line-height: 1.7;
+  }
+
+  .features {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding-top: 28px;
+  }
+
+  .feature {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .feature-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .feature-text strong {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 3px;
+  }
+
+  .feature-text span {
+    font-size: 13px;
+    color: #667788;
+    line-height: 1.55;
+  }
+
+  /* ══════════════════════════════
+     FOOTER
+     ══════════════════════════════ */
+  footer {
+    background: var(--navy);
+    padding: 28px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-top: 1px solid rgba(201,168,76,0.12);
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(255,255,255,0.3);
+    line-height: 1.6;
+  }
+
+  .footer-brand strong { color: var(--gold); font-style: normal; font-weight: 400; }
+  .footer-legal { font-size: 11px; color: rgba(255,255,255,0.15); }
+
+  /* ══════════════════════════════
+     CONTACT MODAL
+     ══════════════════════════════ */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,22,40,0.88);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-backdrop.open { display: flex; }
+
+  .modal {
+    background: var(--navy);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 4px;
+    padding: 40px;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    animation: modalIn 0.25s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.3);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+
+  .modal-close:hover { color: var(--white); }
+
+  .modal-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+
+  .modal h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .modal-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 6px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2px;
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: rgba(201,168,76,0.5);
+  }
+
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  .form-group select option { background: var(--navy); color: var(--white); }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--gold);
+    color: var(--navy);
+    padding: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+  }
+
+  .btn-submit:hover { background: var(--gold-light); }
+
+  .form-note {
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .form-success .check {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .form-success h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .form-success p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* ══════════════════════════════
+     RESPONSIVE
+     ══════════════════════════════ */
+  @media (max-width: 768px) {
+    :root { --banner-h: 14vh; --viewer-h: 86vh; }
+    .banner { padding: 0 18px; }
+    .banner-nav { display: none; }
+    .logo { font-size: 22px; }
+    .tagline { font-size: 12px; }
+    .about { grid-template-columns: 1fr; padding: 48px 24px; gap: 36px; }
+    footer { padding: 22px 20px; }
+    .modal { padding: 28px 22px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  /* ══════════════════════════════
+     QUALITY HINT POPUP
+     ══════════════════════════════ */
+  #quality-hint {
+    position: fixed;
+    left: 16px;
+    bottom: calc(50% + 10px);
+    width: 300px;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    animation:
+      hintIn  0.55s cubic-bezier(0.16, 1, 0.3, 1) 4s    forwards,
+      hintOut 0.55s cubic-bezier(0.4,  0, 1,   1) 23.45s forwards;
+    transform-origin: bottom left;
+  }
+  @keyframes hintIn {
+    from { opacity: 0; transform: scale(0.90) translateX(-8px); }
+    to   { opacity: 1; transform: scale(1)    translateX(0); pointer-events: auto; }
+  }
+  @keyframes hintOut {
+    from { opacity: 1; transform: scale(1)    translateX(0);    }
+    to   { opacity: 0; transform: scale(0.93) translateX(-6px); }
+  }
+  .hint-card {
+    background: #0f1b2d;
+    border: 1px solid rgba(201,168,76,0.28);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.55);
+    position: relative;
+  }
+  .hint-card::before {
+    content: '';
+    display: block;
+    height: 2px;
+    background: linear-gradient(90deg, #c9a84c 0%, #e2c47a 60%, transparent 100%);
+  }
+  .hint-body { padding: 14px 16px 16px; }
+  .hint-header {
+    display: flex; align-items: center; gap: 9px; margin-bottom: 10px;
+  }
+  .hint-icon {
+    width: 30px; height: 30px;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.28);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .hint-icon svg {
+    width: 14px; height: 14px;
+    stroke: #c9a84c; fill: none; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .hint-title {
+    font-size: 14px; font-weight: 600;
+    color: #f5f3ee; line-height: 1.25;
+  }
+  .hint-text {
+    font-size: 12px; color: rgba(245,243,238,0.70);
+    line-height: 1.58; margin-bottom: 12px;
+  }
+  .hint-text strong { color: #e2c47a; font-weight: 500; }
+  .hint-steps { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+  .hint-step  { display: flex; align-items: center; gap: 9px; font-size: 12px; color: rgba(245,243,238,0.70); }
+  .hint-step strong { color: #e2c47a; font-weight: 500; }
+  .step-num {
+    width: 19px; height: 19px; border-radius: 50%;
+    background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.28);
+    color: #c9a84c; font-size: 10px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .hint-progress { height: 1.5px; background: rgba(255,255,255,0.07); border-radius: 1px; overflow: hidden; }
+  .hint-progress-fill {
+    height: 100%; width: 100%;
+    background: linear-gradient(90deg, #c9a84c 0%, #e2c47a 100%);
+    animation: progressDrain 20s linear 4s forwards;
+    transform-origin: left; transform: scaleX(0);
+  }
+  @keyframes progressDrain {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+  }
+  .hint-dismiss {
+    position: absolute; top: 9px; right: 9px;
+    width: 22px; height: 22px;
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.35; transition: opacity 0.18s; color: #f5f3ee; padding: 0;
+  }
+  .hint-dismiss:hover { opacity: 0.9; }
+  .hint-dismiss svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+</style>
+</head>
+<body>
+
+<!-- ══ BANNER ══ -->
+<header class="banner">
+  <div class="banner-left">
+    <a class="logo" href="/">aval<span>i</span>a</a>
+    <div class="tagline">Step inside <em>before you decide.</em></div>
+  </div>
+
+  <nav class="banner-nav">
+    <a href="#about">About</a>
+    <a href="https://andersondigital.ie/contact" target="_blank">Anderson Digital</a>
+    <a href="#about">How it works</a>
+  </nav>
+
+  <div class="banner-ctas">
+    <a href="#about" class="btn-ghost">Learn more</a>
+    <button class="btn-primary" onclick="openModal()">List your venue</button>
+  </div>
+</header>
+
+<!-- ══ VIEWER ══ -->
+<div class="viewer-frame">
+  <iframe
+    src="https://lcc-viewer.xgrids.com/pub/dbmbie-adl-bte3-tour"
+    allowfullscreen
+    allow="fullscreen"
+  ></iframe>
+  <div class="viewer-label">
+    <div class="viewer-label-text">Demo scene · Navigate freely · Powered by Anderson Digital</div>
+    <div class="scroll-cue">
+      <span>Scroll to explore</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<section class="about" id="about">
+  <div>
+    <div class="about-label">What is Avalia</div>
+    <h2 class="about-title">Experience spaces before you commit to them.</h2>
+    <p class="about-body">Avalia gives event planners, wedding planners, and property buyers a way to truly explore a venue or property in photorealistic 3D — navigating freely, capturing viewpoints, and visualising possibilities — before setting foot inside.</p>
+    <div class="about-irish">
+      — Táim abhaile. / I am home.<br>
+      <strong>An bhfuil tú abhaile fós? / Are you home yet?</strong>
+    </div>
+  </div>
+  <div class="features">
+    <div class="feature">
+      <div class="feature-dot"></div>
+      <div class="feature-text">
+        <strong>Navigate freely</strong>
+        <span>Walk through any space in photorealistic 3D from your phone, tablet, or desktop.</span>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-dot"></div>
+      <div class="feature-text">
+        <strong>Capture &amp; redesign</strong>
+        <span>Snapshot any viewpoint and explore AI-powered room redesigns — see the space your way.</span>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-dot"></div>
+      <div class="feature-text">
+        <strong>For venues &amp; real estate</strong>
+        <span>From wedding venues and hotels to heritage buildings and residential properties.</span>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-dot"></div>
+      <div class="feature-text">
+        <strong>Powered by Anderson Digital</strong>
+        <span>Captured with XGRIDS Lixel L2 Pro — Ireland's most advanced spatial scanning service.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">
+    — Táim abhaile. / I am home. <strong>Avalia.</strong><br>
+    A product of Anderson Digital · andersondigital.ie
+  </div>
+  <div class="footer-legal">© 2026 Anderson Incorporated Services Limited · VAT IE 4227915GH</div>
+</footer>
+
+<!-- ══ CONTACT MODAL ══ -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="handleBackdropClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <div id="formWrap">
+      <div class="modal-eyebrow">Get started</div>
+      <h2>List your venue</h2>
+      <p class="modal-sub">Tell us about your space and we'll be in touch within one business day.</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>First name</label>
+          <input type="text" id="fname" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label>Last name</label>
+          <input type="text" id="lname" placeholder="Last name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email address</label>
+        <input type="email" id="email" placeholder="you@yourvenue.ie">
+      </div>
+
+      <div class="form-group">
+        <label>Venue or property name</label>
+        <input type="text" id="venue" placeholder="e.g. The Manor House, Cork">
+      </div>
+
+      <div class="form-group">
+        <label>Venue type</label>
+        <select id="vtype">
+          <option value="">Select one...</option>
+          <option>Wedding venue</option>
+          <option>Hotel</option>
+          <option>Event space</option>
+          <option>Real estate / residential</option>
+          <option>Heritage / cultural site</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Anything else you'd like to tell us?</label>
+        <textarea id="message" placeholder="Size, location, timeline, questions..."></textarea>
+      </div>
+
+      <button class="btn-submit" onclick="submitForm()">Send enquiry</button>
+      <div class="form-note">Your enquiry goes directly to info@andersondigital.ie</div>
+    </div>
+
+    <div class="form-success" id="formSuccess">
+      <div class="check">✦</div>
+      <h3>Enquiry received.</h3>
+      <p>We'll get back to you as soon as we can.<br>— Avalia / Anderson Digital</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal() {
+    document.getElementById('modalBackdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modalBackdrop').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleBackdropClick(e) {
+    if (e.target === document.getElementById('modalBackdrop')) closeModal();
+  }
+
+  async function submitForm() {
+    const fname = document.getElementById('fname').value.trim();
+    const lname = document.getElementById('lname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const venue = document.getElementById('venue').value.trim();
+    const vtype = document.getElementById('vtype').value;
+    const message = document.getElementById('message').value.trim();
+
+    if (!fname || !email || !venue) {
+      alert('Please fill in your name, email, and venue name.');
+      return;
+    }
+
+    const btn = document.querySelector('.btn-submit');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('https://formspree.io/f/xdkdgjzz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name: `${fname} ${lname}`,
+          email,
+          venue,
+          type: vtype,
+          message,
+          _subject: `Avalia venue enquiry — ${venue}`
+        })
+      });
+
+      if (res.ok) {
+        document.getElementById('formWrap').style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+        setTimeout(closeModal, 3000);
+      } else {
+        btn.textContent = 'Send enquiry';
+        btn.disabled = false;
+        alert('Something went wrong — please try again or email info@andersondigital.ie directly.');
+      }
+    } catch(e) {
+      btn.textContent = 'Send enquiry';
+      btn.disabled = false;
+      alert('Connection error — please try again or email info@andersondigital.ie directly.');
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // Quality hint
+  const hint = document.getElementById('quality-hint');
+  let enableTimer = setTimeout(() => { hint.style.pointerEvents = 'auto'; }, 4000);
+  let removeTimer = setTimeout(() => hint.remove(), 24600);
+
+  function dismissHint() {
+    clearTimeout(enableTimer);
+    clearTimeout(removeTimer);
+    hint.style.animation = 'hintOut 0.35s cubic-bezier(0.4,0,1,1) forwards';
+    setTimeout(() => hint.remove(), 380);
+  }
+  hint.addEventListener('mouseenter', () => {
+    hint.querySelector('.hint-progress-fill').style.animationPlayState = 'paused';
+  });
+  hint.addEventListener('mouseleave', () => {
+    hint.querySelector('.hint-progress-fill').style.animationPlayState = 'running';
+  });
+</script>
+
+<!-- ══ QUALITY HINT POPUP ══ -->
+<div id="quality-hint" role="status">
+  <div class="hint-card">
+    <button class="hint-dismiss" onclick="dismissHint()" aria-label="Dismiss tip">
+      <svg viewBox="0 0 12 12"><path d="M1 1l10 10M11 1L1 11"/></svg>
+    </button>
+    <div class="hint-body">
+      <div class="hint-header">
+        <div class="hint-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+            <circle cx="9" cy="6" r="2.2" fill="rgba(201,168,76,0.18)"/>
+            <circle cx="15" cy="12" r="2.2" fill="rgba(201,168,76,0.18)"/>
+            <circle cx="9" cy="18" r="2.2" fill="rgba(201,168,76,0.18)"/>
+          </svg>
+        </div>
+        <span class="hint-title">Tip — Boost your view quality</span>
+      </div>
+      <p class="hint-text">
+        This scene loads at <strong>medium quality</strong> by default for fast access on all devices.
+        For the sharpest experience, increase the quality slider.
+      </p>
+      <div class="hint-steps">
+        <div class="hint-step">
+          <span class="step-num">1</span>
+          <span>Click the <strong>Settings</strong> icon in the viewer toolbar <em>(top left)</em></span>
+        </div>
+        <div class="hint-step">
+          <span class="step-num">2</span>
+          <span>Move the <strong>Quality</strong> slider to <em>High</em></span>
+        </div>
+      </div>
+      <div class="hint-progress">
+        <div class="hint-progress-fill"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
