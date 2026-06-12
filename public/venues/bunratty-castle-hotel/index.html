@@ -1,0 +1,685 @@
+<!-- Bunratty venue landing page - THE shipping index (this is what Vercel serves). Content is index_rebuild_v1 (Marielle GO, 11 June 2026); the prior version is preserved at index_original_backup_2026-06-11.html. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bunratty Castle Hotel - Explore in 3D | Avalia</title>
+  <meta name="description" content="Walk through Bunratty Castle Hotel's Lobby, Fibber McGee's, and the Shannon Suite in immersive 3D. A four-star Munster property captured space by space, so you can step inside before you decide. Powered by Avalia.">
+
+  <link rel="canonical" href="https://avalia.ie/venues/bunratty-castle-hotel/">
+
+  <!-- Open Graph: the link-share is the conversion (brief Journey B). -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Bunratty Castle Hotel - Explore in 3D">
+  <meta property="og:description" content="A four-star Munster property with over a thousand years of welcome. Step inside the Lobby, Fibber McGee's, and the Shannon Suite in immersive 3D. Powered by Avalia.">
+  <meta property="og:url" content="https://avalia.ie/venues/bunratty-castle-hotel/">
+  <!-- OG image: FLAG - supply a real share image (a still of the Lobby or Shannon Suite). Placeholder path. -->
+  <meta property="og:image" content="https://avalia.ie/venues/bunratty-castle-hotel/share/og-bunratty.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Brand-font split: Cormorant Garamond + DM Sans only. Public-facing Avalia pair. Never mix in Segoe UI (internal only). -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap">
+
+  <!-- Structured data (brief GEO requirements). -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LodgingBusiness",
+    "name": "Bunratty Castle Hotel",
+    "address": { "@type": "PostalAddress", "addressLocality": "Bunratty", "addressRegion": "Co. Clare", "addressCountry": "IE" },
+    "url": "https://www.bunrattycastlehotel.com/",
+    "starRating": { "@type": "Rating", "ratingValue": "4" },
+    "subjectOf": {
+      "@type": "TouristAttraction",
+      "name": "Bunratty Castle Hotel - Explore in 3D",
+      "url": "https://avalia.ie/venues/bunratty-castle-hotel/"
+    }
+  }
+  </script>
+
+  <style>
+    :root {
+      --navy: #012A4A;
+      --navy-deep: #0d1d33;
+      --navy-darker: #061222;
+      --teal: #61C1B6;
+      /* Gold token brought to the locked warm value per the Visual reference
+         (retired cooler #c9a84c removed across the page). */
+      --gold: #C9A96E;
+      --gold-bright: #e4c89a;
+      --fg: #f5f1e8;
+      --muted: rgba(245, 241, 232, 0.62);
+      --muted-2: rgba(245, 241, 232, 0.42);
+      --line: rgba(245, 241, 232, 0.16);
+      --card: rgba(20, 30, 48, 0.55);
+      --card-hover: rgba(20, 30, 48, 0.78);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background:
+        radial-gradient(ellipse at 25% 8%, rgba(97, 193, 182, 0.07), transparent 55%),
+        radial-gradient(ellipse at 80% 30%, rgba(201, 169, 110, 0.06), transparent 55%),
+        linear-gradient(170deg, var(--navy-deep) 0%, var(--navy-darker) 100%);
+      background-attachment: fixed;
+      color: var(--fg);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { color: inherit; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 22px; }
+
+    /* Section headings and any venue/space names: Cormorant Garamond.
+       Body, labels, UI, specs: DM Sans. The split is strict. */
+    h1, h2, h3, .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+    /* ===== Header ===== */
+    header.site {
+      padding: 26px 0 18px;
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0;
+      background: linear-gradient(180deg, var(--navy-darker) 60%, rgba(6,18,34,0.86));
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 50;
+    }
+    .header-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .venue-id { display: flex; align-items: center; gap: 14px; }
+    /* FLAG: Bunratty logo not yet cleared (brief checklist). Until cleared, the
+       venue is represented by its name in Cormorant Garamond. Logo slot is ready. */
+    .venue-logo-slot {
+      width: 46px; height: 46px;
+      border: 1px dashed var(--line);
+      border-radius: 6px;
+      display: none;            /* hidden until a cleared logo is dropped in */
+      align-items: center; justify-content: center;
+      font-size: 8px; color: var(--muted-2); text-align: center;
+    }
+    .venue-name { font-size: 27px; font-weight: 700; letter-spacing: 0.01em; color: var(--fg); }
+    .venue-name a { text-decoration: none; }
+    .venue-sub { font-size: 12px; color: var(--muted); letter-spacing: 0.02em; }
+    .powered {
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .powered .av { color: var(--gold); font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 14px; letter-spacing: 0.04em; text-transform: none; }
+    .powered:hover { color: var(--fg); }
+
+    /* ===== Property lead (Section B) ===== */
+    section.property { margin: 34px 0 0; }
+    .eyebrow { font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .property-grid { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 38px; align-items: start; }
+    @media (max-width: 900px) { .property-grid { grid-template-columns: 1fr; gap: 26px; } }
+    .property-narrative h1 { font-size: 40px; font-weight: 600; line-height: 1.12; margin-bottom: 18px; letter-spacing: 0.005em; }
+    @media (max-width: 640px) { .property-narrative h1 { font-size: 32px; } }
+    .property-narrative p { color: var(--muted); font-size: 16px; margin-bottom: 16px; max-width: 60ch; }
+    .property-narrative p:last-child { margin-bottom: 0; }
+    .property-narrative strong { color: var(--fg); font-weight: 500; }
+
+    /* Facts panel */
+    .facts {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 22px 22px 8px;
+    }
+    .facts .facts-h { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 14px; }
+    .fact-row { padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .fact-row:last-child { border-bottom: 0; }
+    .fact-row .k { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin-bottom: 3px; }
+    .fact-row .v { display: block; font-size: 15px; color: var(--fg); }
+
+    /* ===== Space tabs ===== */
+    .tabs {
+      display: flex; gap: 8px; margin: 18px 0 0; flex-wrap: wrap;
+    }
+    .tab {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 13px; letter-spacing: 0.04em;
+      padding: 9px 18px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--fg);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .tab:hover { background: var(--card-hover); border-color: var(--gold); color: var(--gold); }
+    .tab.active { background: rgba(201,169,110,0.14); border-color: var(--gold); color: var(--gold-bright); }
+    .tab .tag { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-left: 6px; }
+    .tab.active .tag { color: var(--gold); }
+
+    /* ===== Step-inside framing ===== */
+    .step-inside-intro { margin: 6px 0 0; }
+    .step-inside-intro .block-h { font-size: 30px; font-weight: 600; margin-bottom: 6px; }
+    .step-inside-intro .lede { color: var(--muted); font-size: 16px; max-width: 64ch; }
+
+    /* ===== Viewer panel ===== */
+    .viewer-shell { margin: 16px 0 0; }
+    .viewer-frame-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--navy-darker);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.45);
+    }
+    @media (max-width: 720px) { .viewer-frame-wrap { aspect-ratio: 3 / 4; } }
+    .viewer-frame-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
+    .open-space {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 12px;
+      font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); text-decoration: none;
+      padding-bottom: 3px; border-bottom: 1px solid rgba(201,169,110,0.4);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .open-space:hover { color: var(--gold-bright); border-bottom-color: var(--gold); }
+
+    /* ===== Content grid: specs + AI enhance ===== */
+    .content-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 28px; margin: 40px 0 0; }
+    @media (max-width: 900px) { .content-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+    .panel-h { font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 14px; }
+    .space-title { font-size: 30px; font-weight: 600; margin-bottom: 4px; }
+    .space-blurb { color: var(--muted); font-size: 15px; margin-bottom: 22px; max-width: 50ch; }
+
+    .specs { border-top: 1px solid var(--line); }
+    .spec-row { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+    .spec-row .k { color: var(--teal); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .spec-row .v { color: var(--fg); font-size: 15px; text-align: right; }
+    .spec-row .v.tbd { color: var(--muted-2); font-style: italic; }
+
+    /* ===== AI Enhance card ===== */
+    .ai-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 26px 24px;
+    }
+    .ai-card h3 { font-size: 25px; font-weight: 600; margin-bottom: 10px; }
+    .ai-card p { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+    .ai-mock {
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      margin: 16px 0;
+      background: rgba(6,18,34,0.4);
+      text-align: center;
+    }
+    .ai-mock .pulse-dot {
+      width: 44px; height: 44px; margin: 0 auto 12px;
+      border-radius: 50%;
+      background: rgba(201,169,110,0.14);
+      border: 1px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      animation: ring 2.4s ease-out infinite;
+    }
+    @keyframes ring {
+      0% { box-shadow: 0 0 0 0 rgba(201,169,110,0.5); }
+      70% { box-shadow: 0 0 0 14px rgba(201,169,110,0); }
+      100% { box-shadow: 0 0 0 0 rgba(201,169,110,0); }
+    }
+    .ai-mock .mock-label { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+    .btn {
+      display: inline-block;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
+      padding: 12px 26px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid var(--gold);
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-gold { background: var(--gold); color: #1a1a1a; }
+    .btn-gold:hover { background: var(--gold-bright); }
+    .btn-ghost { background: transparent; color: var(--gold); }
+    .btn-ghost:hover { background: rgba(201,169,110,0.12); }
+    .ai-note { font-size: 12px; color: var(--muted-2); margin-top: 12px; }
+
+    .notify-form { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+    .notify-form input[type=email] {
+      flex: 1; min-width: 180px;
+      background: rgba(6,18,34,0.6);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--fg);
+      padding: 11px 14px;
+      font: inherit; font-size: 14px;
+    }
+    .notify-form input[type=email]:focus { outline: none; border-color: var(--gold); }
+
+    /* ===== Sections ===== */
+    section.block { margin: 56px 0 0; }
+    .block-h { font-size: 32px; font-weight: 600; margin-bottom: 6px; }
+    .block-sub { color: var(--muted); font-size: 15px; margin-bottom: 24px; }
+
+    /* ===== Roadmap chips ===== */
+    .roadmap { display: flex; gap: 12px; flex-wrap: wrap; }
+    .chip {
+      background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+      padding: 14px 16px; font-size: 13px; color: var(--muted); max-width: 320px;
+    }
+    .chip strong { color: var(--fg); font-weight: 600; display: block; margin-bottom: 3px; font-size: 14px; }
+    .chip .soon { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); }
+
+    /* ===== Social proof ===== */
+    .quote { border-left: 2px solid var(--gold); padding: 6px 0 6px 22px; max-width: 60ch; }
+    .quote .q { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: var(--fg); }
+    .quote .who { font-size: 13px; color: var(--muted); margin-top: 8px; letter-spacing: 0.02em; }
+
+    /* ===== Enquiry form ===== */
+    .enquiry { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 30px 28px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+    @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--teal); }
+    .field input, .field select, .field textarea {
+      background: rgba(6,18,34,0.6);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--fg);
+      padding: 11px 13px;
+      font: inherit; font-size: 14px;
+    }
+    .field textarea { resize: vertical; min-height: 90px; }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--gold); }
+    .form-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 20px; flex-wrap: wrap; }
+    .phone-line { font-size: 13px; color: var(--muted); }
+    .phone-line a { color: var(--gold); text-decoration: none; }
+
+    /* ===== Share ===== */
+    .share-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .share-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+      padding: 9px 14px; font-size: 13px; color: var(--fg); cursor: pointer; text-decoration: none;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .share-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .share-url { font-size: 12px; color: var(--muted); margin-top: 10px; word-break: break-all; }
+
+    /* ===== Footer ===== */
+    footer.site { margin-top: 64px; border-top: 1px solid var(--line); padding: 30px 0 40px; }
+    .foot-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
+    .foot-col { font-size: 13px; color: var(--muted); }
+    .foot-col a { color: var(--muted); text-decoration: none; }
+    .foot-col a:hover { color: var(--gold); }
+    .foot-av { font-family: 'Cormorant Garamond', serif; color: var(--gold); font-weight: 700; font-size: 18px; }
+    .taim { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--muted); font-size: 15px; margin-top: 18px; text-align: center; }
+
+    .flag {
+      font-size: 11px; color: var(--muted-2); letter-spacing: 0.02em;
+      border: 1px dashed rgba(245,241,232,0.18); border-radius: 4px;
+      padding: 3px 8px; display: inline-block; margin-top: 8px;
+    }
+    .hide { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- ====================== HEADER ======================
+       Section A. The venue is the host, Avalia is the infrastructure.
+       Bunratty owns the page identity; Avalia shows up small. -->
+  <header class="site">
+    <div class="wrap">
+      <div class="header-row">
+        <div class="venue-id">
+          <!-- FLAG: Bunratty logo not yet cleared. Slot ready; name carries identity meanwhile. -->
+          <div class="venue-logo-slot" id="logo-slot">LOGO<br>PENDING</div>
+          <div>
+            <div class="venue-name serif"><a href="https://www.bunrattycastlehotel.com/" target="_blank" rel="noopener">Bunratty Castle Hotel</a></div>
+            <div class="venue-sub">Explore our spaces in immersive 3D</div>
+          </div>
+        </div>
+        <a class="powered" href="https://avalia.ie" target="_blank" rel="noopener">
+          Powered by <span class="av">Avalia</span>
+        </a>
+      </div>
+
+      <!-- Space tabs. All three are LIVE links (no coming-soon for the spaces). -->
+      <nav class="tabs" id="tabs">
+        <a class="tab active" data-space="lobby" href="#lobby">Lobby</a>
+        <a class="tab" data-space="fibber-mcgees" href="#fibber-mcgees">Fibber McGee's</a>
+        <a class="tab" data-space="shannon-suite" href="#shannon-suite">Shannon Suite</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ====================== SECTION B: THE PROPERTY, TOLD ======================
+         The property-first lead. The visitor meets Bunratty before the product.
+         Narrative is the web-verified, Liam-approved hotel blurb
+         (bunratty-proposal-v3-hotel-blurb.md), em dashes purged, rendered not invented.
+         FLAG: narrative + facts are web-verified and approved in our own proposal
+         docs, but want a final confirm with Liam or Flynn before public use. -->
+    <section class="property" aria-label="About Bunratty Castle Hotel">
+      <div class="eyebrow">The property</div>
+      <div class="property-grid">
+        <div class="property-narrative">
+          <h1 class="serif">Over a thousand years of welcome on the Shannon estuary.</h1>
+          <p>Bunratty has been a gathering place for over a thousand years. The ground where the hotel stands is said to trace back to a Norse trading camp on the Shannon estuary, the same strategic approach that drew four successive castles to be built, contested, and rebuilt on the land alongside.</p>
+          <p>The modern hotel sits at the heart of all of it. A <strong>four-star property of 144 rooms and suites</strong>, twelve kilometres from Shannon Airport and a short stroll from Bunratty Castle and Folk Park, with a spa, leisure facilities, and a long-established reputation for weddings and events. In 1996 it was brought into the Blarney Group, a home-grown Munster success story now in its third generation under the Kelleher family, and a deliberate westward chapter began: a destination hotel for a village that already carried one of Ireland's most recognisable identities.</p>
+          <p>The 2026 renovation is the most comprehensive since that chapter opened. New guest rooms, a transformed bar in Fibber McGee's, refreshed communal spaces throughout. This is the moment the renewed spaces are captured.</p>
+          <span class="flag">[OPEN] Property narrative and facts are web-verified and approved (proposal v3 blurb). Confirm still accurate and cleared for public venue-page use with Liam or Flynn.</span>
+        </div>
+
+        <!-- Property at a glance. Four web-verified tiles from the approved blurb. -->
+        <aside class="facts" aria-label="Property at a glance">
+          <div class="facts-h">Property at a glance</div>
+          <div class="fact-row"><span class="k">Bedrooms</span><span class="v">144 rooms and suites</span></div>
+          <div class="fact-row"><span class="k">Rating</span><span class="v">4 star, Failte Ireland certified</span></div>
+          <div class="fact-row"><span class="k">Facilities</span><span class="v">Spa and Leisure, Weddings, Events</span></div>
+          <div class="fact-row"><span class="k">Location</span><span class="v">12 km Shannon Airport, Bunratty Castle and Folk Park</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ====================== SECTION C: STEP INSIDE THE SPACES ======================
+         The viewer, reframed as "now step inside" rather than the opening act.
+         The live viewer remains the hero of this section (brief and strategy section 5).
+         Property narrative above (Section B) means the visitor meets the place first. -->
+    <section class="block step-inside-intro" aria-label="Step inside the spaces">
+      <div class="block-h serif">Step inside the spaces</div>
+      <p class="lede">Three of the newly refreshed spaces, captured so you can walk them from anywhere. Choose a space and look around in full 3D.</p>
+    </section>
+
+    <section class="viewer-shell" aria-label="Space viewer">
+      <div class="viewer-frame-wrap">
+        <!-- Opens on the Lobby by default. Tabs swap the src to the live viewer URL of each space. -->
+        <iframe id="viewer" title="Bunratty Castle Hotel - 3D space viewer"
+                src="https://avalia.ie/venues/bunratty-castle-hotel/lobby"
+                allow="fullscreen; accelerometer; gyroscope" loading="eager"></iframe>
+      </div>
+      <a class="open-space" id="open-space" href="https://avalia.ie/venues/bunratty-castle-hotel/lobby" target="_blank" rel="noopener">
+        Open this space full screen
+      </a>
+    </section>
+
+    <!-- ====================== SPECS + AI ENHANCE ====================== -->
+    <div class="content-grid">
+
+      <!-- Space info panel (driven by the active tab). Venue-voiced blurbs. -->
+      <div>
+        <div class="panel-h">About this space</div>
+        <h2 class="space-title" id="space-title">The Lobby</h2>
+        <p class="space-blurb" id="space-blurb">The arrival space. The calm after the journey, a lobby that sets the register for everything that follows.</p>
+        <div class="specs" id="specs"><!-- rows injected per space --></div>
+        <!-- Specs come from Bunratty's own data. TBD where not supplied; never invented. -->
+      </div>
+
+      <!-- AI Enhance (Section D). Repositioned below the spaces as a planner and couple tool. -->
+      <aside class="ai-card">
+        <div class="panel-h">Avalia AI Enhance</div>
+        <h3 class="serif">Visualise your event before you plan it.</h3>
+        <p id="ai-blurb">Stand in the Shannon Suite, frame the room from the top table, and describe your evening: long banquet tables, ivory linen, low floral centrepieces, candlelight. Avalia generates the dressed room so you can share it with your client before a single chair is moved.</p>
+
+        <!-- ====== AI ENHANCE STATE: [OPEN] - confirm with Liam/Flynn ======
+             Wave One default is the static mockup + notify capture, the safe, honest
+             state, per Marielle's direction (keep the honest Wave One state, do not
+             claim live until the enhancer is actually wired). Flip the data-ai-state
+             once Liam confirms the live enhancer is wired. No half-wired claim. -->
+        <div id="ai-state" data-ai-state="mockup">
+
+          <!-- STATE: mockup (default for Wave One) -->
+          <div class="ai-when-mockup">
+            <div class="ai-mock">
+              <div class="pulse-dot serif">AI</div>
+              <div class="mock-label">AI Enhance preview - dress this room in seconds</div>
+            </div>
+            <p class="ai-note">AI Enhance is coming to Bunratty Castle Hotel spaces soon. Join the list to be the first to dress a room.</p>
+            <!-- FLAG: notify capture destination not set. Formspree endpoint or events-team
+                 email to be confirmed (same open item as the enquiry destination below). -->
+            <form class="notify-form" action="REPLACE_WITH_NOTIFY_ENDPOINT" method="POST" onsubmit="return false;">
+              <input type="email" name="email" placeholder="Your email" aria-label="Email for AI Enhance notification">
+              <button class="btn btn-gold" type="submit">Notify me</button>
+            </form>
+            <span class="flag">[OPEN] AI Enhance state: static mockup (default). Confirm live-vs-mockup + notify destination with Liam/Flynn.</span>
+          </div>
+
+          <!-- STATE: live (Wave Two) - hidden until enabled -->
+          <div class="ai-when-live hide">
+            <a class="btn btn-gold" href="#" id="ai-launch">Try AI Enhance</a>
+            <p class="ai-note">Share AI-enhanced images with your clients, planning team, or venue coordinator.</p>
+          </div>
+
+        </div>
+      </aside>
+    </div>
+
+    <!-- ====================== SECTION E: SOCIAL PROOF ====================== -->
+    <section class="block">
+      <div class="block-h serif">From the team at Bunratty</div>
+      <div class="quote">
+        <!-- FLAG: Flynn Pinto quote not yet supplied. Placeholder marked, do not invent a quote. -->
+        <div class="q" id="flynn-quote">[OPEN] One-sentence quote from Flynn Pinto to be supplied. Specific, in his voice. Not invented here.</div>
+        <div class="who">Flynn Pinto, General Manager, Bunratty Castle Hotel</div>
+      </div>
+      <span class="flag">[OPEN] Social proof: Flynn Pinto quote + (optional) Bunratty logo, pending clearance.</span>
+    </section>
+
+    <!-- ====================== SECTION F: ENQUIRY ====================== -->
+    <section class="block">
+      <div class="block-h serif" id="enquiry-h">Enquire about the Lobby</div>
+      <div class="block-sub">Our events team would love to discuss your occasion. Reach out below and we will be in touch within one business day.</div>
+
+      <div class="enquiry">
+        <!-- FLAG: form destination [OPEN]. Must submit to BUNRATTY'S EVENTS TEAM,
+             not Anderson Digital. Confirm the address/endpoint with Flynn Pinto. -->
+        <form action="REPLACE_WITH_BUNRATTY_EVENTS_ENDPOINT" method="POST" onsubmit="return false;">
+          <div class="form-grid">
+            <div class="field"><label for="f-name">Name</label><input id="f-name" name="name" type="text" required></div>
+            <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" required></div>
+            <div class="field"><label for="f-phone">Phone (optional)</label><input id="f-phone" name="phone" type="tel"></div>
+            <div class="field"><label for="f-space">Space of interest</label>
+              <select id="f-space" name="space">
+                <option value="lobby">Lobby</option>
+                <option value="fibber-mcgees">Fibber McGee's</option>
+                <option value="shannon-suite">Shannon Suite</option>
+              </select>
+            </div>
+            <div class="field"><label for="f-occasion">Occasion type</label><input id="f-occasion" name="occasion" type="text" placeholder="Wedding, corporate dinner, celebration..."></div>
+            <div class="field"><label for="f-guests">Approximate guest count</label><input id="f-guests" name="guests" type="number" min="1"></div>
+            <div class="field"><label for="f-date">Date (approximate)</label><input id="f-date" name="date" type="text" placeholder="e.g. Autumn 2026"></div>
+            <div class="field full"><label for="f-message">Message</label><textarea id="f-message" name="message"></textarea></div>
+          </div>
+          <div class="form-foot">
+            <button class="btn btn-gold" type="submit">Send your enquiry</button>
+            <!-- FLAG: phone display [OPEN]. Hidden until Bunratty approves showing a direct number.
+                 When approved, set the number and remove the hide class. -->
+            <div class="phone-line hide" id="phone-line">Prefer to call? <a href="tel:REPLACE_WITH_NUMBER">+353 REPLACE</a></div>
+          </div>
+          <span class="flag">[OPEN] Enquiry destination = Bunratty events team (confirm address) - and phone display pending Bunratty approval.</span>
+        </form>
+      </div>
+    </section>
+
+    <!-- ====================== SECTION G: SHARE ====================== -->
+    <section class="block">
+      <div class="block-h serif">Share this space</div>
+      <div class="block-sub">Send the link to your client, your planning team, or your family. It opens on any phone.</div>
+      <div class="share-row">
+        <button class="share-btn" id="copy-link">Copy link</button>
+        <a class="share-btn" id="share-wa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="share-btn" id="share-li" href="#" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="share-url" id="share-url"></div>
+    </section>
+
+    <!-- ====================== SECTION H: ROADMAP ====================== -->
+    <section class="block">
+      <div class="block-h serif">Coming to these spaces</div>
+      <div class="roadmap">
+        <div class="chip"><span class="soon">Soon</span><strong>Table and seat selection</strong>Choose your table in Fibber McGee's before you arrive.</div>
+        <div class="chip"><span class="soon">Soon</span><strong>Video flythrough</strong>A cinematic tour of the Shannon Suite for presentations and social media.</div>
+        <div class="chip"><span class="soon">Soon</span><strong>Capacity visualisation</strong>Assess setup configurations in moments.</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================== SECTION I: FOOTER ====================== -->
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-row">
+        <div class="foot-col">
+          <strong class="serif" style="font-size:17px;color:var(--fg)">Bunratty Castle Hotel</strong><br>
+          Bunratty, Co. Clare, Ireland<br>
+          <a href="https://www.bunrattycastlehotel.com/" target="_blank" rel="noopener">bunrattycastlehotel.com</a>
+        </div>
+        <div class="foot-col" style="text-align:center">
+          <span class="foot-av">Avalia</span><br>
+          <a href="https://avalia.ie" target="_blank" rel="noopener">Powered by Avalia</a>
+        </div>
+        <div class="foot-col" style="text-align:right">
+          <a href="#lobby">Lobby</a> &nbsp;
+          <a href="#fibber-mcgees">Fibber McGee's</a> &nbsp;
+          <a href="#shannon-suite">Shannon Suite</a><br>
+          <a href="https://avalia.ie" target="_blank" rel="noopener">avalia.ie</a><br>
+          <a href="/privacy" id="privacy-link">Privacy policy</a>
+        </div>
+      </div>
+      <!-- FLAG: Irish spelling of the tagline is draft, confirm before public use (house Irish-draft rule). -->
+      <div class="taim">Taim abhaile. I am home. Avalia.</div>
+    </div>
+  </footer>
+
+  <script>
+    // ========================================================================
+    // Space switching. All three spaces are live; tabs swap the viewer src and
+    // the per-space copy. Opens on the Lobby by default. Driven by the URL hash
+    // so a shared deep-link (e.g. .../#shannon-suite) opens on the right space.
+    // The deep-link behaviour is load-bearing for the co-marketing mechanic:
+    // Bunratty's own site links the Shannon Suite from their weddings page,
+    // Fibber McGee's from their bar page, the landing page from their gallery.
+    // ========================================================================
+    const VENUE_BASE = 'https://avalia.ie/venues/bunratty-castle-hotel';
+
+    // Per-space content. Blurbs are venue-voiced (Marielle's direction), not
+    // product-voiced. Specs come from Bunratty's own data; TBD where not yet
+    // supplied (house rule: never invent figures). The Shannon Suite capacity
+    // set is TBD-pending-confirmation by Bunratty's events team, not published
+    // fact, until Flynn's team confirms it (Go-Live checklist item, open).
+    const SPACES = {
+      'lobby': {
+        title: 'The Lobby',
+        blurb: 'The arrival space. The calm after the journey, a lobby that sets the register for everything that follows.',
+        specs: [
+          ['Floor area', 'TBD m2', true],
+          ['Ceiling height', 'TBD m', true],
+          ['Best for', 'First impressions, arrivals, reception drinks', false],
+          ['Natural light', 'TBD', true]
+        ]
+      },
+      'fibber-mcgees': {
+        title: "Fibber McGee's",
+        blurb: 'The restored bar. Warm stone, rich timbers, the kind of room you stay in longer than you planned, already drawing locals and guests alike.',
+        specs: [
+          ['Capacity (seated)', 'TBD', true],
+          ['Capacity (standing)', 'TBD', true],
+          ['Floor area', 'TBD m2', true],
+          ['Private bar', 'Available', false]
+        ]
+      },
+      'shannon-suite': {
+        title: 'Shannon Suite',
+        blurb: 'The primary event space. The room an event planner or couple walks before they travel, assessed for their dinner, conference, or wedding from anywhere.',
+        // Capacity figures are TBD until Bunratty's events team confirms them.
+        // The brief example set (120/80/60) is NOT treated as published fact;
+        // it is held TBD-pending-confirmation, shown visually as TBD.
+        specs: [
+          ['Capacity (theatre)', 'TBD', true],
+          ['Capacity (banquet)', 'TBD', true],
+          ['Capacity (cabaret)', 'TBD', true],
+          ['Floor area', 'TBD m2', true],
+          ['Ceiling height', 'TBD m', true],
+          ['Natural light', 'TBD', true],
+          ['AV equipment', 'TBD', true],
+          ['Private bar', 'Available', false]
+        ]
+      }
+    };
+    const ORDER = ['lobby', 'fibber-mcgees', 'shannon-suite'];
+    const LABELS = { 'lobby': 'the Lobby', 'fibber-mcgees': "Fibber McGee's", 'shannon-suite': 'the Shannon Suite' };
+
+    const viewer = document.getElementById('viewer');
+    const openSpace = document.getElementById('open-space');
+    const tabs = Array.from(document.querySelectorAll('.tab'));
+    const specsEl = document.getElementById('specs');
+    const spaceTitle = document.getElementById('space-title');
+    const spaceBlurb = document.getElementById('space-blurb');
+    const enquiryH = document.getElementById('enquiry-h');
+    const formSpace = document.getElementById('f-space');
+    const shareUrl = document.getElementById('share-url');
+    const shareWa = document.getElementById('share-wa');
+    const shareLi = document.getElementById('share-li');
+
+    function renderSpecs(space) {
+      const s = SPACES[space];
+      specsEl.innerHTML = '';
+      s.specs.forEach(([k, v, isTbd]) => {
+        const row = document.createElement('div');
+        row.className = 'spec-row';
+        row.innerHTML = '<span class="k"></span><span class="v' + (isTbd ? ' tbd' : '') + '"></span>';
+        row.querySelector('.k').textContent = k;
+        row.querySelector('.v').textContent = v;
+        specsEl.appendChild(row);
+      });
+    }
+
+    function setSpace(space, updateHash) {
+      if (!SPACES[space]) space = 'lobby';
+      const url = VENUE_BASE + '/' + space;
+      // Only reload the iframe if the space actually changed (avoids a reload on first paint).
+      if (viewer.getAttribute('src') !== url) viewer.setAttribute('src', url);
+      openSpace.setAttribute('href', url);
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.space === space));
+      const s = SPACES[space];
+      spaceTitle.textContent = s.title;
+      spaceBlurb.textContent = s.blurb;
+      renderSpecs(space);
+      enquiryH.textContent = 'Enquire about ' + LABELS[space];
+      if (formSpace) formSpace.value = space;
+      // Share targets the currently selected space (deep link).
+      const shareLink = url;
+      shareUrl.textContent = shareLink;
+      const shareText = 'Explore ' + s.title + ' at Bunratty Castle Hotel in 3D';
+      shareWa.setAttribute('href', 'https://wa.me/?text=' + encodeURIComponent(shareText + ' ' + shareLink));
+      shareLi.setAttribute('href', 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareLink));
+      if (updateHash && location.hash.slice(1) !== space) {
+        history.replaceState(null, '', '#' + space);
+      }
+    }
+
+    tabs.forEach(t => t.addEventListener('click', (e) => {
+      e.preventDefault();
+      setSpace(t.dataset.space, true);
+    }));
+    window.addEventListener('hashchange', () => setSpace(location.hash.slice(1), false));
+
+    document.getElementById('copy-link').addEventListener('click', async (e) => {
+      const link = shareUrl.textContent;
+      try { await navigator.clipboard.writeText(link); e.target.textContent = 'Copied'; setTimeout(() => e.target.textContent = 'Copy link', 1600); }
+      catch { window.prompt('Copy this link', link); }
+    });
+
+    // Boot: respect a deep-link hash, else open on the Lobby.
+    const initial = ORDER.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'lobby';
+    setSpace(initial, false);
+  </script>
+
+</body>
+</html>

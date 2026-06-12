@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bunratty Castle Hotel - Shannon Suite · Avalia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap">
+  <style>
+    :root {
+      --navy: #012A4A;
+      --navy-deep: #0d1d33;
+      --navy-darker: #061222;
+      --teal: #61C1B6;
+      --gold: #c9a84c;
+      --fg: #f5f1e8;
+      --muted: rgba(245, 241, 232, 0.55);
+      --line: rgba(245, 241, 232, 0.18);
+      --bg-dim: rgba(20, 30, 48, 0.72);
+      --bg-dim-hover: rgba(20, 30, 48, 0.92);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: var(--navy-darker);
+      color: var(--fg);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #app {
+      width: 100vw; height: 100vh;
+      display: block;
+      touch-action: none;
+      cursor: grab;
+    }
+    #app.dragging { cursor: grabbing; }
+    #app.walking { cursor: progress; }
+    .overlay {
+      position: fixed;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* ===== Brand mark (top-left) ===== */
+    .brand {
+      top: 22px; left: 24px;
+      pointer-events: auto;
+      transition: opacity 0.5s;
+    }
+    body.help-open .brand { opacity: 0; pointer-events: none; }
+    .brand .mark {
+      font-family: 'Cormorant Garamond', 'Georgia', serif;
+      font-weight: 700;
+      font-size: 28px;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .brand .mark .alt { color: var(--fg); }
+    .brand .tag {
+      display: block;
+      margin-top: 2px;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ===== Scene title (bottom-left) ===== */
+    .title {
+      bottom: 28px; left: 24px;
+      max-width: 70vw;
+      pointer-events: auto;
+    }
+    .title h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .title h1 a.scene-link {
+      color: var(--fg);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .title h1 a.scene-link:hover { color: var(--gold); }
+    .title .sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      font-style: italic;
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+    .title .sub a.scene-link {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .title .sub a.scene-link:hover { color: var(--gold); }
+    .title .cta {
+      display: inline-block;
+      font-family: 'DM Sans', 'Helvetica Neue', system-ui, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      padding-bottom: 2px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.4);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .title .cta:hover {
+      border-bottom-color: var(--gold);
+      color: #e4c870;
+    }
+
+    /* ===== HUD (debug, top-right of canvas, hidden by default) ===== */
+    .hud {
+      top: 22px; right: 24px;
+      background: var(--bg-dim);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 10px;
+      color: var(--muted);
+      display: none;
+      pointer-events: auto;
+    }
+
+    /* ===== Status bar (transient messages, top-center) ===== */
+    .status-bar {
+      top: 16px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-dim);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--fg);
+      max-width: 80vw;
+      text-align: center;
+      pointer-events: auto;
+      transition: opacity 0.3s;
+    }
+    .status-bar.hidden { opacity: 0; pointer-events: none; }
+    .status-bar.success { border-color: var(--teal); color: var(--teal); }
+    .status-bar.error { border-color: #e36363; color: #e36363; }
+
+    /* ===== Branded loader overlay ===== */
+    #loader {
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(97, 193, 182, 0.10), transparent 60%),
+        radial-gradient(ellipse at 70% 72%, rgba(201, 168, 76, 0.08), transparent 60%),
+        linear-gradient(160deg, var(--navy-deep) 0%, var(--navy-darker) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      transition: opacity 2s ease-out;
+    }
+    #loader.fade { opacity: 0; pointer-events: none; }
+    .loader-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 48px;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .loader-brand .alt { color: var(--fg); }
+    .loader-tag {
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+    .loader-status {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 14px;
+      min-height: 1.2em;
+      text-align: center;
+      max-width: 80vw;
+    }
+    .loader-bar {
+      width: 240px;
+      height: 2px;
+      background: rgba(245, 241, 232, 0.1);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+    .loader-bar-fill {
+      height: 100%;
+      width: 0;
+      background: var(--gold);
+      transition: width 0.3s ease-out;
+    }
+    .loader-hint {
+      margin-top: 28px;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    /* ===== WebGL context-lost overlay ===== */
+    #context-lost {
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 40%, rgba(97, 193, 182, 0.08), transparent 60%),
+        linear-gradient(160deg, var(--navy-deep) 0%, var(--navy-darker) 100%);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      padding: 24px;
+      text-align: center;
+    }
+    #context-lost.show { display: flex; }
+    #context-lost h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px; font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    #context-lost p {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 420px;
+      margin-bottom: 14px;
+      line-height: 1.55;
+    }
+    #context-lost p.cl-hint {
+      font-size: 11px;
+      color: rgba(245, 241, 232, 0.4);
+      letter-spacing: 0.04em;
+      margin-bottom: 22px;
+    }
+    #context-lost button {
+      background: var(--gold);
+      color: #1a1a1a;
+      border: 1px solid var(--gold);
+      padding: 10px 24px;
+      font: inherit;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+
+    /* ===== Top-right icon cluster (Reset / Help / Fullscreen / Hide UI) ===== */
+    .icon-cluster {
+      position: fixed;
+      top: 22px; right: 24px;
+      display: flex;
+      gap: 8px;
+      z-index: 30;
+      pointer-events: auto;
+    }
+    .icon-cluster.idle { opacity: 0; transition: opacity 0.6s; }
+    .icon-cluster:hover { opacity: 1; }
+    .icon-btn {
+      width: 40px; height: 40px;
+      background: var(--bg-dim);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--fg);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      padding: 0;
+    }
+    .icon-btn:hover {
+      background: var(--bg-dim-hover);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .icon-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .icon-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .icon-btn:disabled:hover { background: var(--bg-dim); border-color: var(--line); color: var(--fg); }
+    .icon-cluster.collapsed .icon-btn:not(#btn-toggle-ui) { display: none; }
+    .icon-cluster.collapsed { gap: 0; }
+
+    /* Pulse the help button when the help panel closes — draws the eye to where Help lives */
+    @keyframes pulse-gold-ring {
+      0%   { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.85); }
+      100% { box-shadow: 0 0 0 14px rgba(201, 168, 76, 0); }
+    }
+    #btn-help.pulse {
+      animation: pulse-gold-ring 1.3s ease-out 3;
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* ===== Bottom-right navigation stack: d-pad on top, floor/height below ===== */
+    .navigation-stack {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 110px;
+      z-index: 25;
+      pointer-events: none;  /* children re-enable */
+    }
+    .navigation-stack.hidden { display: none; }
+
+    .vert-cluster {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      pointer-events: auto;
+      transition: opacity 0.8s;
+    }
+    .vert-cluster.idle { opacity: 0; }
+    .vert-cluster:hover { opacity: 1; }
+
+    .floor-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .floor-pill {
+      background: var(--bg-dim);
+      border: 1px solid var(--line);
+      color: rgba(245, 241, 232, 0.85);
+      padding: 6px 0;
+      font-family: 'Cormorant Garamond', 'Georgia', serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      border-radius: 4px;
+      text-align: center;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .floor-pill:hover {
+      background: var(--bg-dim-hover);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .vert-triangle {
+      background: transparent;
+      border: none;
+      color: rgba(245, 241, 232, 0.9);
+      padding: 6px 0;
+      cursor: pointer;
+      border-radius: 4px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: color 0.15s;
+      touch-action: none;
+    }
+    .vert-triangle:hover, .vert-triangle.active { color: var(--gold); }
+    .vert-triangle svg {
+      width: 60%; height: 12px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.0;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.85));
+    }
+    .kbd-hint {
+      position: absolute;
+      left: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 9px;
+      opacity: 0.4;
+      letter-spacing: 0.02em;
+    }
+    @media (pointer: coarse) { .kbd-hint { display: none; } }
+    .vert-center {
+      background: var(--bg-dim);
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2px;
+    }
+    .height-readout {
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .floor-pill.active-center {
+      border: none;
+      background: transparent;
+      padding: 0;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', 'Georgia', serif;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+    .floor-pill.active-center:hover {
+      background: transparent;
+      color: #e4c870;
+    }
+
+    /* ===== D-pad =====
+       Desktop: a compact 110×110 cluster sitting inside .navigation-stack above the floor cluster.
+       Mobile / touch: lifts out to V12 edge layout — forward/back at top/bottom centre, turn at left/right edges. */
+    .dpad {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      pointer-events: auto;
+      opacity: 0.65;
+      transition: opacity 0.8s;
+    }
+    .dpad.idle { opacity: 0; }
+    .dpad:hover { opacity: 1; }
+    .dpad-btn {
+      background: transparent;
+      border: none;
+      padding: 0;
+      width: 40px; height: 40px;
+      color: rgba(245, 241, 232, 0.85);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: color 0.15s, transform 0.08s, filter 0.2s;
+      touch-action: none;
+      position: absolute;
+    }
+    .dpad-btn:hover, .dpad-btn.active { color: var(--gold); }
+    .dpad-btn.active { filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.7)); }
+    .dpad-btn svg {
+      width: 30px; height: 30px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.85));
+    }
+    .dpad-up    { top: 0;    left: 50%; transform: translateX(-50%); }
+    .dpad-down  { bottom: 0; left: 50%; transform: translateX(-50%); }
+    .dpad-left  { left: 0;   top: 50%;  transform: translateY(-50%); }
+    .dpad-right { right: 0;  top: 50%;  transform: translateY(-50%); }
+    .dpad-up.active    { transform: translateX(-50%) scale(0.92); }
+    .dpad-down.active  { transform: translateX(-50%) scale(0.92); }
+    .dpad-left.active  { transform: translateY(-50%) scale(0.92); }
+    .dpad-right.active { transform: translateY(-50%) scale(0.92); }
+
+    /* On touch devices (or narrow screens), lift the d-pad out to V12 screen-edge layout */
+    @media (pointer: coarse), (max-width: 720px) {
+      .dpad {
+        position: fixed;
+        top: 0; right: 0; bottom: 0; left: 0;
+        width: auto; height: auto;
+        pointer-events: none;
+        z-index: 24;
+      }
+      .dpad-btn { pointer-events: auto; width: 60px; height: 60px; }
+      .dpad-btn svg { width: 42px; height: 42px; stroke-width: 2.8; }
+      .dpad-up    { top: 22%;    bottom: auto; left: 50%; right: auto; }
+      .dpad-down  { bottom: 22%; top: auto;    left: 50%; right: auto; }
+      .dpad-left  { top: 50%;    bottom: auto; left: 14px; right: auto; }
+      .dpad-right { top: 50%;    bottom: auto; right: 14px; left: auto; }
+      .dpad-up.active    { transform: translateX(-50%) scale(0.92); }
+      .dpad-down.active  { transform: translateX(-50%) scale(0.92); }
+      .dpad-left.active  { transform: translateY(-50%) scale(0.92); }
+      .dpad-right.active { transform: translateY(-50%) scale(0.92); }
+      /* shrink the floor cluster a bit on touch / narrow screens */
+      .navigation-stack { width: 96px; right: 14px; bottom: 18px; gap: 0; }
+    }
+
+    /* ===== Mobile / narrow screens ===== */
+    @media (max-width: 720px) {
+      .brand .tag { display: none; }
+      .title h1 { font-size: 18px; max-width: 55vw; }
+      .title .sub { font-size: 10px; letter-spacing: 0.10em; }
+      .brand .mark { font-size: 22px; }
+      .icon-cluster { gap: 6px; }
+      .icon-btn { width: 36px; height: 36px; }
+      .icon-btn svg { width: 16px; height: 16px; }
+      .floor-pill { font-size: 10px; padding: 5px 0; }
+      .height-readout { font-size: 10px; }
+    }
+
+    /* ===== Help modal ===== */
+    .help-panel {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(20, 30, 48, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      padding: 28px 32px 24px;
+      width: min(560px, 90vw);
+      max-height: 86vh;
+      overflow-y: auto;
+      z-index: 110;
+      pointer-events: auto;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .help-panel.show { display: flex; }
+    .help-panel.auto-fading { opacity: 0; transition: opacity 3s ease-out; }
+    .help-backdrop.auto-fading { opacity: 0; transition: opacity 3s ease-out; }
+    .help-panel h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 24px;
+      color: var(--gold);
+      letter-spacing: 0.02em;
+    }
+    .help-panel .h-section {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(201,168,76,0.25);
+    }
+    .help-panel .h-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      color: var(--fg);
+      padding: 3px 0;
+    }
+    .help-panel .h-row .label { color: var(--fg); flex: 1; }
+    .help-panel .h-row .keys { color: var(--muted); font-family: ui-monospace, Menlo, monospace; font-size: 11px; flex-shrink: 0; }
+    .help-panel .h-row .keys kbd {
+      display: inline-block;
+      padding: 1px 5px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      margin: 0 1px;
+      font-size: 10px;
+    }
+    .help-panel .h-desktop, .help-panel .h-mobile { display: none; }
+    @media (pointer: fine) { .help-panel .h-desktop { display: flex; } }
+    @media (pointer: coarse) { .help-panel .h-mobile { display: flex; } }
+    .help-panel .perf-toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .help-panel .perf-toggle-row input { margin-right: 6px; }
+    .help-panel .reload-hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .help-panel .reload-hint a { color: var(--gold); text-decoration: none; cursor: pointer; }
+    .help-panel .help-close {
+      position: absolute;
+      top: 14px; right: 14px;
+      width: 32px; height: 32px;
+      background: transparent;
+      border: 1px solid rgba(245, 241, 232, 0.3);
+      color: var(--fg);
+      cursor: pointer;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      padding: 0;
+    }
+    .help-panel .help-close:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .help-panel .help-close:active {
+      background: rgba(201, 168, 76, 0.2);
+    }
+    .help-panel .help-close svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    .help-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(6, 18, 34, 0.62);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      z-index: 35;
+      display: none;
+    }
+    .help-backdrop.show { display: block; }
+  </style>
+</head>
+<body>
+
+  <canvas id="app"></canvas>
+
+  <!-- Brand mark top-left -->
+  <div class="overlay brand">
+    <a class="mark" href="https://avalia.ie" target="_blank" rel="noopener">Av<span class="alt">a</span>lia</a>
+    <div class="tag">Step inside before you decide</div>
+  </div>
+
+  <!-- Scene title bottom-left -->
+  <div class="overlay title">
+    <h1>
+      <a class="scene-link" href="https://www.bunrattycastlehotel.com/" target="_blank" rel="noopener">
+        Bunratty Castle Hotel
+      </a>
+    </h1>
+    <div class="sub">
+      <a class="scene-link" href="https://www.bunrattycastlehotel.com/" target="_blank" rel="noopener">
+        The Shannon Suite
+      </a>
+    </div>
+    <a class="cta" href="https://www.bunrattycastlehotel.com/contact-us/" target="_blank" rel="noopener">
+      Get in touch →
+    </a>
+  </div>
+
+  <!-- HUD (debug, hidden by default) -->
+  <div class="overlay hud" id="hud">
+    <div id="hud-pos">–</div>
+    <div id="hud-look">–</div>
+    <div id="hud-floor">–</div>
+  </div>
+
+  <!-- Status bar -->
+  <div class="overlay status-bar hidden" id="status-bar"></div>
+
+  <!-- Top-right icon cluster -->
+  <div class="icon-cluster" id="icon-cluster">
+    <button class="icon-btn" id="btn-reset" title="Return to start view">
+      <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-help" title="Help &amp; controls (H)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.7"/><circle cx="12" cy="17.5" r="0.6" fill="currentColor"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-fullscreen" title="Toggle fullscreen (F)">
+      <svg viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-ai" title="Save HD still">
+      <svg viewBox="0 0 24 24"><path d="M15.5 4.5l4 4-10 10H5.5v-4z"/><path d="M14 6l4 4"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-toggle-ui" title="Hide UI (U)">
+      <svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
+  </div>
+
+  <!-- Bottom-right navigation: d-pad on top, floor/height cluster below.
+       On mobile, d-pad lifts out into screen-edge V12 layout; floor cluster stays bottom-right. -->
+  <div class="navigation-stack" id="navigation-stack">
+    <div class="dpad" id="dpad">
+      <button class="dpad-btn dpad-up" id="dpad-up" title="Step forward (tap 2m, hold to glide)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 11 12 3 20 11"/><polyline points="4 19 12 11 20 19"/></svg>
+      </button>
+      <button class="dpad-btn dpad-down" id="dpad-down" title="Step back (tap 2m, hold to glide)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 5 12 13 20 5"/><polyline points="4 13 12 21 20 13"/></svg>
+      </button>
+      <button class="dpad-btn dpad-left" id="dpad-left" title="Turn left">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13 A 8 8 0 0 0 12 5 L 4 5"/><polyline points="7 2 4 5 7 8"/></svg>
+      </button>
+      <button class="dpad-btn dpad-right" id="dpad-right" title="Turn right">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13 A 8 8 0 0 1 12 5 L 20 5"/><polyline points="17 2 20 5 17 8"/></svg>
+      </button>
+    </div>
+    <div class="vert-cluster" id="vert-cluster">
+      <div class="floor-pills" id="floors-above"></div>
+      <button class="vert-triangle vert-up" id="vert-up" title="Raise (E)">
+        <span class="kbd-hint">E</span>
+        <svg viewBox="0 0 24 12"><polyline points="6 9, 12 4, 18 9"/></svg>
+      </button>
+      <div class="vert-center">
+        <span class="height-readout" id="height-readout">–</span>
+        <button class="floor-pill active-center" id="active-floor-pill">–</button>
+      </div>
+      <button class="vert-triangle vert-down" id="vert-down" title="Lower (Q)">
+        <span class="kbd-hint">Q</span>
+        <svg viewBox="0 0 24 12"><polyline points="6 3, 12 8, 18 3"/></svg>
+      </button>
+      <div class="floor-pills" id="floors-below"></div>
+    </div>
+  </div>
+
+  <!-- Help modal -->
+  <div class="help-backdrop" id="help-backdrop"></div>
+  <div class="help-panel" id="help-panel">
+    <button class="help-close" id="help-close" title="Close (Esc)">
+      <svg viewBox="0 0 14 14"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg>
+    </button>
+    <h2>Av<span style="color:var(--fg)">a</span>lia - Controls</h2>
+    <div class="h-section h-desktop">Mouse &amp; keyboard</div>
+    <div class="h-row h-desktop"><span class="label">Step forward (2m)</span><span class="keys">click floor</span></div>
+    <div class="h-row h-desktop"><span class="label">Look around</span><span class="keys">drag</span></div>
+    <div class="h-row h-desktop"><span class="label">Zoom</span><span class="keys">scroll wheel</span></div>
+    <div class="h-section h-desktop">Keyboard</div>
+    <div class="h-row h-desktop"><span class="label">Walk</span><span class="keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span></div>
+    <div class="h-row h-desktop"><span class="label">Up / down</span><span class="keys"><kbd>E</kbd> / <kbd>Q</kbd></span></div>
+    <div class="h-row h-desktop"><span class="label">Sprint</span><span class="keys"><kbd>Shift</kbd></span></div>
+    <div class="h-row h-desktop"><span class="label">Help / Reset / Hide UI</span><span class="keys"><kbd>H</kbd> / <kbd>R</kbd> / <kbd>U</kbd></span></div>
+
+    <div class="h-section h-mobile">Touch controls</div>
+    <div class="h-row h-mobile"><span class="label">Step forward</span><span class="keys">tap floor</span></div>
+    <div class="h-row h-mobile"><span class="label">Look around</span><span class="keys">drag</span></div>
+    <div class="h-row h-mobile"><span class="label">Zoom</span><span class="keys">pinch</span></div>
+    <div class="h-section h-mobile">On-screen controls</div>
+    <div class="h-row h-mobile"><span class="label">Step forward / back</span><span class="keys">up / down arrows</span></div>
+    <div class="h-row h-mobile"><span class="label">Turn</span><span class="keys">left / right arrows</span></div>
+    <div class="h-row h-mobile"><span class="label">Up / down</span><span class="keys">triangles (right)</span></div>
+
+    <div class="h-section">Floors</div>
+    <div class="h-row"><span class="label">Switch floor</span><span class="keys">tap floor pill</span></div>
+    <div class="h-row"><span class="label">Reset to floor start</span><span class="keys">tap active floor</span></div>
+
+    <div class="perf-toggle-row" data-keep-open="1">
+      <label data-keep-open="1"><input type="checkbox" id="perf-toggle" data-keep-open="1"> Performance mode (lower quality, smoother on older devices)</label>
+    </div>
+    <div class="reload-hint" data-keep-open="1">If you toggle Performance mode, <a id="perf-reload" data-keep-open="1">reload the page</a> for it to take effect.</div>
+  </div>
+
+  <!-- WebGL context-lost / out-of-memory overlay — respectful desktop invitation -->
+  <div id="context-lost">
+    <h2>Best on desktop</h2>
+    <p>Your device ran low on graphics memory loading this scene. For the fullest experience of this space, please open this page on a desktop browser or a more recent device.</p>
+    <p class="cl-hint">Use your browser's share menu to send the link to yourself.</p>
+    <button id="ctx-reload">Try again on this device</button>
+  </div>
+
+  <!-- Branded loader -->
+  <div id="loader">
+    <div class="loader-brand">Av<span class="alt">a</span>lia</div>
+    <div class="loader-tag">Step inside before you decide</div>
+    <div class="loader-status" id="loader-status">Connecting…</div>
+    <div class="loader-bar"><div class="loader-bar-fill" id="loader-fill"></div></div>
+    <div class="loader-hint">— Táim abhaile —</div>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "playcanvas": "https://cdn.jsdelivr.net/npm/playcanvas@2.18.1/build/playcanvas.mjs"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as pc from 'playcanvas';
+
+    // ============================================================================
+    // ============== SCENE CONFIGURATION (per-space, top of file) ================
+    // ============================================================================
+    // Shannon Suite viewer, cloned from the signed-off lobby viewer 2026-06-12.
+    // WAVE ONE protected delivery: manifest and floors are served from the
+    // PRIVATE avalia-splats bucket through the Cloudflare Worker on cdn.avalia.ie
+    // (referer-checked, hotlink-protected). Bucket is NOT world-readable and there
+    // is no r2.dev URL. (Runbook section 6.)
+    // Static-manifest-first: this space ships pointing at the final Worker path so
+    // it is live with no rework the moment the assets are migrated. The move to a
+    // Supabase runtime read comes later.
+    const SPLAT_BASE   = 'https://cdn.avalia.ie/venues/bunratty-castle-hotel/shannon-suite';
+    const MANIFEST_URL = SPLAT_BASE + '/lod-meta.json';
+    // floors.json lives on R2 under the same key prefix, served by the same Worker.
+    const FLOORS_URL   = SPLAT_BASE + '/floors.json';
+    // SPLAT_ROTATION [180,0,0]: matches the frame this space's floors.json was
+    // authored in (avalia-floor-admin / Nav Finder renders the splat at 180,0,0,
+    // and the perimeter/start data only makes sense in that frame), and matches
+    // the lobby's empirically-found Bunratty L2 Pro value. NOTE: the auto-stubbed
+    // metadata.json carries the XGRIDS doctrine default [-90,0,0] instead; the
+    // floor-authoring evidence outweighs the stub. UNVERIFIED ON DEVICE - verify
+    // on first deploy per capture, then correct metadata.json to the proven value.
+    const SPLAT_ROTATION = [180, 0, 0];
+
+    // ============================================================================
+    // =========================== MOVEMENT / RENDER CONSTANTS ====================
+    // ============================================================================
+    const EYE_HEIGHT_OFFSET   = 1.6;
+    const WALK_STEP_M         = 2.0;   // 2m hop per click/tap (was 3.0). A gentler, more room-scale step.
+    const WALK_ANIM_S         = 0.5;
+    const WASD_SPEED_MPS      = 3.0;
+    const VERT_SPEED_MPS      = 2.0;
+    const SHIFT_MULTIPLIER    = 3.0;
+    const HEIGHT_TAP_STEP_M   = 0.2;
+    const HEIGHT_GLIDE_MPS    = 0.8;
+    const TAP_THRESHOLD_MS    = 180;
+    const ROTATION_SMOOTHING  = 0.18;
+    const LOOKAT_DISTANCE     = 5.0;
+    const CLICK_THRESHOLD_MS  = 200;
+    const CLICK_THRESHOLD_PX  = 5;
+    const DPAD_TURN_TAP_DEG   = 45;
+    const DPAD_TURN_HOLD_DPS  = 60;
+    const DPAD_HOLD_MPS       = 1.0;     // hold-forward / hold-back continuous walking speed
+    const IDLE_FADE_MS        = 8000;
+
+    // ============================================================================
+    // ================================ STATE =====================================
+    // ============================================================================
+    let app = null;
+    let camEntity = null;
+    let splatEntity = null;
+    let floorsData = null;
+    let activeFloorId = null;
+    let legacyMode = false;
+
+    const camState = {
+      position: new pc.Vec3(0, 1.6, 4),
+      azimuth: 180, elevation: 0,
+      targetAzimuth: 180, targetElevation: 0,
+    };
+
+    const walkAnim = { active: false, t: 0, dur: 0, fromX: 0, fromZ: 0, toX: 0, toZ: 0 };
+
+    const keys = {};
+    let mouseState = null;
+    let lastInteraction = performance.now();
+
+    // ============================================================================
+    // =========================== iOS / PERFORMANCE MODE =========================
+    // ============================================================================
+    const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const PERF_MODE = localStorage.getItem('avalia-perf-mode') === '1';
+
+    // ============================================================================
+    // ================================ DOM REFS ==================================
+    // ============================================================================
+    const canvas         = document.getElementById('app');
+    const loader         = document.getElementById('loader');
+    const loaderStatus   = document.getElementById('loader-status');
+    const loaderFill     = document.getElementById('loader-fill');
+    const statusBar      = document.getElementById('status-bar');
+    const hud            = document.getElementById('hud');
+    const hudPos         = document.getElementById('hud-pos');
+    const hudLook        = document.getElementById('hud-look');
+    const hudFloor       = document.getElementById('hud-floor');
+    const iconCluster    = document.getElementById('icon-cluster');
+    const btnReset       = document.getElementById('btn-reset');
+    const btnHelp        = document.getElementById('btn-help');
+    const btnFullscreen  = document.getElementById('btn-fullscreen');
+    const btnAi          = document.getElementById('btn-ai');
+    const btnToggleUI    = document.getElementById('btn-toggle-ui');
+    const vertCluster    = document.getElementById('vert-cluster');
+    const floorsAbove    = document.getElementById('floors-above');
+    const floorsBelow    = document.getElementById('floors-below');
+    const vertUp         = document.getElementById('vert-up');
+    const vertDown       = document.getElementById('vert-down');
+    const heightReadout  = document.getElementById('height-readout');
+    const activeFloorPill = document.getElementById('active-floor-pill');
+    const navigationStack = document.getElementById('navigation-stack');
+    const dpad           = document.getElementById('dpad');
+    const dpadUp         = document.getElementById('dpad-up');
+    const dpadDown       = document.getElementById('dpad-down');
+    const dpadLeft       = document.getElementById('dpad-left');
+    const dpadRight      = document.getElementById('dpad-right');
+    const helpPanel      = document.getElementById('help-panel');
+    const helpBackdrop   = document.getElementById('help-backdrop');
+    const helpClose      = document.getElementById('help-close');
+    const perfToggle     = document.getElementById('perf-toggle');
+    const perfReload     = document.getElementById('perf-reload');
+    const contextLost    = document.getElementById('context-lost');
+    const ctxReload      = document.getElementById('ctx-reload');
+
+    // ============================================================================
+    // ================================ UTILS =====================================
+    // ============================================================================
+    let statusTimer = null;
+    function setStatus(msg, kind, ttlMs) {
+      statusBar.textContent = msg;
+      statusBar.classList.remove('hidden', 'error', 'success');
+      if (kind === 'error') statusBar.classList.add('error');
+      if (kind === 'success') statusBar.classList.add('success');
+      if (statusTimer) clearTimeout(statusTimer);
+      if (ttlMs) statusTimer = setTimeout(() => statusBar.classList.add('hidden'), ttlMs);
+    }
+    function setLoaderStatus(text, progress) {
+      loaderStatus.textContent = text;
+      if (progress !== undefined) loaderFill.style.width = `${Math.round(progress * 100)}%`;
+    }
+    function hideLoader() {
+      loader.classList.add('fade');
+      setTimeout(() => { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 2100);
+    }
+    function touchInteraction() { lastInteraction = performance.now(); }
+
+    // ============================================================================
+    // =================== FLOOR DATA: load, validate, resolve ====================
+    // ============================================================================
+    async function loadFloorsData() {
+      try {
+        const r = await fetch(FLOORS_URL, { cache: 'no-cache' });
+        if (!r.ok) {
+          console.log(`[Avalia] No floors.json at ${FLOORS_URL} (HTTP ${r.status}). Running in legacy mode.`);
+          return null;
+        }
+        const data = await r.json();
+        if (!data || !Array.isArray(data.floors) || data.floors.length === 0) {
+          console.warn('[Avalia] floors.json missing floors[] array. Running in legacy mode.');
+          return null;
+        }
+        data.floors.sort((a, b) => {
+          const ay = (typeof a.walking_y === 'number') ? a.walking_y : a.start.position.y;
+          const by = (typeof b.walking_y === 'number') ? b.walking_y : b.start.position.y;
+          return ay - by;
+        });
+        console.log(`[Avalia] Loaded floors.json — ${data.floors.length} floor${data.floors.length === 1 ? '' : 's'}.`);
+        return data;
+      } catch (err) {
+        console.warn('[Avalia] floors.json fetch failed:', err);
+        return null;
+      }
+    }
+
+    function getFloor(id) {
+      return floorsData ? floorsData.floors.find(f => f.id === id) : null;
+    }
+    function getActiveFloor() { return getFloor(activeFloorId); }
+
+    // Find a floor whose [perimeter_base_y, perimeter_ceiling_y] band contains Y
+    // AND whose XZ perimeter contains (x, z). This is what makes ceilings work:
+    // you can only pass through to a higher floor if your XZ position is inside
+    // that floor's footprint (e.g. the stairwell). Otherwise you hit the ceiling.
+    function findFloorAtPos(x, y, z) {
+      if (!floorsData) return null;
+      for (const f of floorsData.floors) {
+        if (typeof f.perimeter_base_y === 'number' && typeof f.perimeter_ceiling_y === 'number') {
+          if (y >= f.perimeter_base_y && y <= f.perimeter_ceiling_y) {
+            if (pointInPolygon(x, z, f.perimeter)) return f;
+          }
+        }
+      }
+      return null;
+    }
+
+    // ============================================================================
+    // =================== POINT-IN-POLYGON & SLIDE COLLISION =====================
+    // ============================================================================
+    function pointInPolygon(x, z, poly) {
+      let inside = false;
+      for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+        const xi = poly[i].x, zi = poly[i].z;
+        const xj = poly[j].x, zj = poly[j].z;
+        const intersect = ((zi > z) !== (zj > z)) &&
+                          (x < (xj - xi) * (z - zi) / (zj - zi) + xi);
+        if (intersect) inside = !inside;
+      }
+      return inside;
+    }
+
+    function slideMove(fromX, fromZ, toX, toZ, poly, closed) {
+      if (!closed || !poly || poly.length < 3) return { x: toX, z: toZ };
+      if (pointInPolygon(toX, toZ, poly)) return { x: toX, z: toZ };
+      if (!pointInPolygon(fromX, fromZ, poly)) return { x: fromX, z: fromZ };
+      let lo = 0, hi = 1;
+      for (let i = 0; i < 18; i++) {
+        const mid = (lo + hi) / 2;
+        const mx = fromX + (toX - fromX) * mid;
+        const mz = fromZ + (toZ - fromZ) * mid;
+        if (pointInPolygon(mx, mz, poly)) lo = mid; else hi = mid;
+      }
+      const safeT = Math.max(0, lo - 0.001);
+      return { x: fromX + (toX - fromX) * safeT, z: fromZ + (toZ - fromZ) * safeT };
+    }
+
+    function applyHorizontalCollision(fromX, fromZ, toX, toZ) {
+      if (legacyMode) return { x: toX, z: toZ };
+      const af = getActiveFloor();
+      if (!af) return { x: toX, z: toZ };
+      return slideMove(fromX, fromZ, toX, toZ, af.perimeter, af.perimeter_closed);
+    }
+
+    function applyVertical(currentY, deltaY) {
+      if (legacyMode) return currentY + deltaY;
+      const proposedY = currentY + deltaY;
+      // Pass current camera XZ — only switch floors if our XZ position is inside the target floor's footprint
+      const containingFloor = findFloorAtPos(camState.position.x, proposedY, camState.position.z);
+      if (containingFloor) {
+        if (containingFloor.id !== activeFloorId) {
+          activeFloorId = containingFloor.id;
+          renderFloorStack();
+          setStatus(`Now on ${containingFloor.label}`, null, 2000);
+        }
+        return proposedY;
+      }
+      const af = getActiveFloor();
+      if (!af) return proposedY;
+      let y = proposedY;
+      if (typeof af.perimeter_base_y === 'number' && y < af.perimeter_base_y) y = af.perimeter_base_y;
+      if (typeof af.perimeter_ceiling_y === 'number' && y > af.perimeter_ceiling_y) y = af.perimeter_ceiling_y;
+      return y;
+    }
+
+    // ============================================================================
+    // ============== CAMERA POSITIONING (raycast, look-at, helpers) ==============
+    // ============================================================================
+    function computeLookAt() {
+      const fwd = camEntity.forward.clone();
+      return {
+        x: camState.position.x + fwd.x * LOOKAT_DISTANCE,
+        y: camState.position.y + fwd.y * LOOKAT_DISTANCE,
+        z: camState.position.z + fwd.z * LOOKAT_DISTANCE,
+      };
+    }
+    function getWalkForward() {
+      const f = camEntity.forward.clone();
+      f.y = 0;
+      if (f.length() < 0.001) return { x: 0, z: -1 };
+      f.normalize();
+      return { x: f.x, z: f.z };
+    }
+    function getWalkRight() {
+      const r = camEntity.right.clone();
+      r.y = 0;
+      if (r.length() < 0.001) return { x: 1, z: 0 };
+      r.normalize();
+      return { x: r.x, z: r.z };
+    }
+
+    function raycastFloor(screenX, screenY) {
+      const rect = canvas.getBoundingClientRect();
+      const x = screenX - rect.left;
+      const y = screenY - rect.top;
+      const camComp = camEntity.camera;
+      const nearPt = camComp.screenToWorld(x, y, camComp.nearClip);
+      const farPt  = camComp.screenToWorld(x, y, camComp.farClip);
+      const rayDir = new pc.Vec3().sub2(farPt, nearPt).normalize();
+      const rayOrigin = nearPt;
+
+      const af = getActiveFloor();
+      const floorY = (af && typeof af.walking_y === 'number')
+                       ? af.walking_y
+                       : (camState.position.y - EYE_HEIGHT_OFFSET);
+      if (Math.abs(rayDir.y) < 0.001) return null;
+      const t = (floorY - rayOrigin.y) / rayDir.y;
+      if (t < 0) return null;
+      return { x: rayOrigin.x + t * rayDir.x, z: rayOrigin.z + t * rayDir.z };
+    }
+
+    // ============================================================================
+    // ===================== CAMERA TELEPORT / WALK ANIMATION =====================
+    // ============================================================================
+    function snapTo(x, y, z, lookAt) {
+      camState.position.set(x, y, z);
+      camEntity.setPosition(camState.position);
+      if (lookAt) {
+        // Compute azimuth/elevation directly using the same convention as onUpdate's setEulerAngles.
+        // PlayCanvas YXZ: setEulerAngles(ex, ey, 0) → forward = (-sin(ey)*cos(ex), sin(ex)*cos(ey), -cos(ey)*cos(ex))
+        // So: ey = atan2(-fx, -fz),  ex = atan2(fy, sqrt(fx²+fz²))
+        const dx = lookAt.x - x, dy = lookAt.y - y, dz = lookAt.z - z;
+        const horiz = Math.sqrt(dx * dx + dz * dz);
+        const azimuth   = (horiz < 0.0001) ? camState.azimuth : (Math.atan2(-dx, -dz) * 180 / Math.PI);
+        const elevation = Math.atan2(dy, horiz) * 180 / Math.PI;
+        camState.azimuth   = azimuth;   camState.targetAzimuth   = azimuth;
+        camState.elevation = elevation; camState.targetElevation = elevation;
+        camEntity.setEulerAngles(elevation, azimuth, 0);
+      }
+      walkAnim.active = false;
+    }
+    function teleportToFloorStart(floorId) {
+      const f = getFloor(floorId);
+      if (!f) return;
+      // Use the authored start.position.y directly — walking_y is for collision bounds, not eye height.
+      snapTo(f.start.position.x, f.start.position.y, f.start.position.z, f.start.look_at);
+      activeFloorId = f.id;
+      renderFloorStack();
+      setStatus(`Reset to ${f.label}`, null, 1500);
+    }
+    function startWalkAnim(toX, toZ) {
+      walkAnim.active = true; walkAnim.t = 0; walkAnim.dur = WALK_ANIM_S;
+      walkAnim.fromX = camState.position.x; walkAnim.fromZ = camState.position.z;
+      walkAnim.toX = toX; walkAnim.toZ = toZ;
+    }
+    function clickToWalk(screenX, screenY) {
+      const hit = raycastFloor(screenX, screenY);
+      if (!hit) return;
+      const dx = hit.x - camState.position.x;
+      const dz = hit.z - camState.position.z;
+      const dist = Math.sqrt(dx * dx + dz * dz);
+      if (dist < 0.05) return;
+      const stepDist = Math.min(WALK_STEP_M, dist);
+      let targetX = camState.position.x + dx * (stepDist / dist);
+      let targetZ = camState.position.z + dz * (stepDist / dist);
+      const result = applyHorizontalCollision(camState.position.x, camState.position.z, targetX, targetZ);
+      if (Math.abs(result.x - camState.position.x) < 0.01 && Math.abs(result.z - camState.position.z) < 0.01) return;
+      startWalkAnim(result.x, result.z);
+    }
+
+    // ============================================================================
+    // ====================== FLOOR-STACK UI RENDERING ============================
+    // ============================================================================
+    function renderFloorStack() {
+      floorsAbove.innerHTML = '';
+      floorsBelow.innerHTML = '';
+      // Always show height triangles + readout. Floor pills only when we have valid floor data.
+      if (legacyMode || !floorsData) {
+        floorsAbove.style.display = 'none';
+        floorsBelow.style.display = 'none';
+        activeFloorPill.style.display = 'none';
+        updateHeightReadout();
+        return;
+      }
+      floorsAbove.style.display = '';
+      floorsBelow.style.display = '';
+      activeFloorPill.style.display = '';
+      const single = floorsData.floors.length <= 1;
+      const af = getActiveFloor();
+      if (!single && af) {
+        const sorted = floorsData.floors.slice();
+        const wy = (f) => (typeof f.walking_y === 'number') ? f.walking_y : f.start.position.y;
+        const above = sorted.filter(f => f.id !== af.id && wy(f) > wy(af)).sort((a,b) => wy(b) - wy(a));
+        const below = sorted.filter(f => f.id !== af.id && wy(f) < wy(af)).sort((a,b) => wy(b) - wy(a));
+        above.forEach(f => floorsAbove.appendChild(makePill(f)));
+        below.forEach(f => floorsBelow.appendChild(makePill(f)));
+      }
+      activeFloorPill.textContent = af ? af.label : '–';
+      activeFloorPill.dataset.id = af ? af.id : '';
+      updateHeightReadout();
+    }
+    function makePill(floor) {
+      const b = document.createElement('button');
+      b.className = 'floor-pill';
+      b.textContent = floor.label;
+      b.dataset.id = floor.id;
+      b.title = `Jump to ${floor.label}`;
+      b.addEventListener('click', () => { teleportToFloorStart(floor.id); touchInteraction(); });
+      return b;
+    }
+    function updateHeightReadout() {
+      heightReadout.textContent = `${camState.position.y.toFixed(2)}m`;
+    }
+
+    // ============================================================================
+    // ============================ INPUT WIRING ==================================
+    // ============================================================================
+    function wireMouse() {
+      canvas.addEventListener('mousedown', (e) => {
+        touchInteraction();
+        if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+        mouseState = {
+          startX: e.clientX, startY: e.clientY,
+          lastX: e.clientX, lastY: e.clientY,
+          startTime: Date.now(), moved: false, button: e.button,
+        };
+        canvas.classList.add('dragging');
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (!mouseState) return;
+        const dx = e.clientX - mouseState.lastX;
+        const dy = e.clientY - mouseState.lastY;
+        mouseState.lastX = e.clientX; mouseState.lastY = e.clientY;
+        const totalDx = e.clientX - mouseState.startX;
+        const totalDy = e.clientY - mouseState.startY;
+        if (Math.hypot(totalDx, totalDy) > CLICK_THRESHOLD_PX) mouseState.moved = true;
+        if (mouseState.moved) {
+          camState.targetAzimuth   -= dx * 0.18;
+          camState.targetElevation -= dy * 0.18;
+          if (camState.targetElevation > 89)  camState.targetElevation = 89;
+          if (camState.targetElevation < -89) camState.targetElevation = -89;
+          touchInteraction();
+        }
+      });
+      window.addEventListener('mouseup', (e) => {
+        if (!mouseState) return;
+        const elapsed = Date.now() - mouseState.startTime;
+        const wasClick = !mouseState.moved && elapsed < CLICK_THRESHOLD_MS && mouseState.button === 0;
+        canvas.classList.remove('dragging');
+        if (wasClick) clickToWalk(e.clientX, e.clientY);
+        mouseState = null;
+      });
+      canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        touchInteraction();
+        const fwd = getWalkForward();
+        const speed = e.shiftKey ? 1.5 : 0.5;
+        const step = -Math.sign(e.deltaY) * speed;
+        const nx = camState.position.x + fwd.x * step;
+        const nz = camState.position.z + fwd.z * step;
+        const r = applyHorizontalCollision(camState.position.x, camState.position.z, nx, nz);
+        camState.position.x = r.x; camState.position.z = r.z;
+      }, { passive: false });
+    }
+
+    function wireTouch() {
+      let touchState = null;
+      let pinchDist = 0;
+      canvas.addEventListener('touchstart', (e) => {
+        touchInteraction();
+        if (e.touches.length === 1) {
+          const t = e.touches[0];
+          touchState = { startX: t.clientX, startY: t.clientY, lastX: t.clientX, lastY: t.clientY, startTime: Date.now(), moved: false };
+        } else if (e.touches.length === 2) {
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          pinchDist = Math.hypot(dx, dy);
+          touchState = null;
+        }
+      }, { passive: true });
+      canvas.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1 && touchState) {
+          const t = e.touches[0];
+          const dx = t.clientX - touchState.lastX;
+          const dy = t.clientY - touchState.lastY;
+          touchState.lastX = t.clientX; touchState.lastY = t.clientY;
+          const totalDx = t.clientX - touchState.startX;
+          const totalDy = t.clientY - touchState.startY;
+          if (Math.hypot(totalDx, totalDy) > CLICK_THRESHOLD_PX) touchState.moved = true;
+          if (touchState.moved) {
+            camState.targetAzimuth   -= dx * 0.18;
+            camState.targetElevation -= dy * 0.18;
+            if (camState.targetElevation > 89)  camState.targetElevation = 89;
+            if (camState.targetElevation < -89) camState.targetElevation = -89;
+            touchInteraction();
+          }
+        } else if (e.touches.length === 2) {
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          const d = Math.hypot(dx, dy);
+          const delta = (d - pinchDist) * 0.01;
+          pinchDist = d;
+          const fwd = getWalkForward();
+          const nx = camState.position.x + fwd.x * delta;
+          const nz = camState.position.z + fwd.z * delta;
+          const r = applyHorizontalCollision(camState.position.x, camState.position.z, nx, nz);
+          camState.position.x = r.x; camState.position.z = r.z;
+          touchInteraction();
+        }
+      }, { passive: true });
+      canvas.addEventListener('touchend', (e) => {
+        if (!touchState) return;
+        const elapsed = Date.now() - touchState.startTime;
+        const wasTap = !touchState.moved && elapsed < CLICK_THRESHOLD_MS;
+        if (wasTap) clickToWalk(touchState.lastX, touchState.lastY);
+        touchState = null;
+      });
+    }
+
+    function wireKeyboard() {
+      window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        keys[e.code] = true;
+        touchInteraction();
+        if (e.code === 'KeyH') { e.preventDefault(); toggleHelp(); }
+        if (e.code === 'KeyR') { e.preventDefault(); doReset(); }
+        if (e.code === 'KeyU') { e.preventDefault(); toggleUI(); }
+        if (e.code === 'KeyF') { e.preventDefault(); toggleFullscreen(); }
+        if (e.code === 'Escape') { if (helpPanel.classList.contains('show')) closeHelp(); }
+        if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code)) e.preventDefault();
+      });
+      window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+    }
+
+    // ============================================================================
+    // ====================== VERTICAL TRIANGLES (tap & hold) =====================
+    // ============================================================================
+    function wireTriangle(button, dir) {
+      let downTime = 0;
+      let glideTimer = null;
+      let didGlide = false;
+      let lastTime = 0;
+      let pendingHoldTimer = null;
+      const startGlide = () => {
+        didGlide = true;
+        button.classList.add('active');
+        lastTime = performance.now();
+        glideTimer = setInterval(() => {
+          const now = performance.now();
+          const dt = (now - lastTime) / 1000;
+          lastTime = now;
+          applyHeightDelta(dir * HEIGHT_GLIDE_MPS * dt);
+        }, 16);
+      };
+      const stopAll = () => {
+        if (pendingHoldTimer) { clearTimeout(pendingHoldTimer); pendingHoldTimer = null; }
+        if (glideTimer)        { clearInterval(glideTimer);     glideTimer = null; }
+        button.classList.remove('active');
+      };
+      button.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        touchInteraction();
+        if (downTime > 0) return;
+        downTime = performance.now();
+        didGlide = false;
+        pendingHoldTimer = setTimeout(() => { pendingHoldTimer = null; startGlide(); }, TAP_THRESHOLD_MS);
+      });
+      const onUp = () => {
+        if (downTime === 0) return;
+        const elapsed = performance.now() - downTime;
+        downTime = 0;
+        stopAll();
+        if (!didGlide && elapsed < TAP_THRESHOLD_MS) applyHeightDelta(dir * HEIGHT_TAP_STEP_M);
+      };
+      button.addEventListener('pointerup', onUp);
+      button.addEventListener('pointerleave', onUp);
+      button.addEventListener('pointercancel', onUp);
+    }
+
+    function applyHeightDelta(dy) {
+      const newY = applyVertical(camState.position.y, dy);
+      camState.position.y = newY;
+      camEntity.setPosition(camState.position);
+      updateHeightReadout();
+    }
+
+    // ============================================================================
+    // ============================ D-PAD (mobile + desktop) ======================
+    // ============================================================================
+    function wireDpadForward(button, dir) {
+      // Tap (< TAP_THRESHOLD_MS) -> WALK_STEP_M hop. Hold -> continuous walk at DPAD_HOLD_MPS.
+      let downTime = 0;
+      let glideTimer = null;
+      let didGlide = false;
+      let pendingHoldTimer = null;
+      let lastTime = 0;
+      const startGlide = () => {
+        didGlide = true;
+        button.classList.add('active');
+        lastTime = performance.now();
+        glideTimer = setInterval(() => {
+          const now = performance.now();
+          const dt = (now - lastTime) / 1000;
+          lastTime = now;
+          const fwd = getWalkForward();
+          const distM = DPAD_HOLD_MPS * dt * dir;
+          const tx = camState.position.x + fwd.x * distM;
+          const tz = camState.position.z + fwd.z * distM;
+          const r = applyHorizontalCollision(camState.position.x, camState.position.z, tx, tz);
+          camState.position.x = r.x; camState.position.z = r.z;
+          camEntity.setPosition(camState.position);
+          touchInteraction();
+        }, 16);
+      };
+      const stopAll = () => {
+        if (pendingHoldTimer) { clearTimeout(pendingHoldTimer); pendingHoldTimer = null; }
+        if (glideTimer)        { clearInterval(glideTimer);     glideTimer = null; }
+        button.classList.remove('active');
+      };
+      button.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        touchInteraction();
+        if (downTime > 0) return;
+        downTime = performance.now();
+        didGlide = false;
+        pendingHoldTimer = setTimeout(() => { pendingHoldTimer = null; startGlide(); }, TAP_THRESHOLD_MS);
+      });
+      const onUp = () => {
+        if (downTime === 0) return;
+        const elapsed = performance.now() - downTime;
+        downTime = 0;
+        stopAll();
+        if (!didGlide && elapsed < TAP_THRESHOLD_MS) {
+          // Tap -> WALK_STEP_M hop
+          const fwd = getWalkForward();
+          const tx = camState.position.x + fwd.x * WALK_STEP_M * dir;
+          const tz = camState.position.z + fwd.z * WALK_STEP_M * dir;
+          const r = applyHorizontalCollision(camState.position.x, camState.position.z, tx, tz);
+          if (Math.abs(r.x - camState.position.x) > 0.01 || Math.abs(r.z - camState.position.z) > 0.01) startWalkAnim(r.x, r.z);
+        }
+      };
+      button.addEventListener('pointerup', onUp);
+      button.addEventListener('pointerleave', onUp);
+      button.addEventListener('pointercancel', onUp);
+    }
+    function wireDpadTurn(button, dir) {
+      let downTime = 0;
+      let glideTimer = null;
+      let didGlide = false;
+      let pendingHoldTimer = null;
+      let lastTime = 0;
+      const startGlide = () => {
+        didGlide = true;
+        button.classList.add('active');
+        lastTime = performance.now();
+        glideTimer = setInterval(() => {
+          const now = performance.now();
+          const dt = (now - lastTime) / 1000;
+          lastTime = now;
+          camState.targetAzimuth -= dir * DPAD_TURN_HOLD_DPS * dt;
+          touchInteraction();
+        }, 16);
+      };
+      const stopAll = () => {
+        if (pendingHoldTimer) { clearTimeout(pendingHoldTimer); pendingHoldTimer = null; }
+        if (glideTimer)        { clearInterval(glideTimer);     glideTimer = null; }
+        button.classList.remove('active');
+      };
+      button.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        touchInteraction();
+        if (downTime > 0) return;
+        downTime = performance.now();
+        didGlide = false;
+        pendingHoldTimer = setTimeout(() => { pendingHoldTimer = null; startGlide(); }, TAP_THRESHOLD_MS);
+      });
+      const onUp = () => {
+        if (downTime === 0) return;
+        const elapsed = performance.now() - downTime;
+        downTime = 0;
+        stopAll();
+        if (!didGlide && elapsed < TAP_THRESHOLD_MS) camState.targetAzimuth -= dir * DPAD_TURN_TAP_DEG;
+      };
+      button.addEventListener('pointerup', onUp);
+      button.addEventListener('pointerleave', onUp);
+      button.addEventListener('pointercancel', onUp);
+    }
+
+    // ============================================================================
+    // ========================== TOP-RIGHT ICON CLUSTER ==========================
+    // ============================================================================
+    function doReset() {
+      touchInteraction();
+      if (floorsData) {
+        const primary = floorsData.floors.find(f => f.is_primary) || floorsData.floors[0];
+        teleportToFloorStart(primary.id);
+      } else {
+        // Authored start for this space (floors.json), used only when floors.json failed to load.
+        snapTo(-14.85, 2.53, 1.22, { x: -9.87, y: 0.52, z: 1.3 });
+      }
+    }
+    let loaderDismissed = false;
+    function dismissLoader() {
+      if (loaderDismissed) return;
+      loaderDismissed = true;
+      hideLoader();
+    }
+
+    let helpAutoCloseTimer = null;
+    let helpAutoFadeTimer = null;
+    function clearHelpAutoCloseTimers() {
+      if (helpAutoCloseTimer) { clearTimeout(helpAutoCloseTimer); helpAutoCloseTimer = null; }
+      if (helpAutoFadeTimer)  { clearTimeout(helpAutoFadeTimer);  helpAutoFadeTimer = null; }
+      helpPanel.classList.remove('auto-fading');
+      helpBackdrop.classList.remove('auto-fading');
+    }
+    function scheduleHelpAutoClose() {
+      clearHelpAutoCloseTimers();
+      // 5s fully displayed, then begin 3s fade-out
+      helpAutoCloseTimer = setTimeout(() => {
+        helpPanel.classList.add('auto-fading');
+        helpBackdrop.classList.add('auto-fading');
+        helpAutoFadeTimer = setTimeout(() => { closeHelp(); }, 3000);
+      }, 5000);
+    }
+
+    function pulseHelpButton() {
+      iconCluster.classList.remove('idle');
+      lastInteraction = performance.now();
+      btnHelp.classList.remove('pulse');
+      void btnHelp.offsetWidth;
+      btnHelp.classList.add('pulse');
+      setTimeout(() => btnHelp.classList.remove('pulse'), 1300 * 3 + 100);
+    }
+    function openHelp() {
+      helpPanel.classList.add('show');
+      helpBackdrop.classList.add('show');
+      document.body.classList.add('help-open');
+      perfToggle.checked = PERF_MODE;
+      touchInteraction();
+      scheduleHelpAutoClose();
+    }
+    function closeHelp() {
+      clearHelpAutoCloseTimers();
+      helpPanel.classList.remove('show');
+      helpBackdrop.classList.remove('show');
+      document.body.classList.remove('help-open');
+      if (!loaderDismissed) {
+        dismissLoader();
+        setTimeout(pulseHelpButton, 2200);
+      } else {
+        pulseHelpButton();
+      }
+    }
+    function toggleHelp() { if (helpPanel.classList.contains('show')) closeHelp(); else openHelp(); }
+
+    // If the user interacts with the help panel (clicks toggle, link, etc), reset the auto-close timer
+    helpPanel.addEventListener('click', (e) => {
+      // Ignore clicks on the close button itself (handled separately)
+      if (e.target.closest('#help-close')) return;
+      scheduleHelpAutoClose();
+    });
+    function toggleFullscreen() {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen?.();
+    }
+    function toggleUI() {
+      iconCluster.classList.toggle('collapsed');
+      const collapsed = iconCluster.classList.contains('collapsed');
+      navigationStack.style.display = collapsed ? 'none' : '';
+      dpad.style.display = collapsed ? 'none' : '';
+      vertCluster.style.display = collapsed ? 'none' : '';
+      // Note: .brand and .title intentionally NOT hidden — they remain as
+      // venue presentation (Avalia logo, Bunratty title, subhead, CTA) even
+      // when controls are collapsed. Hide UI is for controls, not branding.
+      touchInteraction();
+    }
+
+    btnReset.addEventListener('click', doReset);
+    btnHelp.addEventListener('click', toggleHelp);
+    btnFullscreen.addEventListener('click', toggleFullscreen);
+    btnToggleUI.addEventListener('click', toggleUI);
+
+    // Paintbrush — captures the canvas at native resolution and downloads as PNG.
+    // Capture inside requestAnimationFrame so the drawing buffer is fresh
+    // (preserveDrawingBuffer is true so the buffer survives to toBlob; rAF guarantees post-render timing).
+    btnAi.addEventListener('click', () => {
+      touchInteraction();
+      setStatus('Capturing…', null, 800);
+      requestAnimationFrame(() => {
+        try {
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              setStatus('Capture failed - try once more', 'error', 3000);
+              return;
+            }
+            const url = URL.createObjectURL(blob);
+            const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `avalia-still-${stamp}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            setStatus(`Saved · ${canvas.width}×${canvas.height}`, 'success', 2500);
+          }, 'image/png');
+        } catch (err) {
+          console.error('[Avalia] capture failed:', err);
+          setStatus('Capture failed', 'error', 3000);
+        }
+      });
+    });
+    helpClose.addEventListener('click', closeHelp);
+    helpBackdrop.addEventListener('click', closeHelp);
+    activeFloorPill.addEventListener('click', () => {
+      if (activeFloorId) teleportToFloorStart(activeFloorId);
+    });
+    perfToggle.addEventListener('change', () => {
+      localStorage.setItem('avalia-perf-mode', perfToggle.checked ? '1' : '0');
+    });
+    perfReload.addEventListener('click', () => location.reload());
+    ctxReload.addEventListener('click', () => location.reload());
+
+    // ============================================================================
+    // ============================ IDLE FADE TIMER ===============================
+    // ============================================================================
+    function updateIdleFade() {
+      const idle = (performance.now() - lastInteraction) > IDLE_FADE_MS;
+      iconCluster.classList.toggle('idle', idle);
+      vertCluster.classList.toggle('idle', idle);
+      dpad.classList.toggle('idle', idle);
+    }
+
+    // ============================================================================
+    // ============================ FRAME UPDATE ==================================
+    // ============================================================================
+    function onUpdate(dt) {
+      camState.azimuth   += (camState.targetAzimuth   - camState.azimuth)   * ROTATION_SMOOTHING;
+      camState.elevation += (camState.targetElevation - camState.elevation) * ROTATION_SMOOTHING;
+      camEntity.setEulerAngles(camState.elevation, camState.azimuth, 0);
+
+      // Click-to-walk animation — easeInOutSine for gentle acceleration/deceleration (less jarring than quad)
+      if (walkAnim.active) {
+        walkAnim.t += dt;
+        const k = Math.min(1, walkAnim.t / walkAnim.dur);
+        const e = -(Math.cos(Math.PI * k) - 1) / 2;
+        camState.position.x = walkAnim.fromX + (walkAnim.toX - walkAnim.fromX) * e;
+        camState.position.z = walkAnim.fromZ + (walkAnim.toZ - walkAnim.fromZ) * e;
+        if (k >= 1) walkAnim.active = false;
+      }
+
+      const sprint = (keys.ShiftLeft || keys.ShiftRight) ? SHIFT_MULTIPLIER : 1;
+      const wasdSpeed = WASD_SPEED_MPS * sprint * dt;
+      const vertSpeed = VERT_SPEED_MPS * sprint * dt;
+      const fwd = getWalkForward();
+      const right = getWalkRight();
+      let dx = 0, dz = 0;
+      if (keys.KeyW || keys.ArrowUp)    { dx += fwd.x * wasdSpeed; dz += fwd.z * wasdSpeed; }
+      if (keys.KeyS || keys.ArrowDown)  { dx -= fwd.x * wasdSpeed; dz -= fwd.z * wasdSpeed; }
+      if (keys.KeyA || keys.ArrowLeft)  { dx -= right.x * wasdSpeed; dz -= right.z * wasdSpeed; }
+      if (keys.KeyD || keys.ArrowRight) { dx += right.x * wasdSpeed; dz += right.z * wasdSpeed; }
+      if (dx !== 0 || dz !== 0) {
+        const r = applyHorizontalCollision(camState.position.x, camState.position.z,
+                                           camState.position.x + dx, camState.position.z + dz);
+        camState.position.x = r.x; camState.position.z = r.z;
+        touchInteraction();
+      }
+      let dy = 0;
+      if (keys.KeyE || keys.Space)       dy += vertSpeed;
+      if (keys.KeyQ || keys.ControlLeft || keys.ControlRight) dy -= vertSpeed;
+      if (dy !== 0) {
+        camState.position.y = applyVertical(camState.position.y, dy);
+        touchInteraction();
+      }
+      camEntity.setPosition(camState.position);
+
+      const lookAt = computeLookAt();
+      hudPos.textContent  = `${camState.position.x.toFixed(2)}, ${camState.position.y.toFixed(2)}, ${camState.position.z.toFixed(2)}`;
+      hudLook.textContent = `${lookAt.x.toFixed(2)}, ${lookAt.y.toFixed(2)}, ${lookAt.z.toFixed(2)}`;
+      hudFloor.textContent = activeFloorId ? (getActiveFloor()?.label || '') : 'legacy';
+      updateHeightReadout();
+      updateIdleFade();
+    }
+
+    // ============================================================================
+    // ================================ INIT ======================================
+    // ============================================================================
+    async function init() {
+      setLoaderStatus('Initialising renderer…', 0.1);
+      app = new pc.Application(canvas, {
+        mouse: new pc.Mouse(canvas),
+        touch: new pc.TouchDevice(canvas),
+        keyboard: new pc.Keyboard(window),
+        graphicsDeviceOptions: {
+          antialias: false,
+          powerPreference: 'high-performance',
+          // preserveDrawingBuffer:true lets canvas.toBlob capture the rendered scene reliably
+          // for the HD still / paintbrush feature. Small memory cost; tested OK on iOS 17+.
+          preserveDrawingBuffer: true,
+        },
+      });
+      app.setCanvasFillMode(pc.FILLMODE_FILL_WINDOW);
+      app.setCanvasResolution(pc.RESOLUTION_AUTO);
+
+      let ctxLostTimer = null;
+      canvas.addEventListener('webglcontextlost', (e) => {
+        e.preventDefault();
+        ctxLostTimer = setTimeout(() => contextLost.classList.add('show'), 1500);
+      });
+      canvas.addEventListener('webglcontextrestored', () => {
+        if (ctxLostTimer) { clearTimeout(ctxLostTimer); ctxLostTimer = null; }
+        contextLost.classList.remove('show');
+      });
+
+      camEntity = new pc.Entity('camera');
+      camEntity.addComponent('camera', { clearColor: new pc.Color(0.02, 0.02, 0.02), fov: 60, nearClip: 0.05, farClip: 800 });
+      app.root.addChild(camEntity);
+
+      setLoaderStatus('Fetching scene data…', 0.2);
+      const floorsPromise = loadFloorsData();
+
+      setLoaderStatus('Streaming the Shannon Suite…', 0.3);
+      const asset = new pc.Asset('shannon-suite', 'gsplat', { url: MANIFEST_URL });
+      app.assets.add(asset);
+      const loadPromise = new Promise((resolve, reject) => {
+        asset.once('load', resolve);
+        asset.once('error', reject);
+      });
+      app.assets.load(asset);
+      await loadPromise;
+
+      setLoaderStatus('Composing the scene…', 0.85);
+      splatEntity = new pc.Entity('shannon-suite');
+      splatEntity.addComponent('gsplat', { asset, unified: true });
+      splatEntity.setLocalEulerAngles(SPLAT_ROTATION[0], SPLAT_ROTATION[1], SPLAT_ROTATION[2]);
+      app.root.addChild(splatEntity);
+
+      floorsData = await floorsPromise;
+      if (!floorsData) {
+        legacyMode = true;
+        renderFloorStack();  // hides only the floor pills, keeps height triangles
+        // Authored start for this space (floors.json), used only when floors.json failed to load.
+        snapTo(-14.85, 2.53, 1.22, { x: -9.87, y: 0.52, z: 1.3 });
+      } else {
+        const primary = floorsData.floors.find(f => f.is_primary) || floorsData.floors[0];
+        activeFloorId = primary.id;
+        // Use authored start.position.y directly — preserves Nav Finder author intent.
+        snapTo(primary.start.position.x, primary.start.position.y, primary.start.position.z, primary.start.look_at);
+        renderFloorStack();
+      }
+
+      wireMouse();
+      wireTouch();
+      wireKeyboard();
+      wireTriangle(vertUp, +1);
+      wireTriangle(vertDown, -1);
+      wireDpadForward(dpadUp, +1);
+      wireDpadForward(dpadDown, -1);
+      wireDpadTurn(dpadLeft, -1);
+      wireDpadTurn(dpadRight, +1);
+
+      app.on('update', onUpdate);
+      app.start();
+
+      // === Viewport/orientation handling ===
+      // PlayCanvas FILLMODE_FILL_WINDOW should auto-handle resize, but mobile browsers
+      // (especially iOS Safari) are flaky on orientationchange events.
+      // Nudge after a settle delay so the canvas correctly reshapes in landscape/portrait swaps.
+      let resizeTimer = null;
+      function handleViewportChange() {
+        if (resizeTimer) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => { if (app && app.resizeCanvas) app.resizeCanvas(); }, 150);
+      }
+      window.addEventListener('resize', handleViewportChange);
+      window.addEventListener('orientationchange', handleViewportChange);
+
+      // === Loader sequence ===
+      // The asset 'load' event fires when LOD0 is ready, but higher LODs continue to stream.
+      // We hold the branded cover up while help opens *on top of it*, so chunks settle behind the help panel.
+      // The loader fades out over 2s either after a fixed timeout, or earlier if the user dismisses help.
+      setLoaderStatus('Welcome - streaming detail behind the scenes', 0.95);
+      setTimeout(() => { openHelp(); }, 1000);             // help appears over loader 1.0s after asset load
+      setTimeout(() => { dismissLoader(); }, 2500);        // auto-fade loader after 2.5s if user hasn't dismissed help
+    }
+
+    init().catch(err => {
+      console.error('[Avalia] init failed:', err);
+      setLoaderStatus('Failed to load scene. ' + (err?.message || ''), 0);
+    });
+  </script>
+
+</body>
+</html>
