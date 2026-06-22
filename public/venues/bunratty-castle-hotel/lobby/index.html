@@ -614,6 +614,225 @@
       display: none;
     }
     .help-backdrop.show { display: block; }
+
+    /* ============================================================================
+       ===================== AI ENHANCE: sign-in + modal =========================
+       Brand-matched (navy/teal/gold). Hidden until the paintbrush is tapped.
+       ============================================================================ */
+    .ai-scrim {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.74);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 150;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      pointer-events: auto;
+    }
+    .ai-scrim.show { display: flex; }
+
+    /* ---- Sign-in card ---- */
+    .ai-signin {
+      background: rgba(20, 30, 48, 0.97);
+      border: 1px solid var(--gold);
+      border-radius: 12px;
+      width: min(400px, 92vw);
+      padding: 28px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    }
+    .ai-signin h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700; font-size: 24px;
+      color: var(--gold); letter-spacing: 0.02em;
+    }
+    .ai-signin p.lead { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .ai-signin input[type="email"] {
+      width: 100%;
+      background: rgba(245,241,232,0.05);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: var(--fg);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 14px;
+    }
+    .ai-signin input[type="email"]:focus { outline: none; border-color: var(--teal); }
+    .ai-signin .ai-btn {
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
+      cursor: pointer; border: 1px solid transparent;
+      transition: all 0.18s;
+    }
+    .ai-btn-primary { background: var(--gold); color: #0a1424; }
+    .ai-btn-primary:hover { background: #e3c067; }
+    .ai-btn-google {
+      background: transparent; border-color: var(--line); color: var(--fg);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .ai-btn-google:hover { border-color: var(--teal); }
+    .ai-signin .ai-or {
+      text-align: center; font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); margin: 2px 0;
+    }
+    .ai-signin .ai-msg { font-size: 12px; color: var(--teal); min-height: 1.1em; }
+    .ai-signin .ai-msg.err { color: #e36363; }
+    .ai-signin .ai-close, .ai-modal .ai-close {
+      position: absolute; top: 14px; right: 16px;
+      background: transparent; border: none; color: var(--muted);
+      font-size: 26px; line-height: 1; cursor: pointer; padding: 2px 8px;
+    }
+    .ai-signin .ai-close:hover, .ai-modal .ai-close:hover { color: var(--fg); }
+    .ai-signin { position: relative; }
+
+    /* ---- Enhance modal ---- */
+    .ai-modal {
+      position: relative;
+      background: rgba(20, 30, 48, 0.97);
+      border: 1px solid var(--panel-line, rgba(245,241,232,0.08));
+      border-radius: 14px;
+      width: 100%; max-width: 1040px; max-height: 92vh;
+      display: flex; flex-direction: column;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+    .ai-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 24px 14px;
+      border-bottom: 1px solid rgba(245,241,232,0.08);
+      flex-shrink: 0;
+    }
+    .ai-modal-title {
+      font-family: 'Cormorant Garamond', serif; font-weight: 700;
+      font-size: 24px; color: var(--gold); letter-spacing: 0.04em;
+    }
+    .ai-modal-title .alt { color: var(--fg); }
+    .ai-modal-body {
+      display: grid; grid-template-columns: 1.5fr 1fr; gap: 0;
+      overflow-y: auto; flex: 1;
+    }
+    .ai-preview-col {
+      padding: 20px 12px 20px 24px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(5,11,22,0.4);
+      border-right: 1px solid rgba(245,241,232,0.08);
+      min-height: 320px;
+    }
+    /* before/after frame; the disclosure label hugs the bottom edge of EVERY generated image */
+    .ai-result-frame {
+      position: relative;
+      width: 100%; max-width: 100%;
+      border: 1px solid rgba(245,241,232,0.12); border-radius: 8px;
+      overflow: hidden; background: #061222;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 220px;
+    }
+    .ai-result-frame img { display: block; width: 100%; height: auto; }
+    /* MANDATORY EU AI Act Art 50(4) disclosure - semi-transparent, hugs bottom edge */
+    .ai-disclosure {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to top, rgba(6,18,34,0.78), rgba(6,18,34,0));
+      color: rgba(245,241,232,0.92);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 11px; letter-spacing: 0.08em;
+      padding: 14px 12px 7px; text-align: center;
+      pointer-events: none;
+    }
+    .ai-result-toggle {
+      display: flex; gap: 6px; margin-top: 12px;
+    }
+    .ai-result-toggle button {
+      flex: 1; padding: 8px 0;
+      background: rgba(245,241,232,0.04); border: 1px solid rgba(245,241,232,0.08);
+      border-radius: 999px; color: var(--fg); font-size: 12px; cursor: pointer;
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+    .ai-result-toggle button.active { background: var(--selected, rgba(201,168,76,0.16)); border-color: rgba(201,168,76,0.7); color: var(--gold); }
+    .ai-preview-placeholder {
+      width: 100%; aspect-ratio: 16/9; border-radius: 8px;
+      border: 1px solid rgba(245,241,232,0.12);
+      background:
+        radial-gradient(ellipse at 30% 35%, rgba(97,193,182,0.18), transparent 65%),
+        radial-gradient(ellipse at 75% 70%, rgba(201,168,76,0.12), transparent 65%),
+        linear-gradient(135deg, #012A4A 0%, #5E7585 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 12px; letter-spacing: 0.1em; text-align: center; padding: 12px;
+    }
+    .ai-controls-col {
+      padding: 18px 24px 8px;
+      display: flex; flex-direction: column; gap: 16px; overflow-y: auto;
+    }
+    .ai-group { display: flex; flex-direction: column; gap: 8px; }
+    .ai-group-label {
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+    }
+    .ai-chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ai-chip {
+      background: rgba(245,241,232,0.04);
+      border: 1px solid rgba(245,241,232,0.08);
+      border-radius: 999px; padding: 7px 12px;
+      font-size: 12px; color: var(--fg); cursor: pointer;
+      font-family: 'DM Sans', system-ui, sans-serif; transition: all 0.18s; white-space: nowrap;
+    }
+    .ai-chip:hover { background: rgba(97,193,182,0.08); border-color: rgba(97,193,182,0.3); }
+    .ai-chip.selected { background: rgba(201,168,76,0.16); border-color: rgba(201,168,76,0.7); color: var(--gold); font-weight: 500; }
+    .ai-chip .meta { color: var(--muted); font-size: 10px; margin-left: 4px; }
+    .ai-prompt {
+      width: 100%; min-height: 64px; resize: vertical;
+      background: rgba(245,241,232,0.05); border: 1px solid var(--line);
+      border-radius: 8px; padding: 10px 12px; color: var(--fg);
+      font-family: 'DM Sans', system-ui, sans-serif; font-size: 13px; line-height: 1.5;
+    }
+    .ai-prompt:focus { outline: none; border-color: var(--teal); }
+    .ai-modal-footer {
+      border-top: 1px solid rgba(245,241,232,0.08);
+      padding: 14px 24px 16px; display: flex; flex-direction: column; gap: 12px;
+      flex-shrink: 0; background: rgba(5,11,22,0.4);
+    }
+    .ai-footer-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .ai-notice {
+      background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.18);
+      border-radius: 6px; padding: 7px 10px; font-size: 11px; line-height: 1.45; color: var(--muted); flex: 1;
+    }
+    .ai-notice b { color: var(--fg); font-weight: 500; }
+    .ai-wallet { font-size: 11px; color: var(--muted); text-align: right; white-space: nowrap; min-width: 160px; }
+    .ai-wallet .balance { color: var(--gold); font-weight: 500; font-size: 13px; font-family: 'Cormorant Garamond', serif; }
+    .ai-actions { display: flex; gap: 10px; }
+    .ai-act-btn {
+      padding: 12px 18px; border-radius: 8px;
+      font-family: 'DM Sans', system-ui, sans-serif; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.04em; cursor: pointer; border: 1px solid transparent; transition: all 0.18s;
+    }
+    .ai-act-secondary { background: transparent; border-color: rgba(245,241,232,0.08); color: var(--muted); }
+    .ai-act-secondary:hover { color: var(--fg); border-color: rgba(245,241,232,0.2); }
+    .ai-act-primary { background: var(--gold); color: #0a1424; flex: 1; }
+    .ai-act-primary:hover { background: #e3c067; }
+    .ai-act-primary:disabled { opacity: 0.5; cursor: progress; }
+    .ai-msg-line { font-size: 12px; min-height: 1.1em; color: var(--teal); }
+    .ai-msg-line.err { color: #e36363; }
+    .ai-topup {
+      display: none; flex-direction: column; gap: 8px;
+      background: rgba(97,193,182,0.06); border: 1px solid rgba(97,193,182,0.25);
+      border-radius: 8px; padding: 12px 14px;
+    }
+    .ai-topup.show { display: flex; }
+    .ai-topup h3 { font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: 17px; font-weight: 600; }
+    .ai-topup p { font-size: 12px; color: var(--muted); line-height: 1.45; }
+    @media (max-width: 720px) {
+      .ai-scrim { padding: 0; align-items: flex-end; }
+      .ai-modal { border-radius: 14px 14px 0 0; max-height: 96vh; }
+      .ai-modal-body { grid-template-columns: 1fr; }
+      .ai-preview-col { border-right: none; border-bottom: 1px solid rgba(245,241,232,0.08); padding: 16px; }
+      .ai-controls-col { padding: 14px 16px 8px; gap: 14px; }
+      .ai-footer-row { flex-direction: column; align-items: stretch; gap: 10px; }
+      .ai-wallet { text-align: left; }
+    }
   </style>
 </head>
 <body>
@@ -743,6 +962,111 @@
     <div class="reload-hint" data-keep-open="1">If you toggle Performance mode, <a id="perf-reload" data-keep-open="1">reload the page</a> for it to take effect.</div>
   </div>
 
+  <!-- ===================== AI ENHANCE: sign-in overlay ===================== -->
+  <div class="ai-scrim" id="ai-signin-scrim">
+    <div class="ai-signin" role="dialog" aria-modal="true" aria-labelledby="ai-signin-title">
+      <button class="ai-close" id="ai-signin-close" aria-label="Close">&times;</button>
+      <h2 id="ai-signin-title">Av<span style="color:var(--fg)">a</span>lia AI Enhance</h2>
+      <p class="lead">Sign in to enhance this view. Your first enhancement is on us.</p>
+      <input type="email" id="ai-email" placeholder="you@email.com" autocomplete="email" inputmode="email">
+      <button class="ai-btn ai-btn-primary" id="ai-magiclink">Email me a sign-in link</button>
+      <div class="ai-or">or</div>
+      <button class="ai-btn ai-btn-google" id="ai-google">Continue with Google</button>
+      <div class="ai-msg" id="ai-signin-msg"></div>
+    </div>
+  </div>
+
+  <!-- ===================== AI ENHANCE: main modal ===================== -->
+  <div class="ai-scrim" id="ai-modal-scrim">
+    <div class="ai-modal" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+      <button class="ai-close" id="ai-modal-close" aria-label="Close">&times;</button>
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">Av<span class="alt">a</span>lia · AI <span class="alt">Enhance</span></div>
+      </div>
+
+      <div class="ai-modal-body">
+        <!-- Preview / result column -->
+        <div class="ai-preview-col">
+          <div id="ai-result-wrap" style="width:100%; display:none;">
+            <div class="ai-result-frame">
+              <img id="ai-result-img" alt="AI enhanced view">
+              <!-- MANDATORY disclosure label - EU AI Act Art 50(4); on EVERY generated image -->
+              <div class="ai-disclosure">Avalia AI enhanced</div>
+            </div>
+            <div class="ai-result-toggle">
+              <button id="ai-show-before">Before</button>
+              <button id="ai-show-after" class="active">After</button>
+            </div>
+          </div>
+          <div class="ai-preview-placeholder" id="ai-placeholder">
+            Your current view will be captured when you tap Enhance.
+          </div>
+        </div>
+
+        <!-- Controls column -->
+        <div class="ai-controls-col">
+          <div class="ai-group">
+            <div class="ai-group-label">Style preset</div>
+            <div class="ai-chip-row" id="ai-presets">
+              <button class="ai-chip selected" data-preset="style-editorial">Editorial Day</button>
+              <button class="ai-chip" data-preset="occ-dinner">Twilight Reception</button>
+              <button class="ai-chip" data-preset="style-golden-hour">Morning Sun</button>
+              <button class="ai-chip" data-preset="style-candlelit">Cinematic Evening</button>
+              <button class="ai-chip" data-preset="style-editorial">Architectural Cool</button>
+              <button class="ai-chip" data-preset="occ-wedding">Christmas Sparkle</button>
+            </div>
+          </div>
+
+          <div class="ai-group">
+            <div class="ai-group-label">Or describe it yourself</div>
+            <textarea class="ai-prompt" id="ai-prompt" placeholder="e.g. warm evening light, a few guests at the bar, festive atmosphere"></textarea>
+          </div>
+
+          <div class="ai-group">
+            <div class="ai-group-label">Aspect ratio</div>
+            <div class="ai-chip-row" id="ai-aspect">
+              <button class="ai-chip selected" data-aspect="16:9">Wide <span class="meta">16:9</span></button>
+              <button class="ai-chip" data-aspect="9:16">Portrait <span class="meta">9:16</span></button>
+              <button class="ai-chip" data-aspect="1:1">Square <span class="meta">1:1</span></button>
+            </div>
+          </div>
+
+          <div class="ai-group">
+            <div class="ai-group-label">Resolution</div>
+            <div class="ai-chip-row" id="ai-res">
+              <button class="ai-chip" data-res="SD">SD</button>
+              <button class="ai-chip selected" data-res="HD">HD</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-modal-footer">
+        <!-- Top-up block: shown only when a free flag is used / credits run out -->
+        <div class="ai-topup" id="ai-topup">
+          <h3>Out of free enhancements</h3>
+          <p>Top up with a Credit pack to keep going. You will be taken to a secure Stripe checkout.</p>
+          <button class="ai-act-btn ai-act-primary" id="ai-topup-btn">Top up · 50 Credits for &euro;2.99</button>
+        </div>
+
+        <div class="ai-footer-row">
+          <div class="ai-notice">
+            <b>AI visualisation.</b> Generated people and scenes are AI synthetic. Every result is labelled "Avalia AI enhanced".
+          </div>
+          <div class="ai-wallet">
+            <div>Your wallet</div>
+            <div class="balance" id="ai-wallet-balance">&ndash;</div>
+          </div>
+        </div>
+        <div class="ai-msg-line" id="ai-modal-msg"></div>
+        <div class="ai-actions">
+          <button class="ai-act-btn ai-act-secondary" id="ai-cancel">Close</button>
+          <button class="ai-act-btn ai-act-primary" id="ai-enhance">Capture &amp; Enhance</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- WebGL context-lost / out-of-memory overlay — respectful desktop invitation -->
   <div id="context-lost">
     <h2>Best on desktop</h2>
@@ -763,7 +1087,8 @@
   <script type="importmap">
     {
       "imports": {
-        "playcanvas": "https://cdn.jsdelivr.net/npm/playcanvas@2.18.1/build/playcanvas.mjs"
+        "playcanvas": "https://cdn.jsdelivr.net/npm/playcanvas@2.18.1/build/playcanvas.mjs",
+        "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
       }
     }
   </script>
@@ -1719,6 +2044,365 @@
       console.error('[Avalia] init failed:', err);
       setLoaderStatus('Failed to load scene. ' + (err?.message || ''), 0);
     });
+
+    // Expose the paintbrush button so the AI Enhance module (separate script below) can
+    // override its click. We re-grab #btn-ai there; nothing else from this scope leaks.
+  </script>
+
+  <!-- ============================================================================
+       ===================== AI ENHANCE WIRING (self-contained) ===================
+       Separate module so it cannot break the viewer's render loop. It talks to the
+       avalia-money Worker (the single money/trust boundary) and to Supabase Auth.
+       MODEL A: no secrets here except the user's own Supabase session JWT and the
+       PUBLIC Supabase anon (publishable) key. All spend/tier/credit logic is the
+       Worker's; this file only collects input, posts it, and renders the result.
+       ============================================================================ -->
+  <script type="module">
+    import { createClient } from '@supabase/supabase-js';
+
+    // ---- Config -------------------------------------------------------------
+    // The Worker is the single trust boundary; it is live in Stripe TEST mode.
+    const WORKER_BASE = 'https://avalia-money.liam-71c.workers.dev';
+
+    // Supabase project (public values only). The anon/publishable key is PUBLIC by
+    // design (it is gated by Row Level Security) and is safe in client code.
+    // >>> LIAM: paste the project's anon/publishable key here before deploy. <<<
+    // Found in Supabase: Project Settings > API > Project API keys > "anon public".
+    const SUPABASE_URL = 'https://uahrmrhujvdaqgzueqepu.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_C4aNEf2B9Aa7FyBeiAmXcA_dbWWiZ_l';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ---- DOM refs -----------------------------------------------------------
+    const appCanvas      = document.getElementById('app');
+    const btnPaint       = document.getElementById('btn-ai');
+
+    const signinScrim    = document.getElementById('ai-signin-scrim');
+    const signinClose    = document.getElementById('ai-signin-close');
+    const emailInput     = document.getElementById('ai-email');
+    const magicBtn       = document.getElementById('ai-magiclink');
+    const googleBtn      = document.getElementById('ai-google');
+    const signinMsg      = document.getElementById('ai-signin-msg');
+
+    const modalScrim     = document.getElementById('ai-modal-scrim');
+    const modalClose     = document.getElementById('ai-modal-close');
+    const cancelBtn      = document.getElementById('ai-cancel');
+    const enhanceBtn     = document.getElementById('ai-enhance');
+    const modalMsg       = document.getElementById('ai-modal-msg');
+    const promptEl       = document.getElementById('ai-prompt');
+    const walletBalance  = document.getElementById('ai-wallet-balance');
+
+    const resultWrap     = document.getElementById('ai-result-wrap');
+    const resultImg      = document.getElementById('ai-result-img');
+    const placeholder    = document.getElementById('ai-placeholder');
+    const showBeforeBtn  = document.getElementById('ai-show-before');
+    const showAfterBtn   = document.getElementById('ai-show-after');
+
+    const topup          = document.getElementById('ai-topup');
+    const topupBtn       = document.getElementById('ai-topup-btn');
+
+    // ---- Selection state ----------------------------------------------------
+    let selPreset = 'style-editorial';
+    let selAspect = '16:9';
+    let selRes    = 'HD';
+    let lastBeforeUrl = null;
+    let lastAfterUrl  = null;
+
+    // The viewer uses two free flags: 'enhance' (polish) and 'reimagine' (restyle).
+    // A preset/custom-prompt restyle is the 'reimagine' free flag and the 'combo' mode
+    // on the paid path. For the TEST loop we run the free 'enhance' flag first.
+    // mode is REQUIRED by the Worker: 'enhance' | 'reimagine' | 'combo'.
+    function currentMode() {
+      // Custom prompt or a restyle preset -> reimagine; otherwise a straight polish.
+      return (promptEl.value.trim() || selPreset) ? 'reimagine' : 'enhance';
+    }
+
+    // ---- Chip wiring (presets / aspect / resolution) ------------------------
+    function wireChips(containerId, onPick) {
+      document.querySelectorAll(`#${containerId} .ai-chip`).forEach(c => {
+        c.addEventListener('click', () => {
+          document.querySelectorAll(`#${containerId} .ai-chip`).forEach(x => x.classList.remove('selected'));
+          c.classList.add('selected');
+          onPick(c.dataset);
+        });
+      });
+    }
+    wireChips('ai-presets', d => { selPreset = d.preset; });
+    wireChips('ai-aspect',  d => { selAspect = d.aspect; });
+    wireChips('ai-res',     d => { selRes = d.res; });
+
+    // ---- Auth helpers -------------------------------------------------------
+    async function getSession() {
+      const { data } = await supabase.auth.getSession();
+      return data?.session || null;
+    }
+
+    function openSignin() {
+      signinMsg.textContent = ''; signinMsg.classList.remove('err');
+      signinScrim.classList.add('show');
+    }
+    function closeSignin() { signinScrim.classList.remove('show'); }
+
+    async function openModal() {
+      modalMsg.textContent = ''; modalMsg.classList.remove('err');
+      topup.classList.remove('show');
+      resultWrap.style.display = 'none';
+      placeholder.style.display = 'flex';
+      modalScrim.classList.add('show');
+      refreshWallet();
+    }
+    function closeModal() { modalScrim.classList.remove('show'); }
+
+    // The paintbrush: auth-gate, then sign-in or modal. (Replaces the download-only handler.)
+    async function onPaintbrush() {
+      const session = await getSession();
+      if (!session) { openSignin(); return; }
+      openModal();
+    }
+    if (btnPaint) {
+      // Replace the original capture-and-download handler by cloning the node to drop old listeners,
+      // then re-grabbing the fresh reference. This guarantees the AI flow is the only handler.
+      const fresh = btnPaint.cloneNode(true);
+      fresh.title = 'AI Enhance this view';
+      btnPaint.parentNode.replaceChild(fresh, btnPaint);
+      fresh.addEventListener('click', onPaintbrush);
+    }
+
+    signinClose.addEventListener('click', closeSignin);
+    signinScrim.addEventListener('click', (e) => { if (e.target === signinScrim) closeSignin(); });
+
+    magicBtn.addEventListener('click', async () => {
+      const email = (emailInput.value || '').trim();
+      if (!email || !email.includes('@')) {
+        signinMsg.classList.add('err'); signinMsg.textContent = 'Enter a valid email address.'; return;
+      }
+      signinMsg.classList.remove('err'); signinMsg.textContent = 'Sending…';
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: window.location.href }
+      });
+      if (error) { signinMsg.classList.add('err'); signinMsg.textContent = error.message; return; }
+      signinMsg.classList.remove('err');
+      signinMsg.textContent = 'Check your email for the sign-in link, then return here.';
+    });
+
+    googleBtn.addEventListener('click', async () => {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.href }
+      });
+      if (error) { signinMsg.classList.add('err'); signinMsg.textContent = error.message; }
+    });
+
+    // If the user returns from a magic link / OAuth with a live session, open the modal.
+    supabase.auth.onAuthStateChange((_evt, session) => {
+      if (session && signinScrim.classList.contains('show')) {
+        closeSignin();
+        openModal();
+      }
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+
+    // ---- Wallet -------------------------------------------------------------
+    // The Worker has no read-wallet endpoint in this scaffold; balance is shown after a
+    // generation (creditsCharged / nudges) and refreshed on checkout return. We read the
+    // wallet directly from Supabase under the user's own RLS (read-own-row), which is safe.
+    async function refreshWallet() {
+      try {
+        const { data, error } = await supabase
+          .from('wallets')
+          .select('balance_cents')
+          .single();
+        if (!error && data && typeof data.balance_cents === 'number') {
+          const credits = Math.floor(data.balance_cents / 5); // 1 Credit = 5 cents
+          walletBalance.innerHTML = `${credits} Credits`;
+        } else {
+          walletBalance.textContent = '—';
+        }
+      } catch {
+        walletBalance.textContent = '—';
+      }
+    }
+
+    // ---- Canvas capture -----------------------------------------------------
+    // Capture happens HERE, on Enhance tap (not on paintbrush tap), so the user can
+    // reposition first. preserveDrawingBuffer is already true in the viewer init, so
+    // toDataURL reliably returns the rendered frame.
+    function captureCanvas() {
+      return appCanvas.toDataURL('image/png');
+    }
+
+    // ---- Result display + mandatory disclosure ------------------------------
+    function showResult(beforeUrl, afterUrl) {
+      lastBeforeUrl = beforeUrl; lastAfterUrl = afterUrl;
+      placeholder.style.display = 'none';
+      resultWrap.style.display = 'block';
+      resultImg.src = afterUrl;       // default to AFTER
+      showAfterBtn.classList.add('active');
+      showBeforeBtn.classList.remove('active');
+      // Disclosure label is part of the frame markup and is always visible over the image.
+    }
+    showBeforeBtn.addEventListener('click', () => {
+      if (!lastBeforeUrl) return;
+      resultImg.src = lastBeforeUrl;
+      showBeforeBtn.classList.add('active'); showAfterBtn.classList.remove('active');
+    });
+    showAfterBtn.addEventListener('click', () => {
+      if (!lastAfterUrl) return;
+      resultImg.src = lastAfterUrl;
+      showAfterBtn.classList.add('active'); showBeforeBtn.classList.remove('active');
+    });
+
+    // ---- The Enhance call ---------------------------------------------------
+    async function runEnhance() {
+      const session = await getSession();
+      if (!session) { closeModal(); openSignin(); return; }
+
+      modalMsg.classList.remove('err');
+      modalMsg.textContent = 'Capturing and enhancing… this can take a moment.';
+      enhanceBtn.disabled = true;
+      topup.classList.remove('show');
+
+      let canvasBase64;
+      try { canvasBase64 = captureCanvas(); }
+      catch (e) {
+        modalMsg.classList.add('err'); modalMsg.textContent = 'Could not capture the view. Try again.';
+        enhanceBtn.disabled = false; return;
+      }
+
+      const mode = currentMode();
+      // freeFlagKind matches the free flag spent: 'enhance' or 'reimagine'.
+      const freeFlagKind = mode === 'enhance' ? 'enhance' : 'reimagine';
+
+      // Worker contract (src/index.js handleEnhance): sessionJwt is read from the BODY.
+      // idempotencyKey + mode are REQUIRED. aspectRatio/resolution are sent for forward
+      // compatibility but are not consumed by the current Worker (flagged in the brief).
+      const payload = {
+        sessionJwt: session.access_token,
+        idempotencyKey: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()),
+        mode,
+        presetId: selPreset,
+        userText: promptEl.value.trim(),
+        isFreePath: true,            // TEST loop: spend the free flag first
+        freeFlagKind,
+        canvasBase64,
+        aspectRatio: selAspect,      // forward-compat; not consumed by current Worker
+        resolution: selRes           // forward-compat; not consumed by current Worker
+      };
+
+      let res, data;
+      try {
+        res = await fetch(`${WORKER_BASE}/enhance`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        data = await res.json().catch(() => ({}));
+      } catch (e) {
+        modalMsg.classList.add('err'); modalMsg.textContent = 'Network error. Please try again.';
+        enhanceBtn.disabled = false; return;
+      }
+
+      enhanceBtn.disabled = false;
+
+      // ---- Branch on the REAL Worker responses (src/index.js) ----
+      // Success: { genId, before, after, creditsCharged, disclosure, ... }
+      if (res.ok && data && data.after) {
+        showResult(data.before, data.after);
+        modalMsg.classList.remove('err');
+        modalMsg.textContent = 'Done. Every result carries the "Avalia AI enhanced" label.';
+        refreshWallet();
+        return;
+      }
+      // Free unavailable (free flag spent / pool/stop hit): { paused:true, reason, nudge:'buy_credits' } (200)
+      if (data && data.paused) {
+        softNudge(data.reason);
+        return;
+      }
+      // Insufficient credits on the paid path: { error:'insufficient_credits', nudge } (402)
+      if (data && data.error === 'insufficient_credits') {
+        softNudge('insufficient');
+        return;
+      }
+      // Prompt helper conflict: { conflict:true, flag } (409)
+      if (data && data.conflict) {
+        modalMsg.classList.add('err');
+        modalMsg.textContent = data.flag || 'That prompt could not be used. Try rephrasing.';
+        return;
+      }
+      // Replay (safe no-op): { replay:true }
+      if (data && data.replay) {
+        modalMsg.classList.remove('err');
+        modalMsg.textContent = 'Already processed.';
+        return;
+      }
+      // Anything else: surface a soft generic message; the Worker refunds on its own failures.
+      modalMsg.classList.add('err');
+      modalMsg.textContent = (data && (data.error || data.detail)) || 'Something went wrong. No credit was charged.';
+    }
+
+    // Soft messages for the free/insufficient paths -> show the top-up block.
+    function softNudge(reason) {
+      modalMsg.classList.remove('err');
+      let msg;
+      switch (reason) {
+        case 'insufficient':
+          msg = 'You are out of Credits. Top up to keep enhancing.'; break;
+        case 'flag_used':
+        case 'free_used':
+          msg = 'You have used your free enhancement. Top up to continue.'; break;
+        case 'pool_empty':
+        case 'daily_stop':
+        case 'weekly_stop':
+        case 'monthly_stop':
+          msg = 'Free enhancements are paused for now. Top up to continue right away.'; break;
+        default:
+          msg = 'Top up to keep enhancing.';
+      }
+      modalMsg.textContent = msg;
+      topup.classList.add('show');
+    }
+
+    enhanceBtn.addEventListener('click', runEnhance);
+
+    // ---- Top-up (Stripe Checkout via the Worker) ----------------------------
+    topupBtn.addEventListener('click', async () => {
+      const session = await getSession();
+      if (!session) { closeModal(); openSignin(); return; }
+      topupBtn.disabled = true;
+      modalMsg.classList.remove('err');
+      modalMsg.textContent = 'Opening secure checkout…';
+      try {
+        // Worker contract (src/stripe.js handleCreateCheckout): sessionJwt in the BODY, plus packId.
+        const res = await fetch(`${WORKER_BASE}/create-checkout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionJwt: session.access_token, packId: 'pack-2-99' })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.url) {
+          window.location.href = data.url;   // Stripe-hosted checkout; returns to success_url
+        } else {
+          modalMsg.classList.add('err');
+          modalMsg.textContent = data.error || 'Could not start checkout.';
+          topupBtn.disabled = false;
+        }
+      } catch (e) {
+        modalMsg.classList.add('err'); modalMsg.textContent = 'Network error starting checkout.';
+        topupBtn.disabled = false;
+      }
+    });
+
+    // On return from Stripe (success_url adds ?cs=...), reopen the modal and refresh the wallet.
+    (async function handleCheckoutReturn() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('cs') || window.location.pathname.includes('/enhance/success')) {
+        const session = await getSession();
+        if (session) { await openModal(); await refreshWallet(); modalMsg.textContent = 'Top-up complete. Your Credits are ready.'; }
+      }
+    })();
   </script>
 
 </body>
