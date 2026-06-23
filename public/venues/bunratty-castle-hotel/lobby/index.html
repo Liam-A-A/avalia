@@ -824,6 +824,115 @@
     .ai-topup.show { display: flex; }
     .ai-topup h3 { font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: 17px; font-weight: 600; }
     .ai-topup p { font-size: 12px; color: var(--muted); line-height: 1.45; }
+
+    /* ============================================================================
+       ===================== VIEWFINDER (C2) ======================================
+       A frame over the STILL-NAVIGABLE viewer. Semi-transparent mask outside the
+       frame; corner markers on the frame; a thin control bar (orientation toggle +
+       Capture + Close). pointer-events:none on the mask so the viewer stays drivable;
+       only the frame border and the control bar capture input.
+       ============================================================================ */
+    .vf-root {
+      position: fixed; inset: 0;
+      z-index: 90;
+      display: none;
+      pointer-events: none;   /* viewer remains navigable; children re-enable as needed */
+    }
+    .vf-root.show { display: block; }
+    /* Four mask panels around the frame dim the out-of-shot area. They do NOT capture pointer
+       events, so drag/zoom still reach the canvas underneath. */
+    .vf-mask {
+      position: absolute;
+      background: rgba(6, 18, 34, 0.55);
+      pointer-events: none;
+      transition: all 0.18s ease;
+    }
+    .vf-frame {
+      position: absolute;
+      border: 1px solid rgba(245, 241, 232, 0.9);
+      box-shadow: 0 0 0 1px rgba(6,18,34,0.4);
+      pointer-events: none;   /* let drags pass through to the canvas */
+      transition: all 0.18s ease;
+    }
+    .vf-corner {
+      position: absolute; width: 22px; height: 22px;
+      border: 2px solid var(--gold);
+    }
+    .vf-corner.tl { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+    .vf-corner.tr { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+    .vf-corner.bl { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+    .vf-corner.br { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+    .vf-hint {
+      position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+      background: var(--bg-dim); border: 1px solid var(--line); border-radius: 999px;
+      padding: 7px 16px; font-size: 12px; color: var(--fg); letter-spacing: 0.02em;
+      pointer-events: none; white-space: nowrap; max-width: 90vw; text-align: center;
+    }
+    .vf-bar {
+      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 10px;
+      pointer-events: auto;   /* the control bar IS interactive */
+      z-index: 2;
+    }
+    .vf-btn {
+      background: var(--bg-dim); border: 1px solid var(--line); color: var(--fg);
+      border-radius: 999px; padding: 11px 20px; cursor: pointer;
+      font-family: 'DM Sans', system-ui, sans-serif; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.04em; transition: all 0.16s; display: flex; align-items: center; gap: 7px;
+    }
+    .vf-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .vf-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .vf-capture { background: var(--gold); color: #0a1424; border-color: var(--gold); padding: 11px 26px; }
+    .vf-capture:hover { background: #e3c067; color: #0a1424; border-color: #e3c067; }
+    .vf-orient { display: flex; gap: 4px; background: var(--bg-dim); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+    .vf-orient button {
+      background: transparent; border: none; color: var(--muted); cursor: pointer;
+      padding: 7px 12px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+      font-family: 'DM Sans', system-ui, sans-serif; transition: all 0.16s;
+    }
+    .vf-orient button.active { background: var(--selected, rgba(201,168,76,0.16)); color: var(--gold); }
+
+    /* ============================================================================
+       ===================== CHOICE PANEL (C2 step 6) =============================
+       After Capture: Save (free) / Enhance (AI) / Reimagine (AI). Capture and
+       generation are decoupled. Shows the captured still as a thumbnail.
+       ============================================================================ */
+    .ai-choice {
+      background: rgba(20, 30, 48, 0.97);
+      border: 1px solid var(--gold);
+      border-radius: 14px;
+      width: min(440px, 94vw);
+      padding: 22px 22px 20px;
+      display: flex; flex-direction: column; gap: 14px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      position: relative;
+      max-height: 94vh; overflow-y: auto;
+    }
+    .ai-choice h2 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 22px;
+      color: var(--gold); letter-spacing: 0.02em;
+    }
+    .ai-choice .ai-choice-thumb {
+      width: 100%; border-radius: 8px; border: 1px solid rgba(245,241,232,0.12);
+      display: block; background: #061222;
+    }
+    .ai-choice-actions { display: flex; flex-direction: column; gap: 8px; }
+    .ai-choice-btn {
+      display: flex; align-items: flex-start; gap: 12px; text-align: left;
+      background: rgba(245,241,232,0.04); border: 1px solid rgba(245,241,232,0.10);
+      border-radius: 10px; padding: 13px 15px; cursor: pointer; transition: all 0.16s;
+      font-family: 'DM Sans', system-ui, sans-serif; color: var(--fg); width: 100%;
+    }
+    .ai-choice-btn:hover { background: rgba(97,193,182,0.08); border-color: rgba(97,193,182,0.4); }
+    .ai-choice-btn .cb-icon { flex-shrink: 0; width: 34px; height: 34px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(201,168,76,0.14); }
+    .ai-choice-btn .cb-icon svg { width: 19px; height: 19px; fill: none; stroke: var(--gold); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .ai-choice-btn .cb-body { flex: 1; }
+    .ai-choice-btn .cb-title { font-size: 14px; font-weight: 600; color: var(--fg); }
+    .ai-choice-btn .cb-sub { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+    .ai-choice-btn .cb-tag { font-size: 10px; color: var(--gold); letter-spacing: 0.06em; margin-top: 3px; }
+
     @media (max-width: 720px) {
       .ai-scrim { padding: 0; align-items: flex-end; }
       .ai-modal { border-radius: 14px 14px 0 0; max-height: 96vh; }
@@ -883,8 +992,19 @@
     <button class="icon-btn" id="btn-fullscreen" title="Toggle fullscreen (F)">
       <svg viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg>
     </button>
-    <button class="icon-btn" id="btn-ai" title="Save HD still">
-      <svg viewBox="0 0 24 24"><path d="M15.5 4.5l4 4-10 10H5.5v-4z"/><path d="M14 6l4 4"/></svg>
+    <!-- C4: AI Enhance trigger. Marielle's icon treatment (Doc Index 400): a single conventional
+         three-point sparkle silhouette drawn into the Avalia line set, GOLD #C9A96E, primary register,
+         matched to the control cluster, medium weight, NO "AI" lettering (the mandatory "Avalia AI
+         enhanced" output disclosure carries the word). Gold FILLED, not stroked, so it reads as "the
+         special one" against a busy splat scene; main four-point star solid, two accent stars lighter.
+         Inline fill/stroke overrides the cluster's stroke-only .icon-btn svg rule for this one button.
+         #btn-ai id preserved - the AI module re-grabs it (clone-and-rewire) to open the viewfinder. -->
+    <button class="icon-btn" id="btn-ai" title="Enhance" style="color: var(--gold);">
+      <svg viewBox="0 0 24 24" style="fill: var(--gold); stroke: none;">
+        <path d="M12 2.4c.35 2.55 1.03 4.3 2.06 5.34C15.1 8.77 16.85 9.45 19.4 9.8c-2.55.35-4.3 1.03-5.34 2.06C13.03 12.9 12.35 14.65 12 17.2c-.35-2.55-1.03-4.3-2.06-5.34C8.9 10.83 7.15 10.15 4.6 9.8c2.55-.35 4.3-1.03 5.34-2.06C10.97 6.7 11.65 4.95 12 2.4z"/>
+        <path d="M18.6 14.1c.16 1.05.45 1.78.9 2.22.44.45 1.17.74 2.22.9-1.05.16-1.78.45-2.22.9-.45.44-.74 1.17-.9 2.22-.16-1.05-.45-1.78-.9-2.22-.44-.45-1.17-.74-2.22-.9 1.05-.16 1.78-.45 2.22-.9.45-.44.74-1.17.9-2.22z" opacity="0.62"/>
+        <path d="M5.7 14.6c.1.68.29 1.15.58 1.44.29.29.76.48 1.44.58-.68.1-1.15.29-1.44.58-.29.29-.48.76-.58 1.44-.1-.68-.29-1.15-.58-1.44-.29-.29-.76-.48-1.44-.58.68-.1 1.15-.29 1.44-.58.29-.29.48-.76.58-1.44z" opacity="0.62"/>
+      </svg>
     </button>
     <button class="icon-btn" id="btn-toggle-ui" title="Hide UI (U)">
       <svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -997,16 +1117,31 @@
               <button id="ai-show-before">Before</button>
               <button id="ai-show-after" class="active">After</button>
             </div>
+            <!-- C3: download (signed URL) + re-run on the SAME capture. No gallery (Phase 2). -->
+            <div class="ai-result-toggle" style="margin-top:8px;">
+              <button id="ai-download" style="border-color:rgba(201,168,76,0.7); color:var(--gold);">Download</button>
+              <button id="ai-again">Try another style</button>
+            </div>
           </div>
+          <!-- The captured still (decoupled capture). Shown once the user has captured a frame. -->
+          <img id="ai-capture-preview" alt="Captured view"
+               style="width:100%; border-radius:8px; border:1px solid rgba(245,241,232,0.12); display:none;">
           <div class="ai-preview-placeholder" id="ai-placeholder">
-            Your current view will be captured when you tap Enhance.
+            Captured view appears here.
           </div>
         </div>
 
         <!-- Controls column -->
+        <!-- B6: the custom-prompt textarea sits ABOVE the preset chips so that on portrait mobile
+             the soft keyboard does not push it off-screen. -->
         <div class="ai-controls-col">
           <div class="ai-group">
-            <div class="ai-group-label">Style preset</div>
+            <div class="ai-group-label">Describe it yourself</div>
+            <textarea class="ai-prompt" id="ai-prompt" placeholder="e.g. warm evening light, a few guests at the bar, festive atmosphere"></textarea>
+          </div>
+
+          <div class="ai-group">
+            <div class="ai-group-label">Or pick a style</div>
             <div class="ai-chip-row" id="ai-presets">
               <button class="ai-chip selected" data-preset="style-editorial">Editorial Day</button>
               <button class="ai-chip" data-preset="occ-dinner">Twilight Reception</button>
@@ -1015,11 +1150,6 @@
               <button class="ai-chip" data-preset="style-editorial">Architectural Cool</button>
               <button class="ai-chip" data-preset="occ-wedding">Christmas Sparkle</button>
             </div>
-          </div>
-
-          <div class="ai-group">
-            <div class="ai-group-label">Or describe it yourself</div>
-            <textarea class="ai-prompt" id="ai-prompt" placeholder="e.g. warm evening light, a few guests at the bar, festive atmosphere"></textarea>
           </div>
 
           <div class="ai-group">
@@ -1042,27 +1172,96 @@
       </div>
 
       <div class="ai-modal-footer">
-        <!-- Top-up block: shown only when a free flag is used / credits run out -->
+        <!-- Add Credits block: shown only when a free flag is used / credits run out -->
         <div class="ai-topup" id="ai-topup">
           <h3>Out of free enhancements</h3>
-          <p>Top up with a Credit pack to keep going. You will be taken to a secure Stripe checkout.</p>
-          <button class="ai-act-btn ai-act-primary" id="ai-topup-btn">Top up · 50 Credits for &euro;2.99</button>
+          <p>Add a Credit pack to keep going. You will be taken to a secure Stripe checkout.</p>
+          <button class="ai-act-btn ai-act-primary" id="ai-topup-btn">Add Credits · 50 Credits for &euro;2.99</button>
         </div>
 
         <div class="ai-footer-row">
           <div class="ai-notice">
             <b>AI visualisation.</b> Generated people and scenes are AI synthetic. Every result is labelled "Avalia AI enhanced".
           </div>
-          <div class="ai-wallet">
-            <div>Your wallet</div>
-            <div class="balance" id="ai-wallet-balance">&ndash;</div>
+          <!-- C5: free-tier users see ENTITLEMENTS, not a balance. Switches to a Credits balance
+               only once both free entitlements are spent. Working wording (Marielle/Mo review). -->
+          <div class="ai-wallet" id="ai-wallet">
+            <div id="ai-wallet-line">1 free Enhance remaining &middot; 1 free Creative remaining</div>
+            <a class="cta" id="ai-getmore" style="display:inline-block; margin-top:4px; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); text-decoration:none; border-bottom:1px solid rgba(201,168,76,0.4); cursor:pointer;">Add Credits</a>
+            <div class="balance" id="ai-wallet-balance" style="display:none;">&ndash;</div>
           </div>
         </div>
         <div class="ai-msg-line" id="ai-modal-msg"></div>
         <div class="ai-actions">
           <button class="ai-act-btn ai-act-secondary" id="ai-cancel">Close</button>
-          <button class="ai-act-btn ai-act-primary" id="ai-enhance">Capture &amp; Enhance</button>
+          <!-- The capture already happened (viewfinder). This button runs the chosen AI mode. -->
+          <button class="ai-act-btn ai-act-primary" id="ai-enhance">Generate</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== VIEWFINDER OVERLAY (C2) =====================
+       Sits over the STILL-NAVIGABLE viewer. The user frames the shot, then taps Capture.
+       Mask panels + frame are pointer-events:none so drags reach the canvas; the control bar
+       is interactive. The trigger (sparkles button) opens this; capture is decoupled from AI. -->
+  <div class="vf-root" id="vf-root" aria-hidden="true">
+    <div class="vf-mask" id="vf-mask-top"></div>
+    <div class="vf-mask" id="vf-mask-bottom"></div>
+    <div class="vf-mask" id="vf-mask-left"></div>
+    <div class="vf-mask" id="vf-mask-right"></div>
+    <div class="vf-frame" id="vf-frame">
+      <span class="vf-corner tl"></span><span class="vf-corner tr"></span>
+      <span class="vf-corner bl"></span><span class="vf-corner br"></span>
+    </div>
+    <div class="vf-hint" id="vf-hint">Move and frame your shot, then capture</div>
+    <div class="vf-bar">
+      <button class="vf-btn" id="vf-close" title="Close viewfinder">
+        <svg viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </button>
+      <div class="vf-orient" id="vf-orient">
+        <button data-orient="landscape" class="active">Landscape</button>
+        <button data-orient="portrait">Portrait</button>
+      </div>
+      <button class="vf-btn vf-capture" id="vf-capture">
+        <svg viewBox="0 0 24 24"><path d="M4 7h3l2-2h6l2 2h3v11H4z"/><circle cx="12" cy="12.5" r="3.2"/></svg>
+        Capture
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================== CHOICE PANEL (C2 step 6) =====================
+       After Capture: Save (free) / Enhance (AI) / Reimagine (AI). Decoupled from capture. -->
+  <div class="ai-scrim" id="ai-choice-scrim">
+    <div class="ai-choice" role="dialog" aria-modal="true" aria-labelledby="ai-choice-title">
+      <button class="ai-close" id="ai-choice-close" aria-label="Close">&times;</button>
+      <h2 id="ai-choice-title">Your view is captured</h2>
+      <img class="ai-choice-thumb" id="ai-choice-thumb" alt="Captured view">
+      <div class="ai-choice-actions">
+        <button class="ai-choice-btn" id="choice-save">
+          <span class="cb-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+          <span class="cb-body">
+            <span class="cb-title">Save</span>
+            <span class="cb-sub">Download this view with the Avalia watermark.</span>
+            <span class="cb-tag">Free &middot; unlimited</span>
+          </span>
+        </button>
+        <button class="ai-choice-btn" id="choice-enhance">
+          <span class="cb-icon"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L19 9l-3.6 3.3.9 5-4.3-2.5L7.7 17l.9-5L5 9l5.1-1.4z"/></svg></span>
+          <span class="cb-body">
+            <span class="cb-title">Enhance</span>
+            <span class="cb-sub">AI polish: lighting, clarity and finish, same room.</span>
+            <span class="cb-tag" id="choice-enhance-tag">1 free remaining</span>
+          </span>
+        </button>
+        <button class="ai-choice-btn" id="choice-creative">
+          <span class="cb-icon"><svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <span class="cb-body">
+            <span class="cb-title">Reimagine</span>
+            <span class="cb-sub">AI restyle: reimagine the space in a new mood or season.</span>
+            <span class="cb-tag" id="choice-creative-tag">1 free remaining</span>
+          </span>
+        </button>
       </div>
     </div>
   </div>
@@ -1143,6 +1342,11 @@
     let floorsData = null;
     let activeFloorId = null;
     let legacyMode = false;
+    // B4: when the page reloads after an auth redirect (a returning, signed-in user), do NOT
+    // auto-fire the help/instructions modal. We detect a likely-live Supabase session synchronously
+    // from localStorage (the SDK persists it as sb-<ref>-auth-token), plus an explicit flag the AI
+    // module can set. Either suppresses the first-visit help auto-open.
+    let helpSuppressed = false;
 
     const camState = {
       position: new pc.Vec3(0, 1.6, 4),
@@ -1838,36 +2042,10 @@
     btnFullscreen.addEventListener('click', toggleFullscreen);
     btnToggleUI.addEventListener('click', toggleUI);
 
-    // Paintbrush — captures the canvas at native resolution and downloads as PNG.
-    // Capture inside requestAnimationFrame so the drawing buffer is fresh
-    // (preserveDrawingBuffer is true so the buffer survives to toBlob; rAF guarantees post-render timing).
-    btnAi.addEventListener('click', () => {
-      touchInteraction();
-      setStatus('Capturing…', null, 800);
-      requestAnimationFrame(() => {
-        try {
-          canvas.toBlob((blob) => {
-            if (!blob) {
-              setStatus('Capture failed - try once more', 'error', 3000);
-              return;
-            }
-            const url = URL.createObjectURL(blob);
-            const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `avalia-still-${stamp}.png`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            setStatus(`Saved · ${canvas.width}×${canvas.height}`, 'success', 2500);
-          }, 'image/png');
-        } catch (err) {
-          console.error('[Avalia] capture failed:', err);
-          setStatus('Capture failed', 'error', 3000);
-        }
-      });
-    });
+    // NOTE: the paintbrush/sparkles button (#btn-ai) is now owned by the AI Enhance module
+    // (second <script> block below). It opens the viewfinder, not a direct download. The capture
+    // primitive lives here in the viewer scope (it needs `app`) and is exposed on window.AvaliaViewer
+    // so the AI module can request a real, freshly-rendered frame. See captureFrame() in INIT.
     helpClose.addEventListener('click', closeHelp);
     helpBackdrop.addEventListener('click', closeHelp);
     activeFloorPill.addEventListener('click', () => {
@@ -2019,6 +2197,56 @@
       app.on('update', onUpdate);
       app.start();
 
+      // ========================================================================
+      // ============ CAPTURE PRIMITIVE (B1) — exposed to the AI module =========
+      // ========================================================================
+      // The canvas capture bug (B1): toDataURL() was being called from the AI module
+      // with no guarantee that a frame had been rendered into the readable buffer.
+      // preserveDrawingBuffer:true (set above) keeps the last rendered frame readable,
+      // but only AFTER a render has actually committed. The fix is to force a fresh
+      // render, then read on the NEXT animation frame (after the GPU has drawn).
+      //
+      // We expose this on window.AvaliaViewer so the separate AI Enhance module can
+      // request a real frame without reaching into PlayCanvas internals itself.
+      function captureFrame() {
+        return new Promise((resolve, reject) => {
+          try {
+            // Ask PlayCanvas to draw a fresh frame on the next tick. preserveDrawingBuffer:true keeps
+            // that frame readable. We do NOT call app.render() directly — that is not a stable public
+            // call across 2.x and can throw outside the tick. renderNextFrame + a double-rAF read is
+            // the proven pattern: the tick renders on the next frame, and we read the frame after it.
+            app.renderNextFrame = true;
+            requestAnimationFrame(() => {
+              app.renderNextFrame = true; // belt-and-braces: keep the buffer fresh for the read frame
+              requestAnimationFrame(() => {
+                try {
+                  const dataUrl = canvas.toDataURL('image/png');
+                  // A blank/near-blank capture is the B1 failure signature. A real PNG of the lobby
+                  // is tens of KB+; a blank data URI is a few hundred bytes. Reject so the UI can retry.
+                  if (!dataUrl || dataUrl.length < 2048) {
+                    reject(new Error('capture produced an empty frame'));
+                    return;
+                  }
+                  resolve(dataUrl);
+                } catch (err) { reject(err); }
+              });
+            });
+          } catch (err) { reject(err); }
+        });
+      }
+
+      // Report the live canvas aspect so the AI module's viewfinder can match it.
+      function getViewerAspect() {
+        return { w: canvas.width, h: canvas.height, ratio: canvas.width / canvas.height };
+      }
+
+      window.AvaliaViewer = {
+        capture: captureFrame,
+        getAspect: getViewerAspect,
+        // Let the AI module suppress / restore the help auto-open after an auth return (B4).
+        suppressHelpAutoOpen: () => { helpSuppressed = true; },
+      };
+
       // === Viewport/orientation handling ===
       // PlayCanvas FILLMODE_FILL_WINDOW should auto-handle resize, but mobile browsers
       // (especially iOS Safari) are flaky on orientationchange events.
@@ -2036,8 +2264,34 @@
       // We hold the branded cover up while help opens *on top of it*, so chunks settle behind the help panel.
       // The loader fades out over 2s either after a fixed timeout, or earlier if the user dismisses help.
       setLoaderStatus('Welcome - streaming detail behind the scenes', 0.95);
-      setTimeout(() => { openHelp(); }, 1000);             // help appears over loader 1.0s after asset load
+      // B4: only auto-open help for an apparent FIRST visit. A returning signed-in user (a live
+      // Supabase token in localStorage), an auth-redirect return (token in the URL hash / ?code=),
+      // or an explicit suppress flag all skip the help auto-open and just reveal the viewer.
+      setTimeout(() => {
+        if (!shouldShowFirstVisitHelp()) { dismissLoader(); return; }
+        openHelp();
+      }, 1000);
       setTimeout(() => { dismissLoader(); }, 2500);        // auto-fade loader after 2.5s if user hasn't dismissed help
+    }
+
+    // B4 helper: returns false if this looks like a returning/just-authenticated visit.
+    function shouldShowFirstVisitHelp() {
+      if (helpSuppressed) return false;
+      try {
+        // Supabase persists the session as a localStorage key sb-<projectRef>-auth-token.
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith('sb-') && k.endsWith('-auth-token') && localStorage.getItem(k)) {
+            return false; // a stored session exists -> not a first visit
+          }
+        }
+      } catch { /* localStorage blocked -> fall through to default first-visit behaviour */ }
+      // Auth-redirect return markers (magic link implicit flow leaves a hash; OAuth PKCE leaves ?code).
+      const hash = window.location.hash || '';
+      const search = window.location.search || '';
+      if (hash.includes('access_token') || hash.includes('refresh_token')) return false;
+      if (/[?&]code=/.test(search)) return false;
+      return true;
     }
 
     init().catch(err => {
@@ -2064,10 +2318,10 @@
     // The Worker is the single trust boundary; it is live in Stripe TEST mode.
     const WORKER_BASE = 'https://avalia-money.liam-71c.workers.dev';
 
-    // Supabase project (public values only). The anon/publishable key is PUBLIC by
-    // design (it is gated by Row Level Security) and is safe in client code.
-    // >>> LIAM: paste the project's anon/publishable key here before deploy. <<<
-    // Found in Supabase: Project Settings > API > Project API keys > "anon public".
+    // Supabase project (public values only). The anon/publishable key is PUBLIC by design (gated by
+    // Row Level Security) and is safe in client code. Project ref uahrmrhujvdqgzueqepu (20 chars) —
+    // verified NOT the old ...vdaq... typo. The legacy eyJ... anon key is the one this Worker's
+    // JWT-verify path expects; keep it (do not swap to a sb_publishable_ key).
     const SUPABASE_URL = 'https://uahrmrhujvdqgzueqepu.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhaHJtcmh1anZkcWd6dWVxZXB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODY4NDIsImV4cCI6MjA5Njc2Mjg0Mn0.hgTl-k3KS7CbqKkRAV_t_J-api-_o37yi1Kt-sYsza4';
 
@@ -2077,6 +2331,28 @@
     const appCanvas      = document.getElementById('app');
     const btnPaint       = document.getElementById('btn-ai');
 
+    // Viewfinder (C2)
+    const vfRoot         = document.getElementById('vf-root');
+    const vfFrame        = document.getElementById('vf-frame');
+    const vfMaskTop      = document.getElementById('vf-mask-top');
+    const vfMaskBottom   = document.getElementById('vf-mask-bottom');
+    const vfMaskLeft     = document.getElementById('vf-mask-left');
+    const vfMaskRight    = document.getElementById('vf-mask-right');
+    const vfClose        = document.getElementById('vf-close');
+    const vfCapture      = document.getElementById('vf-capture');
+    const vfOrient       = document.getElementById('vf-orient');
+
+    // Choice panel (C2 step 6)
+    const choiceScrim    = document.getElementById('ai-choice-scrim');
+    const choiceClose    = document.getElementById('ai-choice-close');
+    const choiceThumb    = document.getElementById('ai-choice-thumb');
+    const choiceSave     = document.getElementById('choice-save');
+    const choiceEnhance  = document.getElementById('choice-enhance');
+    const choiceCreative = document.getElementById('choice-creative');
+    const choiceEnhanceTag  = document.getElementById('choice-enhance-tag');
+    const choiceCreativeTag = document.getElementById('choice-creative-tag');
+
+    // Sign-in
     const signinScrim    = document.getElementById('ai-signin-scrim');
     const signinClose    = document.getElementById('ai-signin-close');
     const emailInput     = document.getElementById('ai-email');
@@ -2084,38 +2360,43 @@
     const googleBtn      = document.getElementById('ai-google');
     const signinMsg      = document.getElementById('ai-signin-msg');
 
+    // Enhance modal
     const modalScrim     = document.getElementById('ai-modal-scrim');
     const modalClose     = document.getElementById('ai-modal-close');
     const cancelBtn      = document.getElementById('ai-cancel');
     const enhanceBtn     = document.getElementById('ai-enhance');
     const modalMsg       = document.getElementById('ai-modal-msg');
     const promptEl       = document.getElementById('ai-prompt');
+    const capturePreview = document.getElementById('ai-capture-preview');
+
+    const walletEl       = document.getElementById('ai-wallet');
+    const walletLine     = document.getElementById('ai-wallet-line');
     const walletBalance  = document.getElementById('ai-wallet-balance');
+    const getMoreLink    = document.getElementById('ai-getmore');
 
     const resultWrap     = document.getElementById('ai-result-wrap');
     const resultImg      = document.getElementById('ai-result-img');
     const placeholder    = document.getElementById('ai-placeholder');
     const showBeforeBtn  = document.getElementById('ai-show-before');
     const showAfterBtn   = document.getElementById('ai-show-after');
+    const downloadBtn    = document.getElementById('ai-download');
+    const againBtn       = document.getElementById('ai-again');
 
     const topup          = document.getElementById('ai-topup');
     const topupBtn       = document.getElementById('ai-topup-btn');
 
-    // ---- Selection state ----------------------------------------------------
-    let selPreset = 'style-editorial';
-    let selAspect = '16:9';
-    let selRes    = 'HD';
-    let lastBeforeUrl = null;
-    let lastAfterUrl  = null;
-
-    // The viewer uses two free flags: 'enhance' (polish) and 'reimagine' (restyle).
-    // A preset/custom-prompt restyle is the 'reimagine' free flag and the 'combo' mode
-    // on the paid path. For the TEST loop we run the free 'enhance' flag first.
-    // mode is REQUIRED by the Worker: 'enhance' | 'reimagine' | 'combo'.
-    function currentMode() {
-      // Custom prompt or a restyle preset -> reimagine; otherwise a straight polish.
-      return (promptEl.value.trim() || selPreset) ? 'reimagine' : 'enhance';
-    }
+    // ---- State --------------------------------------------------------------
+    let selPreset    = 'style-editorial';
+    let selAspect    = '16:9';     // landscape default; portrait toggle -> '9:16'
+    let selRes       = 'HD';
+    let orientation  = 'landscape';
+    let pendingMode  = 'enhance';  // 'enhance' | 'reimagine' — set by the choice panel
+    let capturedDataUrl = null;    // the decoupled capture; reused for re-runs (C3)
+    let lastBeforeUrl   = null;
+    let lastAfterUrl    = null;
+    // Entitlements (C5). The Worker is authoritative; this is the optimistic client view, corrected
+    // by Worker responses (a 'paused/free_used' nudge flips the matching flag to spent).
+    let entitlements = { enhance: true, creative: true };
 
     // ---- Chip wiring (presets / aspect / resolution) ------------------------
     function wireChips(containerId, onPick) {
@@ -2136,113 +2417,282 @@
       const { data } = await supabase.auth.getSession();
       return data?.session || null;
     }
-
     function openSignin() {
       signinMsg.textContent = ''; signinMsg.classList.remove('err');
       signinScrim.classList.add('show');
     }
     function closeSignin() { signinScrim.classList.remove('show'); }
 
-    async function openModal() {
+    // ========================================================================
+    // ============ VIEWFINDER (C2) — the new entry point =====================
+    // ========================================================================
+    // The trigger opens the viewfinder over the STILL-NAVIGABLE viewer. Auth is NOT required to
+    // frame or to Save (C1: capture is free). Auth gates only AI generation, requested at the
+    // choice panel. Capture and generation are decoupled.
+    function layoutViewfinder() {
+      // Compute the largest frame of the chosen aspect ratio that fits the viewport with margin.
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const ar = orientation === 'portrait' ? (9 / 16) : (16 / 9);
+      const marginX = vw * 0.08, marginY = vh * 0.14;
+      const availW = vw - marginX * 2, availH = vh - marginY * 2;
+      let fw = availW, fh = fw / ar;
+      if (fh > availH) { fh = availH; fw = fh * ar; }
+      const left = (vw - fw) / 2, top = (vh - fh) / 2;
+      vfFrame.style.left = left + 'px';
+      vfFrame.style.top = top + 'px';
+      vfFrame.style.width = fw + 'px';
+      vfFrame.style.height = fh + 'px';
+      // Mask panels around the frame (cover the out-of-shot area; pointer-events:none).
+      vfMaskTop.style.cssText    = `left:0;top:0;width:100%;height:${top}px`;
+      vfMaskBottom.style.cssText = `left:0;top:${top + fh}px;width:100%;height:${vh - (top + fh)}px`;
+      vfMaskLeft.style.cssText   = `left:0;top:${top}px;width:${left}px;height:${fh}px`;
+      vfMaskRight.style.cssText  = `left:${left + fw}px;top:${top}px;width:${vw - (left + fw)}px;height:${fh}px`;
+    }
+    function openViewfinder() {
+      orientation = 'landscape'; selAspect = '16:9';
+      vfOrient.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.orient === 'landscape'));
+      layoutViewfinder();
+      vfRoot.classList.add('show');
+      vfRoot.setAttribute('aria-hidden', 'false');
+    }
+    function closeViewfinder() {
+      vfRoot.classList.remove('show');
+      vfRoot.setAttribute('aria-hidden', 'true');
+    }
+    window.addEventListener('resize', () => { if (vfRoot.classList.contains('show')) layoutViewfinder(); });
+    window.addEventListener('orientationchange', () => { if (vfRoot.classList.contains('show')) setTimeout(layoutViewfinder, 200); });
+
+    vfOrient.addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      orientation = b.dataset.orient;
+      selAspect = orientation === 'portrait' ? '9:16' : '16:9';
+      vfOrient.querySelectorAll('button').forEach(x => x.classList.toggle('active', x === b));
+      layoutViewfinder();
+    });
+
+    // Capture: ask the viewer scope for a real, freshly-rendered frame (B1 fix lives there).
+    async function doCapture() {
+      vfCapture.disabled = true;
+      try {
+        if (window.AvaliaViewer && typeof window.AvaliaViewer.capture === 'function') {
+          capturedDataUrl = await window.AvaliaViewer.capture();
+        } else {
+          // Fallback if the viewer API is missing: a plain read (still benefits from a rAF wait).
+          await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+          capturedDataUrl = appCanvas.toDataURL('image/png');
+        }
+      } catch (err) {
+        console.error('[Avalia] capture failed:', err);
+        vfCapture.disabled = false;
+        // Surface a gentle in-viewfinder hint by reusing the hint line.
+        document.getElementById('vf-hint').textContent = 'Capture did not catch a frame — try once more.';
+        return;
+      }
+      vfCapture.disabled = false;
+      closeViewfinder();
+      openChoicePanel();
+    }
+    vfCapture.addEventListener('click', doCapture);
+    vfClose.addEventListener('click', closeViewfinder);
+
+    // ========================================================================
+    // ============ CHOICE PANEL (C2 step 6) ==================================
+    // ========================================================================
+    function refreshChoiceTags() {
+      choiceEnhanceTag.textContent  = entitlements.enhance  ? '1 free remaining' : 'Uses Credits';
+      choiceCreativeTag.textContent = entitlements.creative ? '1 free remaining' : 'Uses Credits';
+    }
+    function openChoicePanel() {
+      if (capturedDataUrl) choiceThumb.src = capturedDataUrl;
+      refreshChoiceTags();
+      choiceScrim.classList.add('show');
+    }
+    function closeChoicePanel() { choiceScrim.classList.remove('show'); }
+    choiceClose.addEventListener('click', closeChoicePanel);
+    choiceScrim.addEventListener('click', (e) => { if (e.target === choiceScrim) closeChoicePanel(); });
+
+    // SAVE (C1): free, watermarked, instant download. No auth, no AI, no Worker call.
+    choiceSave.addEventListener('click', () => {
+      if (!capturedDataUrl) return;
+      downloadDataUrl(capturedDataUrl, `avalia-view-${stamp()}.png`);
+    });
+
+    // ENHANCE / GET CREATIVE: auth-gate, then open the modal primed for that mode.
+    choiceEnhance.addEventListener('click', () => beginGeneration('enhance'));
+    choiceCreative.addEventListener('click', () => beginGeneration('reimagine'));
+
+    async function beginGeneration(mode) {
+      pendingMode = mode;
+      const session = await getSession();
+      if (!session) { closeChoicePanel(); openSignin(); return; }
+      closeChoicePanel();
+      openModal();
+    }
+
+    // ========================================================================
+    // ============ TRIGGER (sparkles button) =================================
+    // ========================================================================
+    // Opens the viewfinder. (Replaces the old capture-and-download / direct-modal handler.)
+    function onTrigger() { openViewfinder(); }
+    if (btnPaint) {
+      // Clone to drop any viewer-scope listeners, then own the fresh node.
+      const fresh = btnPaint.cloneNode(true);
+      fresh.title = 'AI Enhance this view';
+      btnPaint.parentNode.replaceChild(fresh, btnPaint);
+      fresh.addEventListener('click', onTrigger);
+    }
+
+    // ========================================================================
+    // ============ MODAL ====================================================
+    // ========================================================================
+    function openModal() {
       modalMsg.textContent = ''; modalMsg.classList.remove('err');
       topup.classList.remove('show');
       resultWrap.style.display = 'none';
-      placeholder.style.display = 'flex';
+      // Show the captured still as the preview (decoupled capture; not re-captured on generate).
+      if (capturedDataUrl) {
+        capturePreview.src = capturedDataUrl;
+        capturePreview.style.display = 'block';
+        placeholder.style.display = 'none';
+      } else {
+        capturePreview.style.display = 'none';
+        placeholder.style.display = 'flex';
+      }
+      enhanceBtn.textContent = pendingMode === 'reimagine' ? 'Generate restyle' : 'Generate';
+      // Sync the modal's aspect chips to the orientation chosen in the viewfinder (source of truth).
+      document.querySelectorAll('#ai-aspect .ai-chip').forEach(c => {
+        c.classList.toggle('selected', c.dataset.aspect === selAspect);
+      });
       modalScrim.classList.add('show');
       refreshWallet();
     }
     function closeModal() { modalScrim.classList.remove('show'); }
-
-    // The paintbrush: auth-gate, then sign-in or modal. (Replaces the download-only handler.)
-    async function onPaintbrush() {
-      const session = await getSession();
-      if (!session) { openSignin(); return; }
-      openModal();
-    }
-    if (btnPaint) {
-      // Replace the original capture-and-download handler by cloning the node to drop old listeners,
-      // then re-grabbing the fresh reference. This guarantees the AI flow is the only handler.
-      const fresh = btnPaint.cloneNode(true);
-      fresh.title = 'AI Enhance this view';
-      btnPaint.parentNode.replaceChild(fresh, btnPaint);
-      fresh.addEventListener('click', onPaintbrush);
-    }
+    modalClose.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
 
     signinClose.addEventListener('click', closeSignin);
     signinScrim.addEventListener('click', (e) => { if (e.target === signinScrim) closeSignin(); });
 
+    // ---- Auth actions -------------------------------------------------------
     magicBtn.addEventListener('click', async () => {
       const email = (emailInput.value || '').trim();
       if (!email || !email.includes('@')) {
         signinMsg.classList.add('err'); signinMsg.textContent = 'Enter a valid email address.'; return;
       }
       signinMsg.classList.remove('err'); signinMsg.textContent = 'Sending…';
+      // B5: magic link must redirect BACK to the viewer, ready to enhance. emailRedirectTo is the
+      // current viewer URL; on return, onAuthStateChange re-opens the choice panel with the capture.
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: window.location.href }
+        options: { emailRedirectTo: window.location.href.split('#')[0].split('?')[0] }
       });
       if (error) { signinMsg.classList.add('err'); signinMsg.textContent = error.message; return; }
       signinMsg.classList.remove('err');
       signinMsg.textContent = 'Check your email for the sign-in link, then return here.';
     });
 
+    // B5: Google sign-in via a POPUP so the viewer never navigates away. Supabase JS has no
+    // signInWithPopup, so we open the OAuth URL in a popup window (skipBrowserRedirect=true gives us
+    // the URL), and detect the resulting session via onAuthStateChange in this same page.
     googleBtn.addEventListener('click', async () => {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: window.location.href }
-      });
-      if (error) { signinMsg.classList.add('err'); signinMsg.textContent = error.message; }
-    });
-
-    // If the user returns from a magic link / OAuth with a live session, open the modal.
-    supabase.auth.onAuthStateChange((_evt, session) => {
-      if (session && signinScrim.classList.contains('show')) {
-        closeSignin();
-        openModal();
-      }
-    });
-
-    modalClose.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-
-    // ---- Wallet -------------------------------------------------------------
-    // The Worker has no read-wallet endpoint in this scaffold; balance is shown after a
-    // generation (creditsCharged / nudges) and refreshed on checkout return. We read the
-    // wallet directly from Supabase under the user's own RLS (read-own-row), which is safe.
-    async function refreshWallet() {
+      signinMsg.classList.remove('err'); signinMsg.textContent = 'Opening Google…';
       try {
-        const { data, error } = await supabase
-          .from('wallets')
-          .select('balance_cents')
-          .single();
-        if (!error && data && typeof data.balance_cents === 'number') {
-          const credits = Math.floor(data.balance_cents / 5); // 1 Credit = 5 cents
-          walletBalance.innerHTML = `${credits} Credits`;
-        } else {
-          walletBalance.textContent = '—';
+        const redirectTo = window.location.href.split('#')[0].split('?')[0];
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: { redirectTo, skipBrowserRedirect: true }
+        });
+        if (error || !data?.url) {
+          signinMsg.classList.add('err'); signinMsg.textContent = (error && error.message) || 'Could not start Google sign-in.';
+          return;
         }
+        const w = 480, h = 640;
+        const x = window.screenX + (window.outerWidth - w) / 2;
+        const y = window.screenY + (window.outerHeight - h) / 2;
+        const popup = window.open(data.url, 'avalia-google-signin',
+          `width=${w},height=${h},left=${x},top=${y},menubar=no,toolbar=no,location=yes`);
+        if (!popup) {
+          // Popup blocked: fall back to a full redirect (still returns to the viewer).
+          signinMsg.textContent = 'Allow the popup, or continue in this tab…';
+          window.location.href = data.url;
+          return;
+        }
+        // The popup completes OAuth and lands on redirectTo with the tokens. Because it shares this
+        // origin and Supabase storage, detectSessionInUrl in the popup establishes the session, which
+        // surfaces in THIS window via onAuthStateChange. Poll-close the popup once a session lands.
+        const poll = setInterval(async () => {
+          if (popup.closed) { clearInterval(poll); return; }
+          const s = await getSession();
+          if (s) { clearInterval(poll); try { popup.close(); } catch {} }
+        }, 800);
+      } catch (e) {
+        signinMsg.classList.add('err'); signinMsg.textContent = 'Google sign-in failed. Try the email link instead.';
+      }
+    });
+
+    // On a fresh sign-in (popup or magic-link return), continue the flow: if we have a capture,
+    // resume at the choice panel; otherwise reveal the viewfinder is available.
+    supabase.auth.onAuthStateChange((evt, session) => {
+      if (!session) return;
+      // Suppress the help auto-open on this (returning, signed-in) load (B4 belt-and-braces).
+      if (window.AvaliaViewer && window.AvaliaViewer.suppressHelpAutoOpen) window.AvaliaViewer.suppressHelpAutoOpen();
+      if (signinScrim.classList.contains('show')) {
+        closeSignin();
+        if (capturedDataUrl) openChoicePanel();
+      }
+    });
+
+    // ========================================================================
+    // ============ WALLET / ENTITLEMENTS (C5) ================================
+    // ========================================================================
+    // Free-tier users see ENTITLEMENTS, not a balance. Once both free flags are spent we switch to a
+    // Credits balance. The Worker is authoritative; we read the wallet under the user's own RLS for
+    // display only, and reflect spent entitlements from Worker nudges.
+    async function refreshWallet() {
+      const anyFree = entitlements.enhance || entitlements.creative;
+      if (anyFree) {
+        // Show remaining entitlements.
+        const parts = [];
+        if (entitlements.enhance)  parts.push('1 free Enhance remaining');
+        if (entitlements.creative) parts.push('1 free Creative remaining');
+        walletLine.textContent = parts.join(' · ');
+        walletLine.style.display = '';
+        getMoreLink.style.display = 'inline-block';
+        walletBalance.style.display = 'none';
+        return;
+      }
+      // Entitlements spent -> show the Credits readout "[n] Credits · Add Credits".
+      // walletBalance carries "[n] Credits"; the getMoreLink ("Add Credits") sits beside it as the
+      // " · Add Credits" tail, so the composed readout reads as one unit. Drop the redundant line label.
+      try {
+        const { data, error } = await supabase.from('wallets').select('balance_cents').single();
+        const credits = (!error && data && typeof data.balance_cents === 'number')
+          ? Math.floor(data.balance_cents / 5) : 0;
+        walletLine.style.display = 'none';
+        walletBalance.textContent = `${credits} Credits · `;
+        walletBalance.style.display = '';
+        getMoreLink.style.display = 'inline-block';
       } catch {
-        walletBalance.textContent = '—';
+        walletLine.style.display = 'none';
+        walletBalance.textContent = '– Credits · ';
+        walletBalance.style.display = '';
+        getMoreLink.style.display = 'inline-block';
       }
     }
+    getMoreLink.addEventListener('click', () => { topup.classList.add('show'); });
 
-    // ---- Canvas capture -----------------------------------------------------
-    // Capture happens HERE, on Enhance tap (not on paintbrush tap), so the user can
-    // reposition first. preserveDrawingBuffer is already true in the viewer init, so
-    // toDataURL reliably returns the rendered frame.
-    function captureCanvas() {
-      return appCanvas.toDataURL('image/png');
-    }
-
-    // ---- Result display + mandatory disclosure ------------------------------
+    // ========================================================================
+    // ============ RESULT DISPLAY + DISCLOSURE + DOWNLOAD (C3) ===============
+    // ========================================================================
     function showResult(beforeUrl, afterUrl) {
       lastBeforeUrl = beforeUrl; lastAfterUrl = afterUrl;
+      capturePreview.style.display = 'none';
       placeholder.style.display = 'none';
       resultWrap.style.display = 'block';
       resultImg.src = afterUrl;       // default to AFTER
       showAfterBtn.classList.add('active');
       showBeforeBtn.classList.remove('active');
-      // Disclosure label is part of the frame markup and is always visible over the image.
+      // Disclosure label is part of the frame markup — always visible over the image (EU AI Act).
     }
     showBeforeBtn.addEventListener('click', () => {
       if (!lastBeforeUrl) return;
@@ -2255,41 +2705,65 @@
       showAfterBtn.classList.add('active'); showBeforeBtn.classList.remove('active');
     });
 
-    // ---- The Enhance call ---------------------------------------------------
-    async function runEnhance() {
+    // C3 Download: fetch the signed URL (120s TTL) and save it. The downloaded file carries the
+    // "Avalia AI enhanced" disclosure burned in by the Worker's provenance step once that lands;
+    // until then the on-screen frame label is the mandatory disclosure surface.
+    downloadBtn.addEventListener('click', async () => {
+      const url = lastAfterUrl;
+      if (!url) return;
+      try {
+        const r = await fetch(url);
+        const blob = await r.blob();
+        const obj = URL.createObjectURL(blob);
+        downloadDataUrl(obj, `avalia-enhanced-${stamp()}.png`);
+        URL.revokeObjectURL(obj);
+      } catch {
+        // Signed URL may have expired (120s). Re-running re-presigns; tell the user plainly.
+        modalMsg.classList.add('err');
+        modalMsg.textContent = 'That download link expired. Tap "Try another style" to regenerate.';
+      }
+    });
+
+    // C3 re-run: re-open the choice panel with the SAME capture (no re-capture, no gallery).
+    againBtn.addEventListener('click', () => {
+      closeModal();
+      openChoicePanel();
+    });
+
+    // ========================================================================
+    // ============ THE GENERATION CALL ======================================
+    // ========================================================================
+    async function runGeneration() {
       const session = await getSession();
       if (!session) { closeModal(); openSignin(); return; }
+      if (!capturedDataUrl) {
+        modalMsg.classList.add('err'); modalMsg.textContent = 'No captured view. Tap the sparkle to frame a shot first.';
+        return;
+      }
 
       modalMsg.classList.remove('err');
-      modalMsg.textContent = 'Capturing and enhancing… this can take a moment.';
+      modalMsg.textContent = (pendingMode === 'reimagine' ? 'Restyling' : 'Enhancing') + '… this can take a moment.';
       enhanceBtn.disabled = true;
       topup.classList.remove('show');
 
-      let canvasBase64;
-      try { canvasBase64 = captureCanvas(); }
-      catch (e) {
-        modalMsg.classList.add('err'); modalMsg.textContent = 'Could not capture the view. Try again.';
-        enhanceBtn.disabled = false; return;
-      }
-
-      const mode = currentMode();
-      // freeFlagKind matches the free flag spent: 'enhance' or 'reimagine'.
+      const mode = pendingMode; // 'enhance' | 'reimagine' — set by the choice panel, not inferred.
       const freeFlagKind = mode === 'enhance' ? 'enhance' : 'reimagine';
+      const isFreePath = mode === 'enhance' ? entitlements.enhance : entitlements.creative;
 
-      // Worker contract (src/index.js handleEnhance): sessionJwt is read from the BODY.
-      // idempotencyKey + mode are REQUIRED. aspectRatio/resolution are sent for forward
-      // compatibility but are not consumed by the current Worker (flagged in the brief).
+      // Worker contract (src/index.js handleEnhance): sessionJwt + idempotencyKey + mode in the BODY.
+      // canvasBase64 is the decoupled capture (NOT re-read on generate). aspectRatio/resolution are
+      // forward-compat (not consumed by the current Worker).
       const payload = {
         sessionJwt: session.access_token,
         idempotencyKey: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()),
         mode,
         presetId: selPreset,
         userText: promptEl.value.trim(),
-        isFreePath: true,            // TEST loop: spend the free flag first
+        isFreePath,
         freeFlagKind,
-        canvasBase64,
-        aspectRatio: selAspect,      // forward-compat; not consumed by current Worker
-        resolution: selRes           // forward-compat; not consumed by current Worker
+        canvasBase64: capturedDataUrl,
+        aspectRatio: selAspect,
+        resolution: selRes
       };
 
       let res, data;
@@ -2304,28 +2778,27 @@
         modalMsg.classList.add('err'); modalMsg.textContent = 'Network error. Please try again.';
         enhanceBtn.disabled = false; return;
       }
-
       enhanceBtn.disabled = false;
 
-      // ---- Branch on the REAL Worker responses (src/index.js) ----
-      // Success: { genId, before, after, creditsCharged, disclosure, ... }
+      // Success: { genId, before, after, creditsCharged, disclosure }
       if (res.ok && data && data.after) {
+        // A successful free-path generation spends that entitlement.
+        if (isFreePath) entitlements[mode === 'enhance' ? 'enhance' : 'creative'] = false;
         showResult(data.before, data.after);
         modalMsg.classList.remove('err');
         modalMsg.textContent = 'Done. Every result carries the "Avalia AI enhanced" label.';
         refreshWallet();
         return;
       }
-      // Free unavailable (free flag spent / pool/stop hit): { paused:true, reason, nudge:'buy_credits' } (200)
+      // Free unavailable: { paused:true, reason, nudge:'buy_credits' } (200). Flip the matching flag.
       if (data && data.paused) {
+        entitlements[mode === 'enhance' ? 'enhance' : 'creative'] = false;
+        refreshWallet();
         softNudge(data.reason);
         return;
       }
-      // Insufficient credits on the paid path: { error:'insufficient_credits', nudge } (402)
-      if (data && data.error === 'insufficient_credits') {
-        softNudge('insufficient');
-        return;
-      }
+      // Insufficient credits on the paid path: { error:'insufficient_credits' } (402)
+      if (data && data.error === 'insufficient_credits') { softNudge('insufficient'); return; }
       // Prompt helper conflict: { conflict:true, flag } (409)
       if (data && data.conflict) {
         modalMsg.classList.add('err');
@@ -2334,40 +2807,39 @@
       }
       // Replay (safe no-op): { replay:true }
       if (data && data.replay) {
-        modalMsg.classList.remove('err');
-        modalMsg.textContent = 'Already processed.';
-        return;
+        modalMsg.classList.remove('err'); modalMsg.textContent = 'Already processed.'; return;
       }
-      // Anything else: surface a soft generic message; the Worker refunds on its own failures.
+      // Anything else: soft generic; the Worker refunds on its own failures.
       modalMsg.classList.add('err');
       modalMsg.textContent = (data && (data.error || data.detail)) || 'Something went wrong. No credit was charged.';
     }
+    enhanceBtn.addEventListener('click', runGeneration);
 
-    // Soft messages for the free/insufficient paths -> show the top-up block.
+    // Soft messages for the free/insufficient paths -> show the Add Credits block.
     function softNudge(reason) {
       modalMsg.classList.remove('err');
       let msg;
       switch (reason) {
         case 'insufficient':
-          msg = 'You are out of Credits. Top up to keep enhancing.'; break;
+          msg = 'You are out of Credits. Add Credits to keep going.'; break;
         case 'flag_used':
         case 'free_used':
-          msg = 'You have used your free enhancement. Top up to continue.'; break;
+          msg = 'You have used your free generation. Add Credits to continue.'; break;
         case 'pool_empty':
         case 'daily_stop':
         case 'weekly_stop':
         case 'monthly_stop':
-          msg = 'Free enhancements are paused for now. Top up to continue right away.'; break;
+          msg = 'Free generations are paused for now. Add Credits to continue right away.'; break;
         default:
-          msg = 'Top up to keep enhancing.';
+          msg = 'Add Credits to keep going.';
       }
       modalMsg.textContent = msg;
       topup.classList.add('show');
     }
 
-    enhanceBtn.addEventListener('click', runEnhance);
-
-    // ---- Top-up (Stripe Checkout via the Worker) ----------------------------
+    // ========================================================================
+    // ============ TOP-UP (Stripe Checkout via the Worker) ===================
+    // ========================================================================
     topupBtn.addEventListener('click', async () => {
       const session = await getSession();
       if (!session) { closeModal(); openSignin(); return; }
@@ -2400,9 +2872,22 @@
       const params = new URLSearchParams(window.location.search);
       if (params.has('cs') || window.location.pathname.includes('/enhance/success')) {
         const session = await getSession();
-        if (session) { await openModal(); await refreshWallet(); modalMsg.textContent = 'Top-up complete. Your Credits are ready.'; }
+        if (session) {
+          // After adding Credits the free flags are typically spent already; show the Credits balance.
+          entitlements = { enhance: false, creative: false };
+          openModal(); await refreshWallet();
+          modalMsg.textContent = 'Credits added. Your Credits are ready.';
+        }
       }
     })();
+
+    // ---- small utilities ----------------------------------------------------
+    function stamp() { return new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19); }
+    function downloadDataUrl(href, filename) {
+      const a = document.createElement('a');
+      a.href = href; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
   </script>
 
 </body>

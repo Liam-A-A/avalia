@@ -185,6 +185,53 @@
     }
     .open-space:hover { color: var(--gold-bright); border-bottom-color: var(--gold); }
 
+    /* Coming-soon tabs: present, inviting, clearly not-yet-live. The Shannon Suite (the
+       commercial heart) is the more visually inviting of the pair so the planner's eye goes
+       there (Marielle direction sec 4). Non-navigating; a quiet gold hairline on hover. */
+    button.tab { font: inherit; }
+    .tab.coming-soon { color: var(--muted); cursor: pointer; }
+    .tab.coming-soon:hover { border-color: var(--gold); color: var(--gold); background: var(--card-hover); }
+    .tab.coming-soon .tag { color: var(--teal); }
+    .tab.coming-soon.active { background: rgba(201,169,110,0.10); border-color: var(--gold); color: var(--gold-bright); }
+
+    /* ===== Coming-soon holding panel (replaces the live viewer for not-yet-live spaces) =====
+       Atmospheric brand-gradient placeholder, expected-date chip, notify-me capture. A promise,
+       not an absence (Marielle direction sec 1 + sec 4). Same 16:9 footprint as the viewer. */
+    .coming-soon-panel {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.45);
+      background:
+        radial-gradient(ellipse at 28% 30%, rgba(97, 193, 182, 0.14), transparent 60%),
+        radial-gradient(ellipse at 76% 72%, rgba(201, 169, 110, 0.12), transparent 60%),
+        linear-gradient(150deg, var(--navy) 0%, var(--navy-darker) 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 30px 24px;
+    }
+    @media (max-width: 720px) { .coming-soon-panel { aspect-ratio: 3 / 4; } }
+    .coming-soon-panel .cs-eyebrow {
+      font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+    }
+    .coming-soon-panel .cs-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; font-weight: 600; color: var(--fg); margin-bottom: 8px; }
+    @media (max-width: 640px) { .coming-soon-panel .cs-title { font-size: 26px; } }
+    .coming-soon-panel .cs-line { color: var(--muted); font-size: 15px; max-width: 46ch; margin-bottom: 16px; }
+    .cs-date-chip {
+      display: inline-block; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); border: 1px solid rgba(201,169,110,0.5); border-radius: 999px;
+      padding: 6px 14px; margin-bottom: 18px;
+    }
+    .cs-notify { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: 420px; width: 100%; }
+    .cs-notify input[type=email] {
+      flex: 1; min-width: 180px;
+      background: rgba(6,18,34,0.55); border: 1px solid var(--line); border-radius: 4px;
+      color: var(--fg); padding: 11px 14px; font: inherit; font-size: 14px;
+    }
+    .cs-notify input[type=email]:focus { outline: none; border-color: var(--gold); }
+
     /* ===== Content grid: specs + AI enhance ===== */
     .content-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 28px; margin: 40px 0 0; }
     @media (max-width: 900px) { .content-grid { grid-template-columns: 1fr; gap: 32px; } }
@@ -349,11 +396,14 @@
         </a>
       </div>
 
-      <!-- Space tabs. All three are LIVE links (no coming-soon for the spaces). -->
+      <!-- Space tabs. HONEST STATE: only the Lobby is live. Fibber McGee's and the Shannon
+           Suite are NON-NAVIGATING coming-soon states (STRATEGY-02 sec 2/8, Marielle direction
+           sec 4). They are <button> not <a> so there is no broken link, and selecting them shows
+           a dignified holding panel rather than loading a viewer or changing the page URL. -->
       <nav class="tabs" id="tabs">
-        <a class="tab active" data-space="lobby" href="#lobby">Lobby</a>
-        <a class="tab" data-space="fibber-mcgees" href="#fibber-mcgees">Fibber McGee's</a>
-        <a class="tab" data-space="shannon-suite" href="#shannon-suite">Shannon Suite</a>
+        <a class="tab active" data-space="lobby" href="#lobby">Lobby<span class="tag">Live</span></a>
+        <button type="button" class="tab coming-soon" data-space="fibber-mcgees">Fibber McGee's<span class="tag">Soon</span></button>
+        <button type="button" class="tab coming-soon" data-space="shannon-suite">Shannon Suite<span class="tag">Soon</span></button>
       </nav>
     </div>
   </header>
@@ -394,16 +444,34 @@
          Property narrative above (Section B) means the visitor meets the place first. -->
     <section class="block step-inside-intro" aria-label="Step inside the spaces">
       <div class="block-h serif">Step inside the spaces</div>
-      <p class="lede">Three of the newly refreshed spaces, captured so you can walk them from anywhere. Choose a space and look around in full 3D.</p>
+      <p class="lede">Three of the newly refreshed spaces. The Lobby is live now, walkable from anywhere in full 3D. Fibber McGee's and the Shannon Suite are being captured and open here shortly.</p>
     </section>
 
     <section class="viewer-shell" aria-label="Space viewer">
-      <div class="viewer-frame-wrap">
-        <!-- Opens on the Lobby by default. Tabs swap the src to the live viewer URL of each space. -->
+      <!-- LIVE viewer (Lobby). Shown only for live spaces. The Lobby is the hero and loads on arrival. -->
+      <div class="viewer-frame-wrap" id="viewer-live">
         <iframe id="viewer" title="Bunratty Castle Hotel - 3D space viewer"
                 src="https://avalia.ie/venues/bunratty-castle-hotel/lobby"
                 allow="fullscreen; accelerometer; gyroscope" loading="eager"></iframe>
       </div>
+
+      <!-- COMING-SOON holding panel. Shown instead of the viewer for not-yet-live spaces.
+           Dignified, atmospheric, non-navigating: a promise, not a dead tab. Expected date is
+           "TBD" until Bunratty confirms a real date (house rule: never invent a date). -->
+      <div class="coming-soon-panel hide" id="viewer-soon">
+        <div class="cs-eyebrow">Coming soon to Bunratty</div>
+        <div class="cs-title serif" id="cs-title">Fibber McGee's</div>
+        <div class="cs-line" id="cs-line">This space is being captured now. It will open here in full 3D, walkable from anywhere, launching shortly for Bunratty guests.</div>
+        <div class="cs-date-chip" id="cs-date">Expected: TBD</div>
+        <!-- FLAG: notify capture destination not set (same open item as the AI Enhance notify and
+             the enquiry destination). Placeholder endpoint until Flynn confirms. -->
+        <form class="cs-notify" action="REPLACE_WITH_NOTIFY_ENDPOINT" method="POST" onsubmit="return false;">
+          <input type="email" name="email" id="cs-email" placeholder="Your email" aria-label="Email me when this space is live">
+          <button class="btn btn-gold" type="submit">Notify me</button>
+        </form>
+      </div>
+
+      <!-- "Open full screen" is only meaningful for a live space. Hidden on coming-soon. -->
       <a class="open-space" id="open-space" href="https://avalia.ie/venues/bunratty-castle-hotel/lobby" target="_blank" rel="noopener">
         Open this space full screen
       </a>
@@ -573,9 +641,13 @@
     // supplied (house rule: never invent figures). The Shannon Suite capacity
     // set is TBD-pending-confirmation by Bunratty's events team, not published
     // fact, until Flynn's team confirms it (Go-Live checklist item, open).
+    // `live` marks whether the space's viewer is published. Only the Lobby is live (Marielle
+    // direction sec 1). Coming-soon spaces show the holding panel; csTitle/csLine drive it, and
+    // csDate is the expected-date chip (TBD until Bunratty confirms a real date - never invented).
     const SPACES = {
       'lobby': {
         title: 'The Lobby',
+        live: true,
         blurb: 'The arrival space. The calm after the journey, a lobby that sets the register for everything that follows.',
         specs: [
           ['Floor area', 'TBD m2', true],
@@ -586,6 +658,10 @@
       },
       'fibber-mcgees': {
         title: "Fibber McGee's",
+        live: false,
+        csTitle: "Fibber McGee's",
+        csLine: 'The restored bar. Warm stone, rich timbers, the kind of room you stay in longer than you planned. It is being captured now and will open here in full 3D, launching shortly for Bunratty guests.',
+        csDate: 'Expected: TBD',
         blurb: 'The restored bar. Warm stone, rich timbers, the kind of room you stay in longer than you planned, already drawing locals and guests alike.',
         specs: [
           ['Capacity (seated)', 'TBD', true],
@@ -596,6 +672,10 @@
       },
       'shannon-suite': {
         title: 'Shannon Suite',
+        live: false,
+        csTitle: 'Shannon Suite',
+        csLine: 'The primary event space. The room an event planner or couple walks before they travel, dressed for the evening with AI Enhance. It is being captured now and will open here in full 3D, launching shortly for Bunratty guests.',
+        csDate: 'Expected: TBD',
         blurb: 'The primary event space. The room an event planner or couple walks before they travel, assessed for their dinner, conference, or wedding from anywhere.',
         // Capacity figures are TBD until Bunratty's events team confirms them.
         // The brief example set (120/80/60) is NOT treated as published fact;
@@ -616,6 +696,11 @@
     const LABELS = { 'lobby': 'the Lobby', 'fibber-mcgees': "Fibber McGee's", 'shannon-suite': 'the Shannon Suite' };
 
     const viewer = document.getElementById('viewer');
+    const viewerLive = document.getElementById('viewer-live');
+    const viewerSoon = document.getElementById('viewer-soon');
+    const csTitle = document.getElementById('cs-title');
+    const csLine = document.getElementById('cs-line');
+    const csDate = document.getElementById('cs-date');
     const openSpace = document.getElementById('open-space');
     const tabs = Array.from(document.querySelectorAll('.tab'));
     const specsEl = document.getElementById('specs');
@@ -642,25 +727,56 @@
 
     function setSpace(space, updateHash) {
       if (!SPACES[space]) space = 'lobby';
-      const url = VENUE_BASE + '/' + space;
-      // Only reload the iframe if the space actually changed (avoids a reload on first paint).
-      if (viewer.getAttribute('src') !== url) viewer.setAttribute('src', url);
-      openSpace.setAttribute('href', url);
-      tabs.forEach(t => t.classList.toggle('active', t.dataset.space === space));
       const s = SPACES[space];
+      const spaceUrl = VENUE_BASE + '/' + space;
+
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.space === space));
+
+      if (s.live) {
+        // LIVE space: show the viewer, load its URL, offer full-screen.
+        if (viewer.getAttribute('src') !== spaceUrl) viewer.setAttribute('src', spaceUrl);
+        viewerLive.classList.remove('hide');
+        viewerSoon.classList.add('hide');
+        openSpace.classList.remove('hide');
+        openSpace.setAttribute('href', spaceUrl);
+      } else {
+        // COMING-SOON space: show the dignified holding panel. Do NOT swap the iframe (the Lobby
+        // stays loaded behind it, ready when the user returns to a live tab) and do NOT offer a
+        // full-screen link to a viewer that does not exist yet.
+        viewerLive.classList.add('hide');
+        viewerSoon.classList.remove('hide');
+        openSpace.classList.add('hide');
+        csTitle.textContent = s.csTitle || s.title;
+        csLine.textContent = s.csLine || '';
+        csDate.textContent = s.csDate || 'Expected: TBD';
+      }
+
+      // The space panel, specs and enquiry describe the space honestly whether or not its viewer
+      // is live, so they update for every tab.
       spaceTitle.textContent = s.title;
       spaceBlurb.textContent = s.blurb;
       renderSpecs(space);
       enquiryH.textContent = 'Enquire about ' + LABELS[space];
       if (formSpace) formSpace.value = space;
-      // Share targets the currently selected space (deep link).
-      const shareLink = url;
+
+      // Share: only a LIVE space gets a deep-link to its viewer. For a coming-soon space we share
+      // the venue landing (no dead viewer link goes out).
+      const shareLink = s.live ? spaceUrl : (VENUE_BASE + '/');
       shareUrl.textContent = shareLink;
-      const shareText = 'Explore ' + s.title + ' at Bunratty Castle Hotel in 3D';
+      const shareText = s.live
+        ? ('Explore ' + s.title + ' at Bunratty Castle Hotel in 3D')
+        : ('Bunratty Castle Hotel in 3D - ' + s.title + ' coming soon');
       shareWa.setAttribute('href', 'https://wa.me/?text=' + encodeURIComponent(shareText + ' ' + shareLink));
       shareLi.setAttribute('href', 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareLink));
-      if (updateHash && location.hash.slice(1) !== space) {
-        history.replaceState(null, '', '#' + space);
+
+      // URL hash: only reflect a LIVE space (a deep-link to a dead space path is exactly what the
+      // coming-soon discipline forbids). Coming-soon selection clears any stale hash to the landing.
+      if (updateHash) {
+        if (s.live) {
+          if (location.hash.slice(1) !== space) history.replaceState(null, '', '#' + space);
+        } else if (location.hash) {
+          history.replaceState(null, '', location.pathname + location.search);
+        }
       }
     }
 
@@ -668,7 +784,11 @@
       e.preventDefault();
       setSpace(t.dataset.space, true);
     }));
-    window.addEventListener('hashchange', () => setSpace(location.hash.slice(1), false));
+    // Only LIVE spaces are reachable by hash deep-link; an unknown/coming-soon hash falls back to Lobby.
+    window.addEventListener('hashchange', () => {
+      const h = location.hash.slice(1);
+      setSpace((SPACES[h] && SPACES[h].live) ? h : 'lobby', false);
+    });
 
     document.getElementById('copy-link').addEventListener('click', async (e) => {
       const link = shareUrl.textContent;
@@ -676,8 +796,10 @@
       catch { window.prompt('Copy this link', link); }
     });
 
-    // Boot: respect a deep-link hash, else open on the Lobby.
-    const initial = ORDER.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'lobby';
+    // Boot: respect a deep-link hash to a LIVE space, else open on the Lobby (a hash pointing at a
+    // not-yet-live space must not show a broken/coming-soon state on first paint).
+    const hash = location.hash.slice(1);
+    const initial = (SPACES[hash] && SPACES[hash].live) ? hash : 'lobby';
     setSpace(initial, false);
   </script>
 
