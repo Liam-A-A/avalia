@@ -2768,9 +2768,16 @@
 
       let res, data;
       try {
+        // Attach the live session JWT as a Bearer header (Studio brief 2026-06-26). The Worker's
+        // /enhance ALSO reads sessionJwt from the body (current src/index.js handleEnhance), so we
+        // send it BOTH ways: the header satisfies a header-reading Worker, the body field satisfies
+        // the body-reading one. session is already fetched + null-guarded above (runGeneration top).
         res = await fetch(`${WORKER_BASE}/enhance`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
           body: JSON.stringify(payload)
         });
         data = await res.json().catch(() => ({}));
