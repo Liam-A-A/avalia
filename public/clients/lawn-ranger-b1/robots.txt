@@ -1,0 +1,6 @@
+# Review build. A robots.txt in a subfolder is not honoured by crawlers:
+# the per-page <meta name="robots" content="noindex,follow"> is what keeps this out of search.
+User-agent: *
+Disallow: /clients/lawn-ranger-b1/
+
+Sitemap: https://avalia.ie/clients/lawn-ranger-b1/sitemap.xml
