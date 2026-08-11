@@ -42,6 +42,13 @@ section.adl-active{outline:3px solid var(--adl-teal);outline-offset:-3px}
 }
 .adl-bar .lbl{font-weight:700;letter-spacing:.02em}
 .adl-bar .sub{opacity:.75;font-size:12.5px}
+.adl-pos{
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28)!important;color:#fff;
+  border-radius:9px;padding:6px 12px;text-align:left;cursor:pointer;line-height:1.25;
+}
+.adl-pos:hover{background:rgba(255,255,255,.2)}
+.adl-pos b{display:block;font-size:13px}
+.adl-pos span{display:block;font-size:11.5px;opacity:.8;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .adl-bar .spacer{flex:1}
 .adl-bar button{
   font:700 13px/1 inherit;border-radius:8px;padding:9px 13px;cursor:pointer;border:none;
@@ -91,6 +98,30 @@ textarea.adl-ta,input.adl-ta{
 }
 .adl-choice input{margin-right:6px}
 .adl-choice label.sel{border-color:var(--adl-teal);background:var(--adl-teal-light)}
+
+/* the page run-down */
+.adl-plist{display:flex;flex-direction:column;gap:6px}
+.adl-prow{
+  display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--adl-ink);
+  border:1px solid var(--adl-line);border-radius:9px;padding:10px 12px;font-size:14.5px;
+}
+.adl-prow:hover{border-color:var(--adl-teal);background:var(--adl-teal-light)}
+.adl-prow.now{border-color:var(--adl-navy);border-width:2px;background:#f2f7fc}
+.adl-prow .num{
+  background:var(--adl-navy);color:#fff;border-radius:999px;width:24px;height:24px;flex:0 0 24px;
+  display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800;
+}
+.adl-prow .nm{flex:1;font-weight:600}
+.adl-pagegrp .num{
+  background:var(--adl-navy);color:#fff;border-radius:999px;width:22px;height:22px;flex:0 0 22px;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;
+}
+.adl-tag.sn{background:#e6ebf0;color:#4a5560}
+.adl-tag.no{background:#f2f4f6;color:#8894a0}
+.adl-tag.now{background:var(--adl-navy);color:#fff}
+/* ghost buttons are white-on-navy in the bar, so they need a light variant inside the modals */
+.adl-sheet footer .adl-b-ghost{background:#fff;color:var(--adl-ink);border:1.5px solid var(--adl-line)!important}
+.adl-sheet footer .adl-b-danger{color:#a03030}
 
 /* summary */
 .adl-prog{background:var(--adl-teal-light);border-radius:9px;padding:11px 13px;margin-bottom:14px;font-size:13.5px}
