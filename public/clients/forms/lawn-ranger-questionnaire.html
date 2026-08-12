@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en-IE">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anderson Digital &middot; Get Your Business Found</title>
+<style>
+  :root{
+    --navy:#002F6B;        /* ADL brand primary */
+    --bg-deep:#0d1b2a; --bg-mid:#112236; --bg-panel:#162940; --bg-rule:#1e3a52;
+    --teal-bright:#68C4B8; --teal-muted:#2a9d8f; --teal-func:#0F7A70; --teal-light:#D9F0ED;
+    --ink:#12212f; --muted:#5c6b7a; --line:#d7dee6; --panel:#f5f7f9; --white:#ffffff;
+    --text-hi:#e8edf2; --maxw:860px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--panel);color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .sheet{max-width:var(--maxw);margin:0 auto;background:var(--white);}
+  /* Header */
+  .adl-header{background:var(--bg-deep);color:#fff;padding:10px 30px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--navy);}
+  .adl-logo{display:flex;align-items:center;}
+  .adl-logo-img{height:64px;display:block;}
+  .adl-tag{font-size:15px;letter-spacing:.10em;text-transform:uppercase;color:var(--teal-bright);font-weight:700;}
+  /* Hero */
+  .hero{background:var(--bg-deep);color:var(--text-hi);padding:30px 30px 26px;}
+  .hero h1{margin:0 0 8px;font-size:26px;line-height:1.22;color:#fff;}
+  .hero p{margin:0;color:#b9cadd;font-size:16px;max-width:60ch;}
+  .reassure{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:16px;font-size:13px;color:var(--teal-bright);}
+  .reassure span{display:flex;align-items:center;gap:6px;}
+  .body{padding:8px 30px 70px;}
+  .progress{font-size:12.5px;color:var(--muted);margin:18px 0 0;}
+  h2{font-size:18px;margin:34px 0 4px;padding:9px 14px;background:var(--navy);color:#fff;border-radius:6px;display:flex;align-items:center;gap:10px;}
+  h2 .s{width:24px;height:24px;border-radius:50%;background:var(--teal-bright);color:var(--navy);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;}
+  h2.core{background:var(--teal-func);}
+  .why{background:var(--teal-light);border-radius:6px;padding:9px 14px;font-size:13.5px;color:#0c3a35;margin:10px 0;}
+  label.q{display:block;font-weight:600;margin:14px 0 4px;}
+  label.q .hint{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-top:1px;}
+  input[type=text],input[type=tel],input[type=email],input[type=url],input[type=number],textarea,select{
+    width:100%;font:inherit;color:var(--ink);padding:9px 11px;border:1px solid var(--line);border-radius:7px;background:#fcfdfe;}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--teal-muted);box-shadow:0 0 0 3px rgba(42,157,143,.15);}
+  textarea{min-height:74px;resize:vertical;}
+  .row{display:flex;flex-wrap:wrap;gap:12px;}
+  .row>div{flex:1 1 220px;}
+  .checks{display:flex;flex-wrap:wrap;gap:8px 18px;margin:6px 0;}
+  .checks label{display:flex;align-items:center;gap:7px;font-size:14.5px;font-weight:400;}
+  .checks input{width:17px;height:17px;accent-color:var(--teal-muted);}
+  /* repeatable rows */
+  .rows{margin:8px 0;}
+  .rrow{border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:8px;background:#fafcfd;position:relative;}
+  .rrow .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .rrow .full{grid-column:1/-1;}
+  .rm{position:absolute;top:8px;right:8px;border:none;background:#eef2f5;color:#8a3b3b;border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:15px;line-height:1;}
+  .add{margin-top:2px;border:1px dashed var(--teal-muted);background:var(--teal-light);color:var(--teal-func);
+    font-weight:600;padding:9px 14px;border-radius:8px;cursor:pointer;font-size:14px;}
+  .lbl{font-size:12px;color:var(--muted);display:block;margin-bottom:2px;}
+  /* tiers */
+  .tiers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .tier{border:1px solid var(--line);border-radius:10px;padding:16px 18px;position:relative;}
+  .tier.std{border:2px solid var(--teal-muted);background:#f2faf8;}
+  .tier .name{font-weight:700;}
+  .tier .price{font-size:28px;font-weight:800;color:var(--navy);margin:4px 0 2px;}
+  .tier .price small{font-size:13px;font-weight:600;color:var(--muted);}
+  .tier ul{margin:8px 0 0;padding-left:1.1em;font-size:14px;}
+  .tier li{margin:4px 0;}
+  .pill{position:absolute;top:-11px;right:14px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:var(--teal-muted);color:#fff;padding:3px 9px;border-radius:20px;}
+  .plan-pick{display:flex;flex-wrap:wrap;gap:16px;margin:10px 0;font-weight:600;}
+  .plan-pick label{display:flex;align-items:center;gap:8px;}
+  .consent{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;font-size:14px;}
+  .consent label{display:flex;gap:9px;align-items:flex-start;margin:9px 0;font-weight:400;}
+  .consent input{margin-top:3px;width:17px;height:17px;accent-color:var(--teal-muted);flex-shrink:0;}
+  .submit-bar{position:sticky;bottom:0;background:rgba(255,255,255,.97);border-top:1px solid var(--line);
+    padding:14px 30px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:flex-end;backdrop-filter:blur(6px);}
+  .submit-bar .note{margin-right:auto;font-size:12.5px;color:var(--muted);max-width:44ch;}
+  button.primary{background:var(--teal-muted);color:#fff;border:none;padding:12px 22px;border-radius:9px;font-weight:700;font-size:15px;cursor:pointer;}
+  button.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--navy);padding:11px 18px;border-radius:9px;font-weight:600;font-size:14px;cursor:pointer;}
+  footer{padding:20px 30px 30px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);}
+  @media(max-width:620px){.tiers{grid-template-columns:1fr}.rrow .grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<header class="adl-header">
+  <div class="adl-logo">
+    <img class="adl-logo-img" src="assets/logo-fc84dce2f9.png" alt="Anderson Digital">
+  </div>
+  <span class="adl-tag">Web Build &amp; GEO</span>
+</header>
+
+<section class="hero">
+  <h1>Let's get your business found, by people and by AI</h1>
+  <p>Twenty minutes here gives us everything to build a site that turns up when someone asks Google or ChatGPT for a business like yours. You don't need anything prepared, we do the building.</p>
+  <div class="reassure">
+    <span>&#10003; No big upfront bill</span>
+    <span>&#10003; No contract, cancel anytime</span>
+    <span>&#10003; Hosted and looked after by us</span>
+  </div>
+</section>
+
+<div class="body">
+<form id="adlForm" autocomplete="on">
+<p class="progress">About 20 minutes. Start with the quick facts, the fun part (what only you know) comes in the middle.</p>
+
+<!-- ============ CORE, FRONT-LOADED ============ -->
+<h2 class="core"><span class="s">1</span>The essentials</h2>
+<div class="why">These few facts are what an AI or Google use to know who and where you are, so we ask them first.</div>
+
+<label class="q">Business name, exactly as you want it shown everywhere</label>
+<input type="text" name="business.display_name" placeholder="e.g. The Lawn Ranger">
+
+<div class="row">
+  <div><label class="q">Main phone</label><input type="tel" name="business.phone" placeholder="083 868 3872"></div>
+  <div><label class="q">WhatsApp (if different)</label><input type="tel" name="business.whatsapp"></div>
+</div>
+<div class="row">
+  <div><label class="q">Email</label><input type="email" name="business.email" placeholder="you@business.ie"></div>
+  <div><label class="q">Eircode</label><input type="text" name="location.eircode" placeholder="V94 XXXX"></div>
+</div>
+<label class="q">Address or base <span class="hint">Even if you travel to customers.</span></label>
+<input type="text" name="location.address">
+
+<label class="q">In one sentence, what do you do and who for?<span class="hint">Plain words, the way you'd tell a neighbour.</span></label>
+<textarea name="business.one_liner" placeholder="We install and maintain lawns and gardens for homes and businesses around Limerick."></textarea>
+
+<div class="row">
+  <div>
+    <label class="q">Opening hours</label>
+    <input type="text" name="hours.regular" placeholder="e.g. Mon-Fri 9-5:30, Sat 9-1">
+  </div>
+  <div>
+    <label class="q">Out-of-hours / emergencies?</label>
+    <div class="checks">
+      <label><input type="checkbox" name="hours.emergency"> Yes, we take emergency / after-hours calls</label>
+    </div>
+  </div>
+</div>
+
+<label class="q">Where you're based (town/city)</label>
+<input type="text" name="location.base_town" placeholder="Limerick">
+
+<h2 class="core"><span class="s">2</span>Where you work</h2>
+<div class="why">These become the places we tell Google and AI you serve, and can become local pages. Name the estates, villages and landmarks locals use, not just the town.</div>
+<div class="rows" id="areas"></div>
+<button type="button" class="add" data-add="area">+ Add an area you serve</button>
+
+<h2 class="core"><span class="s">3</span>What you do</h2>
+<div class="why">Each service can become its own page, that's what lets an AI match you to a specific request like "artificial grass" instead of a vague "we do everything". Add as many as you like, tick the few you most want to be found for.</div>
+<div class="rows" id="services"></div>
+<button type="button" class="add" data-add="service">+ Add a service</button>
+
+<!-- ============ THE VALUE STUFF ============ -->
+<h2><span class="s">4</span>The questions your customers actually ask</h2>
+<div class="why">This is where you get to show off. AI assistants answer people by lifting clear answers to real questions, so the questions you get asked ten times a week are gold. Add as many as you can.</div>
+<div class="rows" id="faqs"></div>
+<button type="button" class="add" data-add="faq">+ Add a question you get asked</button>
+
+<label class="q">Any words customers use for what you do that aren't the "official" term?<span class="hint">e.g. "fake grass" for artificial turf. This widens how people find you.</span></label>
+<textarea name="content_seed.customer_terms"></textarea>
+
+<label class="q">What do people get wrong or worry about in your trade, that you could set straight?</label>
+<textarea name="content_seed.misconceptions"></textarea>
+
+<label class="q">Is your work seasonal? What do you want more of, and when?</label>
+<input type="text" name="content_seed.seasonality">
+
+<h2><span class="s">5</span>Proof you're good</h2>
+<div class="why">Reviews and proof are one of the strongest signals to Google and AI, and to the customer reading. Recent reviews matter most.</div>
+<div class="row">
+  <div><label class="q">Google Business Profile link</label><input type="url" name="proof.gbp_url" placeholder="Paste the link, or say 'don't have one'"></div>
+  <div><label class="q">Roughly how many Google reviews?</label><input type="text" name="proof.review_count"></div>
+</div>
+<label class="q">Reviews anywhere else? How often does a new one come in?<span class="hint">Facebook, Trustpilot, trade sites. A slow trickle is something we can help with.</span></label>
+<input type="text" name="proof.other_reviews">
+<label class="q">Best examples of work we can feature (before/after, notable jobs)</label>
+<textarea name="proof.case_studies"></textarea>
+<label class="q">Awards, accreditations, memberships, insurance to show?</label>
+<input type="text" name="proof.accreditations">
+
+<h2><span class="s">6</span>What should a visitor do?</h2>
+<label class="q">The main thing you want them to do (and any others)</label>
+<div class="checks">
+  <label><input type="checkbox" name="cta[]" value="call"> Call you</label>
+  <label><input type="checkbox" name="cta[]" value="quote"> Request a quote</label>
+  <label><input type="checkbox" name="cta[]" value="book"> Book online</label>
+  <label><input type="checkbox" name="cta[]" value="whatsapp"> WhatsApp / message</label>
+  <label><input type="checkbox" name="cta[]" value="email"> Email</label>
+  <label><input type="checkbox" name="cta[]" value="directions"> Visit / directions</label>
+</div>
+<div class="row">
+  <div><label class="q">How do enquiries reach you today, and how many can you take a week?</label><input type="text" name="cta.capacity"></div>
+  <div><label class="q">Anything you want to stop? (time-wasters, out-of-area, jobs you don't want)</label><input type="text" name="cta.exclusions"></div>
+</div>
+
+<h2><span class="s">7</span>What you already have</h2>
+<div class="row">
+  <div><label class="q">Existing website (if any)</label><input type="url" name="assets.existing_site"></div>
+  <div><label class="q">Do you own a domain name? Which?</label><input type="text" name="assets.domain" placeholder="e.g. thelawnranger.ie, or 'no'"></div>
+</div>
+<label class="q">Social pages we can pull photos and info from</label>
+<div class="rows" id="socials"></div>
+<button type="button" class="add" data-add="social">+ Add a social page</button>
+<div class="row">
+  <div><label class="q">Logo and brand colours?<span class="hint">Paste hex codes if you know them, or "please sort it".</span></label><input type="text" name="assets.brand"></div>
+  <div><label class="q">Photos: on your phone, in a folder, or should we arrange a shoot?</label><input type="text" name="assets.photos"></div>
+</div>
+
+<h2><span class="s">8</span>Who you're up against</h2>
+<div class="why">Tells us who currently gets named when someone asks for your trade locally, so we can track you climbing past them.</div>
+<div class="rows" id="competitors"></div>
+<button type="button" class="add" data-add="competitor">+ Add a competitor</button>
+
+<h2><span class="s">9</span>Look and feel</h2>
+<label class="q">Which feels most like you?</label>
+<div class="checks">
+  <label><input type="radio" name="look" value="clean"> Clean &amp; modern</label>
+  <label><input type="radio" name="look" value="warm"> Warm &amp; local</label>
+  <label><input type="radio" name="look" value="bold"> Bold &amp; standout</label>
+  <label><input type="radio" name="look" value="pro"> Just make it look professional</label>
+</div>
+
+<!-- ============ EXPANSION + CLOSE ============ -->
+<h2><span class="s">10</span>Anything else that might help your business?</h2>
+<div class="why">No pressure, just so we know what to build toward. Ticking these costs nothing now.</div>
+<div class="checks">
+  <label><input type="checkbox" name="future[]" value="bookings"> Let customers book online</label>
+  <label><input type="checkbox" name="future[]" value="chatbot"> An AI helper on the site that answers questions 24/7</label>
+  <label><input type="checkbox" name="future[]" value="receptionist"> An AI receptionist that catches missed and after-hours calls</label>
+  <label><input type="checkbox" name="future[]" value="reviews"> Help getting more reviews automatically</label>
+  <label><input type="checkbox" name="future[]" value="marketing"> Ongoing posts and marketing to stay fresh</label>
+</div>
+<div class="row">
+  <div><label class="q">Do you run more than one location or brand?</label><input type="text" name="future.multi"></div>
+  <div><label class="q">Know another local business who needs this?<span class="hint">Introduce us and you both get a month free.</span></label><input type="text" name="future.referral"></div>
+</div>
+
+<h2><span class="s">&euro;</span>Your plan</h2>
+<div class="tiers">
+  <div class="tier">
+    <div class="name">Basic</div>
+    <div class="price">&euro;19<small> / month</small></div>
+    <span class="lbl">Get found, sorted.</span>
+    <ul>
+      <li>Professionally built site, made for you</li>
+      <li>Built-in GEO structure so AI and Google can read you</li>
+      <li>A page for each of your main services</li>
+      <li>Hosting, security, backups, SSL</li>
+    </ul>
+  </div>
+  <div class="tier std">
+    <span class="pill">Recommended</span>
+    <div class="name">Standard</div>
+    <div class="price">&euro;25<small> / month</small></div>
+    <span class="lbl">Get found, and see it working.</span>
+    <ul>
+      <li>Everything in Basic</li>
+      <li>We track whether AI and Google name you for your key searches</li>
+      <li>A simple monthly view of how you're doing</li>
+      <li>Reviews and FAQs kept working for you</li>
+    </ul>
+  </div>
+</div>
+<div class="plan-pick">
+  <label><input type="radio" name="plan" value="basic_19"> Basic &euro;19</label>
+  <label><input type="radio" name="plan" value="standard_25" checked> Standard &euro;25</label>
+  <label style="font-weight:400"><input type="checkbox" name="plan_annual"> Pay yearly (one month free)</label>
+</div>
+<p style="font-size:13.5px;color:var(--muted)">For less than it costs to build and host a site yourself on a DIY platform, we do the whole thing and keep it looked after. Move up or down whenever you like.</p>
+
+<h2><span class="s">&#10003;</span>Permissions &amp; go-ahead</h2>
+<div class="consent">
+  <label><input type="checkbox" name="consent.photos"> I have the right to use the photos, reviews and info from our pages and folders (including any people in them) and am happy for Anderson Digital to publish them on our site.</label>
+  <label><input type="checkbox" name="consent.processing"> I understand Anderson Digital will hold the details I give here to build and run our site, and won't sell them. Privacy terms: andersondigital.ie/privacy</label>
+  <label><input type="checkbox" name="consent.authority"> I'm authorised to commission this for the business.</label>
+  <label><input type="checkbox" name="consent.marketing"> (Optional) OK to contact me occasionally about features or offers that could help my business.</label>
+  <label><input type="checkbox" name="consent.testimonial"> (Optional) Happy for Anderson Digital to mention us as a client and share our results as an example.</label>
+</div>
+<div class="row" style="margin-top:12px">
+  <div><label class="q">Your name</label><input type="text" name="signoff.name"></div>
+  <div><label class="q">Your role</label><input type="text" name="signoff.role" placeholder="Owner"></div>
+  <div><label class="q">Date</label><input type="text" name="signoff.date"></div>
+</div>
+
+</form>
+</div>
+
+<div class="submit-bar">
+  <span class="note">"Assemble &amp; submit" emails a summary to Anderson Digital and downloads your full answers so nothing is lost.</span>
+  <button type="button" class="ghost" id="downloadBtn">Download my answers</button>
+  <button type="button" class="primary" id="submitBtn">Assemble &amp; submit</button>
+</div>
+
+<footer>
+  Anderson Digital &middot; Limerick, Ireland &middot; info@andersondigital.ie &middot; Web Build &amp; GEO scoping &middot; v0.2
+</footer>
+
+</div>
+
+<!-- repeatable row templates -->
+<template id="tpl-service">
+  <div class="rrow svc">
+    <button type="button" class="rm" aria-label="Remove">&times;</button>
+    <div class="grid">
+      <div class="full"><span class="lbl">Service (in your customers' words)</span><input type="text" data-k="name"></div>
+      <div><span class="lbl">From-price</span><input type="text" data-k="price_from" placeholder="from &euro;1,200"></div>
+      <div><span class="lbl">Per</span>
+        <select data-k="price_unit"><option value="">choose</option><option>job</option><option>hour</option><option>m&sup2;</option><option>day</option><option>quote</option></select></div>
+      <div class="full"><label style="font-weight:400;font-size:13.5px;display:flex;gap:7px;align-items:center"><input type="checkbox" data-k="found_for" style="width:16px;height:16px;accent-color:#2a9d8f"> Most want to be found for this one</label></div>
+    </div>
+  </div>
+</template>
+<template id="tpl-area">
+  <div class="rrow area">
+    <button type="button" class="rm" aria-label="Remove">&times;</button>
+    <div class="grid">
+      <div><span class="lbl">Area / town / estate / landmark</span><input type="text" data-k="name"></div>
+      <div><span class="lbl">County</span><input type="text" data-k="county"></div>
+      <div class="full"><label style="font-weight:400;font-size:13.5px;display:flex;gap:7px;align-items:center"><input type="checkbox" data-k="priority" style="width:16px;height:16px;accent-color:#2a9d8f"> A priority area for more work</label></div>
+    </div>
+  </div>
+</template>
+<template id="tpl-faq">
+  <div class="rrow faq">
+    <button type="button" class="rm" aria-label="Remove">&times;</button>
+    <div class="grid">
+      <div class="full"><span class="lbl">Question a customer asks</span><input type="text" data-k="q"></div>
+      <div class="full"><span class="lbl">Your answer</span><textarea data-k="a" style="min-height:56px"></textarea></div>
+    </div>
+  </div>
+</template>
+<template id="tpl-social">
+  <div class="rrow social">
+    <button type="button" class="rm" aria-label="Remove">&times;</button>
+    <div class="grid">
+      <div><span class="lbl">Platform</span>
+        <select data-k="platform"><option value="">choose</option><option>Facebook</option><option>Instagram</option><option>TikTok</option><option>LinkedIn</option><option>YouTube</option><option>Other</option></select></div>
+      <div><span class="lbl">Link (URL)</span><input type="url" data-k="url"></div>
+    </div>
+  </div>
+</template>
+<template id="tpl-competitor">
+  <div class="rrow competitor">
+    <button type="button" class="rm" aria-label="Remove">&times;</button>
+    <div class="grid">
+      <div><span class="lbl">Competitor name</span><input type="text" data-k="name"></div>
+      <div><span class="lbl">Website (if known)</span><input type="url" data-k="url"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+(function(){
+  var tpl={service:'tpl-service',area:'tpl-area',faq:'tpl-faq',social:'tpl-social',competitor:'tpl-competitor'};
+  var host={service:'services',area:'areas',faq:'faqs',social:'socials',competitor:'competitors'};
+  function addRow(kind){
+    var t=document.getElementById(tpl[kind]);
+    document.getElementById(host[kind]).appendChild(t.content.cloneNode(true));
+  }
+  // seed a few rows so it never looks empty
+  ['area','area'].forEach(function(){addRow('area')});
+  ['service','service','service'].forEach(function(){addRow('service')});
+  ['faq','faq','faq'].forEach(function(){addRow('faq')});
+  addRow('social'); addRow('competitor');
+  document.querySelectorAll('.add').forEach(function(b){
+    b.addEventListener('click',function(){addRow(b.getAttribute('data-add'))});
+  });
+  document.body.addEventListener('click',function(e){
+    if(e.target.classList && e.target.classList.contains('rm')) e.target.closest('.rrow').remove();
+  });
+
+  function setDeep(obj,path,val){
+    var p=path.split('.'),o=obj;
+    for(var i=0;i<p.length-1;i++){o[p[i]]=o[p[i]]||{};o=o[p[i]];}
+    o[p[p.length-1]]=val;
+  }
+  function collectRows(sel){
+    var out=[];
+    document.querySelectorAll('#'+sel+' .rrow').forEach(function(r){
+      var o={};
+      r.querySelectorAll('[data-k]').forEach(function(el){
+        o[el.getAttribute('data-k')]=el.type==='checkbox'?el.checked:el.value.trim();
+      });
+      // skip empty rows
+      var hasVal=Object.keys(o).some(function(k){return o[k] && o[k]!==false;});
+      if(hasVal) out.push(o);
+    });
+    return out;
+  }
+  function build(){
+    var data={
+      schema_version:"1.0",
+      form_version:"geo-scoping-v0.2",
+      submitted_at:new Date().toISOString(),
+      business:{},location:{},hours:{},content_seed:{},proof:{},assets:{},cta:{},signoff:{},consent:{},future:{},
+      services:collectRows('services'),
+      areas_served:collectRows('areas'),
+      faqs:collectRows('faqs'),
+      socials:collectRows('socials'),
+      competitors:collectRows('competitors'),
+      cta_actions:[],future_interest:[]
+    };
+    // named single fields
+    document.querySelectorAll('#adlForm [name]').forEach(function(el){
+      var n=el.getAttribute('name');
+      if(n.indexOf('[]')>-1){
+        if(el.checked){
+          var key=n.replace('[]','');
+          if(key==='cta') data.cta_actions.push(el.value);
+          else if(key==='future') data.future_interest.push(el.value);
+        }
+        return;
+      }
+      if(el.type==='radio'){ if(el.checked) setDeep(data,n,el.value); return; }
+      if(el.type==='checkbox'){ setDeep(data,n,el.checked); return; }
+      if(el.value.trim()!=='') setDeep(data,n,el.value.trim());
+    });
+    return data;
+  }
+  function slug(d){
+    var n=(d.business&&d.business.display_name)||'client';
+    return n.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'client';
+  }
+  function download(){
+    var d=build();
+    var blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='ADL_webbuild_'+slug(d)+'.json';
+    document.body.appendChild(a);a.click();a.remove();
+    return d;
+  }
+  document.getElementById('downloadBtn').addEventListener('click',download);
+  document.getElementById('submitBtn').addEventListener('click',function(){
+    var d=download();
+    var b=d.business||{};
+    var body=[
+      'New Web Build & GEO submission',
+      '',
+      'Business: '+(b.display_name||''),
+      'Phone: '+(b.phone||''),
+      'Email: '+(b.email||''),
+      'Base: '+((d.location&&d.location.base_town)||''),
+      'Services listed: '+(d.services.length),
+      'Areas: '+(d.areas_served.length),
+      'FAQs: '+(d.faqs.length),
+      'Plan: '+(d.plan||'')+(d.plan_annual?' (annual)':''),
+      'Also interested in: '+(d.future_interest.join(', ')||'none'),
+      '',
+      'Full answers are in the downloaded JSON file, please attach it to this email.'
+    ].join('\n');
+    var subj='Web Build submission - '+(b.display_name||'new client');
+    window.location.href='mailto:info@andersondigital.ie?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  });
+})();
+</script>
+<script>
+/* Prefill: The Lawnranger worked example (illustrative; prices marked 'on quote', some fields assumed) */
+(function(){
+  function fillRows(hostId,tplId,items){
+    var host=document.getElementById(hostId); host.innerHTML='';
+    var tpl=document.getElementById(tplId);
+    items.forEach(function(it){
+      var node=tpl.content.cloneNode(true), row=node.querySelector('.rrow');
+      Object.keys(it).forEach(function(k){
+        var el=row.querySelector('[data-k="'+k+'"]'); if(!el) return;
+        if(el.type==='checkbox') el.checked=!!it[k]; else el.value=it[k];
+      });
+      host.appendChild(node);
+    });
+  }
+  function setName(n,v){var el=document.querySelector('[name="'+n+'"]'); if(el) el.value=v;}
+  function check(n,val,ch){document.querySelectorAll('[name="'+n+'"]').forEach(function(el){
+    if(val===undefined) el.checked=ch; else if(el.value===val) el.checked=true;});}
+
+  setName('business.display_name','The Lawnranger');
+  setName('business.phone','083 868 3872');
+  setName('business.whatsapp','+353 83 868 3872');
+  setName('business.email','thelawnranger64@gmail.com');
+  setName('location.address','Tipperary, Ireland (per Facebook); works across Tipperary, Limerick and Clare');
+  setName('business.one_liner','We design, build and maintain lawns and gardens, from artificial grass and paving to full garden makeovers, for homes and businesses across Tipperary, Limerick and Clare.');
+  setName('hours.regular','Always open (per Facebook); typically Mon to Sat, flexible');
+  setName('location.base_town','Tipperary, covering Limerick and Clare');
+
+  fillRows('areas','tpl-area',[
+    {name:'Tipperary',county:'Tipperary',priority:true},
+    {name:'Limerick',county:'Limerick',priority:true},
+    {name:'Clare',county:'Clare',priority:true},
+    {name:'Castletroy & Monaleen',county:'Limerick',priority:false},
+    {name:'Nenagh',county:'Tipperary',priority:false}
+  ]);
+  fillRows('services','tpl-service',[
+    {name:'Artificial grass installation',price_from:'on quote',price_unit:'m²',found_for:true},
+    {name:'Garden design & makeovers',price_from:'on quote',price_unit:'quote',found_for:true},
+    {name:'Paving, patios & walkways',price_from:'on quote',price_unit:'m²',found_for:true},
+    {name:'Lawn care & grounds maintenance',price_from:'on quote',price_unit:'quote',found_for:false},
+    {name:'Fencing & gates',price_from:'on quote',price_unit:'job',found_for:false},
+    {name:'Planting & flower beds',price_from:'on quote',price_unit:'quote',found_for:false},
+    {name:'Firewood - hardwood & softwood logs',price_from:'on quote',price_unit:'quote',found_for:false}
+  ]);
+  fillRows('faqs','tpl-faq',[
+    {q:'Do you install artificial grass?',a:'Yes, artificial grass for front and back gardens is one of our most popular jobs, supplied and fully installed with a proper base so it looks real and lasts.'},
+    {q:'What areas do you cover?',a:'We work across Tipperary, Limerick and Clare, including Castletroy, Monaleen and the surrounding areas.'},
+    {q:'Do you do full garden makeovers?',a:'Yes, from paving and walkways to planting and new lawns, we take on complete garden transformations.'},
+    {q:'Do you sell firewood?',a:'Yes, we have hardwood and softwood logs. They should be dried out before burning.'},
+    {q:'How do I get a quote?',a:'Call or text Christopher on 083 868 3872 and we will arrange to come and see the job.'}
+  ]);
+  fillRows('socials','tpl-social',[{platform:'Facebook',url:'https://www.facebook.com/TheLawnranger6'}]);
+  fillRows('competitors','tpl-competitor',[{name:'Other Limerick / Tipperary landscapers (to identify)',url:''}]);
+
+  setName('content_seed.customer_terms','fake grass, astro turf, artificial lawn, slabbing, gravel, garden makeover');
+  setName('content_seed.misconceptions','People think artificial grass looks fake or needs no groundwork; a proper base and edging is what makes it look real and last.');
+  setName('content_seed.seasonality','Busiest spring to autumn for landscaping; firewood and grounds maintenance over winter.');
+  setName('proof.gbp_url','Not sure, to check (Facebook page only at present)');
+  setName('proof.review_count','3 on Facebook, not yet Google-rated');
+  setName('proof.other_reviews','Facebook recommendations (e.g. Colm Kiely, 10/10); new reviews occasional');
+  setName('proof.case_studies','Artificial grass + new gate install (Colm Kiely, 10/10 recommendation); front-garden grass and paving jobs; walkway features.');
+
+  check('cta[]','call',true); check('cta[]','quote',true); check('cta[]','whatsapp',true);
+  setName('cta.capacity','Enquiries by call, text and Facebook; Christopher with a small team');
+  setName('assets.domain','None yet (thelawnranger.ie to check)');
+  setName('assets.brand','Green LR logo in use; please refine');
+  setName('assets.photos','Plenty on Facebook and in our inputs folder');
+
+  check('look','warm');
+  check('future[]','reviews',true); check('future[]','marketing',true); check('future[]','bookings',true);
+  setName('future.multi','No, single operator with a small team');
+  setName('future.referral','Introduced by Liam Anderson (Monaleen Heights Residents Association)');
+  check('plan','standard_25');
+  setName('signoff.name','Christopher Ryan');
+  setName('signoff.role','Owner');
+
+  var hero=document.querySelector('.hero');
+  if(hero){
+    var r=document.createElement('div');
+    r.style.cssText='margin-top:14px;display:inline-block;background:#162940;border:1px solid #68C4B8;color:#68C4B8;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:20px;';
+    r.textContent='Worked example · The Lawnranger · illustrative';
+    hero.appendChild(r);
+  }
+})();
+</script>
+
+<script>
+/* Save-as-you-go. Keeps the client's answers on their own device so closing the tab loses nothing.
+   Does not change how the form is collected or sent. */
+(function(){
+  var KEY = 'adl-questionnaire::lawn-ranger';
+  var tpl  = {service:'tpl-service',area:'tpl-area',faq:'tpl-faq',social:'tpl-social',competitor:'tpl-competitor'};
+  var host = {service:'services',area:'areas',faq:'faqs',social:'socials',competitor:'competitors'};
+  var form = document.getElementById('adlForm');
+  if(!form) return;
+  var t=null;
+
+  function addRow(kind){
+    var t2=document.getElementById(tpl[kind]);
+    document.getElementById(host[kind]).appendChild(t2.content.cloneNode(true));
+  }
+  function snapshot(){
+    var d={single:{},rows:{}};
+    form.querySelectorAll('[name]').forEach(function(el){
+      var n=el.getAttribute('name');
+      if(el.type==='radio'){ if(el.checked) d.single[n]=el.value; return; }
+      if(el.type==='checkbox'){ d.single[n+'::'+el.value]=el.checked; return; }
+      d.single[n]=el.value;
+    });
+    Object.keys(host).forEach(function(k){
+      var h=document.getElementById(host[k]); if(!h) return;
+      d.rows[k]=[].map.call(h.querySelectorAll('.rrow'),function(r){
+        var o={};
+        r.querySelectorAll('[data-k]').forEach(function(el){
+          o[el.getAttribute('data-k')] = el.type==='checkbox'?el.checked:el.value;
+        });
+        return o;
+      });
+    });
+    return d;
+  }
+  function save(){
+    try{ localStorage.setItem(KEY,JSON.stringify(snapshot())); flash(); }catch(e){}
+  }
+  function restore(){
+    var raw; try{ raw=localStorage.getItem(KEY); }catch(e){ return; }
+    if(!raw) return;
+    var d; try{ d=JSON.parse(raw); }catch(e){ return; }
+
+    Object.keys(host).forEach(function(k){
+      var saved=(d.rows||{})[k]; if(!saved) return;
+      var h=document.getElementById(host[k]); if(!h) return;
+      h.querySelectorAll('.rrow').forEach(function(r){r.remove();});
+      saved.forEach(function(){ addRow(k); });
+      var rows=h.querySelectorAll('.rrow');
+      saved.forEach(function(vals,i){
+        if(!rows[i]) return;
+        rows[i].querySelectorAll('[data-k]').forEach(function(el){
+          var v=vals[el.getAttribute('data-k')];
+          if(v===undefined) return;
+          if(el.type==='checkbox') el.checked=!!v; else el.value=v;
+        });
+      });
+    });
+
+    form.querySelectorAll('[name]').forEach(function(el){
+      var n=el.getAttribute('name');
+      if(el.type==='radio'){ if((d.single||{})[n]===el.value) el.checked=true; return; }
+      if(el.type==='checkbox'){
+        var s=(d.single||{})[n+'::'+el.value];
+        if(s!==undefined) el.checked=!!s;
+        return;
+      }
+      if((d.single||{})[n]!==undefined) el.value=(d.single||{})[n];
+    });
+  }
+
+  var tag=document.createElement('div');
+  tag.style.cssText='position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#002F6B;color:#fff;'+
+    'font:13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;'+
+    'padding:9px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap';
+  tag.innerHTML='<span style="font-weight:700">Your answers save as you type</span>'+
+    '<span class="st" style="opacity:.75"></span><span style="flex:1"></span>'+
+    '<button type="button" class="clr" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5);'+
+    'border-radius:8px;padding:7px 12px;font:700 12.5px inherit;cursor:pointer">Clear saved answers</button>';
+  document.body.appendChild(tag);
+  document.body.style.paddingBottom='64px';
+  var st=tag.querySelector('.st');
+  function flash(){
+    st.textContent='Saved '+new Date().toLocaleTimeString('en-IE',{hour:'2-digit',minute:'2-digit'});
+  }
+  tag.querySelector('.clr').addEventListener('click',function(){
+    if(!confirm('This clears the answers saved on this device. Are you sure?')) return;
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    location.reload();
+  });
+
+  restore();
+  if(localStorage.getItem(KEY)) flash();
+  form.addEventListener('input',function(){ clearTimeout(t); t=setTimeout(save,400); });
+  form.addEventListener('change',function(){ clearTimeout(t); t=setTimeout(save,400); });
+  document.body.addEventListener('click',function(e){
+    if(e.target.classList && (e.target.classList.contains('add')||e.target.classList.contains('rm'))){
+      clearTimeout(t); t=setTimeout(save,500);
+    }
+  });
+})();
+</script>
+</body>
+</html>
