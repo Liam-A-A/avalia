@@ -76,6 +76,12 @@
   button.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--navy);padding:11px 18px;border-radius:9px;font-weight:600;font-size:14px;cursor:pointer;}
   footer{padding:20px 30px 30px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);}
   @media(max-width:620px){.tiers{grid-template-columns:1fr}.rrow .grid{grid-template-columns:1fr}}
+
+  .note-box{background:#fdf6e6;border:1px solid #e6cf94;border-left:4px solid #c9a24a;border-radius:8px;
+    padding:12px 15px;font-size:13.5px;color:#5a4300;margin:14px 0;line-height:1.55;}
+  .note-box b{color:#4a3700;}
+  #prodSubs[hidden]{display:none;}
+  textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:15px;}
 </style>
 </head>
 <body>
@@ -234,6 +240,101 @@
   <div><label class="q">Know another local business who needs this?<span class="hint">Introduce us and you both get a month free.</span></label><input type="text" name="future.referral"></div>
 </div>
 
+
+<h2><span class="s">11</span>Do you sell products as well?</h2>
+<div class="why">Only the first question here applies to everyone. If you don't sell anything, you're finished and can skip straight to your plan.</div>
+
+<div class="row">
+  <div style="grid-column:1/-1">
+    <label class="q">11. Apart from the work you do, do you sell any physical products?<span class="hint">Anything a customer buys and takes away or has delivered. Firewood, materials, equipment, gifts, anything at all.</span></label>
+    <div class="checks" style="display:flex;gap:10px;flex-wrap:wrap">
+      <label><input type="radio" name="products.sells" value="no" checked> No, just the work we do</label>
+      <label><input type="radio" name="products.sells" value="yes"> Yes, we sell products</label>
+      <label><input type="radio" name="products.sells" value="later"> Not yet, but we'd like to</label>
+    </div>
+  </div>
+</div>
+
+<div id="prodSubs" hidden>
+
+  <div class="row">
+    <div style="grid-column:1/-1">
+      <label class="q">11.a What do you sell?<span class="hint">Your own words are fine. One per line if there's more than one.</span></label>
+      <textarea name="products.what" rows="3" placeholder="e.g. seasoned firewood by the bag and by the load"></textarea>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label class="q">11.b Roughly how many different items?</label>
+      <select name="products.range">
+        <option value="">choose</option>
+        <option>1 to 5</option>
+        <option>6 to 20</option>
+        <option>21 to 100</option>
+        <option>More than 100</option>
+      </select>
+    </div>
+    <div>
+      <label class="q">11.c How do customers get them?<span class="hint">Tick all that apply.</span></label>
+      <div class="checks">
+        <label><input type="checkbox" name="products_fulfil[]" value="collect"> They collect from you</label>
+        <label><input type="checkbox" name="products_fulfil[]" value="local_delivery"> You deliver locally</label>
+        <label><input type="checkbox" name="products_fulfil[]" value="courier"> Post or courier</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label class="q">11.d How do people buy from you today?<span class="hint">Tick all that apply.</span></label>
+      <div class="checks">
+        <label><input type="checkbox" name="products_buynow[]" value="message"> They ring or message and you sort it</label>
+        <label><input type="checkbox" name="products_buynow[]" value="invoice"> You invoice them</label>
+        <label><input type="checkbox" name="products_buynow[]" value="card_in_person"> Card in person</label>
+        <label><input type="checkbox" name="products_buynow[]" value="online_already"> You already sell online somewhere</label>
+      </div>
+    </div>
+    <div>
+      <label class="q">11.e Would you want people to pay on the website?</label>
+      <div class="checks">
+        <label><input type="radio" name="products.pay_online" value="yes"> Yes, pay online</label>
+        <label><input type="radio" name="products.pay_online" value="enquire"> I'd rather they ask first</label>
+        <label><input type="radio" name="products.pay_online" value="unsure"> Not sure yet</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div style="grid-column:1/-1">
+      <label class="q">11.f Does anything you sell need a licence, certificate, safety mark or an age check?<span class="hint">Plenty of everyday products do, and plenty don't. If you're not sure, say so and we'll check it for you. It costs nothing to say "not sure".</span></label>
+      <div class="checks" style="display:flex;gap:10px;flex-wrap:wrap">
+        <label><input type="radio" name="products.regulated" value="no"> No</label>
+        <label><input type="radio" name="products.regulated" value="yes"> Yes</label>
+        <label><input type="radio" name="products.regulated" value="unsure"> Not sure</label>
+      </div>
+      <input type="text" name="products.regulated_detail" placeholder="If yes or not sure, what is it? (optional)" style="margin-top:9px">
+    </div>
+  </div>
+
+  <div class="row">
+    <div style="grid-column:1/-1">
+      <label class="q">11.g If you did sell online, what feels closest to what you want?<span class="hint">Just a rough steer. Nothing here commits you to anything.</span></label>
+      <div class="checks">
+        <label><input type="radio" name="products.shop_type" value="list"> Just show what we sell and what it costs, people ring or message</label>
+        <label><input type="radio" name="products.shop_type" value="few_items"> Take payment for a few main items</label>
+        <label><input type="radio" name="products.shop_type" value="full_shop"> A proper shop with a basket and checkout</label>
+        <label><input type="radio" name="products.shop_type" value="unsure"> Not sure yet, talk me through it</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <b>About selling online.</b> There are a few ways to do this, from a simple page of products and prices that you update yourself, up to a full shop that takes payment. Which one suits you depends on what you sell and how you like to be paid. We will go through the options with you separately, so there is nothing to work out here.
+  </div>
+
+</div>
+
 <h2><span class="s">&euro;</span>Your plan</h2>
 <div class="tiers">
   <div class="tier">
@@ -260,9 +361,13 @@
     </ul>
   </div>
 </div>
+<div class="note-box" style="margin-top:14px">
+  <b>Introductory offer.</b> An agreed build fee plus <b>&euro;15 per month</b> for your first year, then your plan moves to its standard rate. All prices are ex VAT.
+</div>
 <div class="plan-pick">
   <label><input type="radio" name="plan" value="basic_19"> Basic &euro;19</label>
   <label><input type="radio" name="plan" value="standard_25" checked> Standard &euro;25</label>
+  <label><input type="radio" name="plan" value="intro_15"> Introductory &euro;15 <span style="font-weight:400">(with build fee)</span></label>
   <label style="font-weight:400"><input type="checkbox" name="plan_annual"> Pay yearly (one month free)</label>
 </div>
 <p style="font-size:13.5px;color:var(--muted)">For less than it costs to build and host a site yourself on a DIY platform, we do the whole thing and keep it looked after. Move up or down whenever you like.</p>
@@ -291,7 +396,7 @@
 </div>
 
 <footer>
-  Anderson Digital &middot; Limerick, Ireland &middot; info@andersondigital.ie &middot; Web Build &amp; GEO scoping &middot; v0.2
+  Anderson Digital &middot; Limerick, Ireland &middot; info@andersondigital.ie &middot; Web Build &amp; GEO scoping &middot; v0.4
 </footer>
 
 </div>
@@ -407,6 +512,7 @@
           var key=n.replace('[]','');
           if(key==='cta') data.cta_actions.push(el.value);
           else if(key==='future') data.future_interest.push(el.value);
+          else { if(!data[key]) data[key]=[]; data[key].push(el.value); }
         }
         return;
       }
@@ -451,6 +557,24 @@
     var subj='Web Build submission - '+(b.display_name||'new client');
     window.location.href='mailto:info@andersondigital.ie?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
   });
+})();
+</script>
+
+<script>
+/* Shows the product sub-questions only when the client says they sell something. */
+(function(){
+  function sync(){
+    var subs=document.getElementById('prodSubs');
+    if(!subs) return;
+    var picked=document.querySelector('input[name="products.sells"]:checked');
+    var v=picked?picked.value:'no';
+    subs.hidden=(v==='no');
+  }
+  window.__adlSyncReveal=sync;
+  document.addEventListener('change',function(e){
+    if(e.target && e.target.name==='products.sells') sync();
+  });
+  sync();
 })();
 </script>
 
@@ -559,6 +683,9 @@
   });
 
   restore();
+  /* restoring sets radios directly, which fires no events, so re-sync any
+     conditional sections (section 11 product sub-questions) after restore */
+  if(typeof window.__adlSyncReveal==='function') window.__adlSyncReveal();
   if(localStorage.getItem(KEY)) flash();
   form.addEventListener('input',function(){ clearTimeout(t); t=setTimeout(save,400); });
   form.addEventListener('change',function(){ clearTimeout(t); t=setTimeout(save,400); });
