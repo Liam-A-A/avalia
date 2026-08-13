@@ -619,8 +619,21 @@
     '<button type="button" class="clr" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5);'+
     'border-radius:8px;padding:7px 12px;font:700 12.5px inherit;cursor:pointer">Clear saved answers</button>';
   document.body.appendChild(tag);
-  document.body.style.paddingBottom='64px';
   var st=tag.querySelector('.st');
+
+  /* The page has its own sticky .submit-bar at bottom:0. Measure this bar and lift
+     the submit bar clear of it, so Download and Assemble are never covered. */
+  var lift=document.createElement('style');
+  document.head.appendChild(lift);
+  function fit(){
+    var h=tag.offsetHeight||56;
+    document.body.style.paddingBottom=h+'px';
+    lift.textContent='.submit-bar{bottom:'+h+'px !important}';
+  }
+  fit();
+  setTimeout(fit,300);
+  window.addEventListener('resize',fit);
+  if(window.ResizeObserver){ try{ new ResizeObserver(fit).observe(tag); }catch(e){} }
   function flash(){
     st.textContent='Saved '+new Date().toLocaleTimeString('en-IE',{hour:'2-digit',minute:'2-digit'});
   }
