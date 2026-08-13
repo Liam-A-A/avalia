@@ -82,6 +82,32 @@
   .note-box b{color:#4a3700;}
   #prodSubs[hidden]{display:none;}
   textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:15px;}
+
+  /* introductory discount + build fee options */
+  .intro-wrap{border:2px solid var(--teal-muted);border-radius:12px;overflow:hidden;margin:18px 0 22px;}
+  .intro-badge{background:var(--teal-muted);color:#fff;font-weight:800;font-size:12.5px;
+    letter-spacing:.06em;text-transform:uppercase;padding:8px 15px;}
+  .intro-body{padding:13px 16px;font-size:14.5px;line-height:1.6;background:#f2fbf9;color:var(--navy);}
+  .intro-body b{color:var(--navy);}
+  .payhead{font-size:18px;color:var(--navy);margin:22px 0 4px;}
+  .paylead{font-size:13.5px;color:var(--muted);margin:0 0 14px;}
+  .paygrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:12px;}
+  @media(max-width:780px){.paygrid{grid-template-columns:1fr;}}
+  .payopt{position:relative;display:block;border:2px solid var(--line);border-radius:12px;
+    padding:18px 16px 16px;cursor:pointer;background:#fff;transition:border-color .15s,box-shadow .15s;}
+  .payopt:hover{border-color:var(--teal-muted);}
+  .payopt:has(input:checked){border-color:var(--teal-muted);background:#f2fbf9;box-shadow:0 3px 12px rgba(0,0,0,.07);}
+  .payopt input{position:absolute;top:16px;right:14px;width:18px;height:18px;accent-color:var(--teal-muted);}
+  .payopt .pname{display:block;font-weight:700;font-size:14px;color:var(--navy);padding-right:26px;}
+  .payopt .pamt{display:block;font-size:30px;font-weight:800;color:var(--navy);line-height:1.1;margin:8px 0 2px;}
+  .payopt .pamt small{font-size:13px;font-weight:600;color:var(--muted);}
+  .payopt .psub{display:block;font-size:13px;color:var(--muted);}
+  .payopt .ptot{display:block;margin-top:10px;padding-top:9px;border-top:1px solid var(--line);
+    font-size:13.5px;font-weight:700;color:var(--teal-muted);}
+  .payopt .pill{position:absolute;top:-11px;left:14px;font-size:10.5px;font-weight:800;letter-spacing:.05em;
+    text-transform:uppercase;padding:3px 9px;border-radius:999px;color:#fff;}
+  .payopt .pill.best{background:var(--teal-muted);}
+  .payopt .pill.low{background:var(--navy);}
 </style>
 </head>
 <body>
@@ -361,16 +387,51 @@
     </ul>
   </div>
 </div>
-<div class="note-box" style="margin-top:14px">
-  <b>Introductory offer.</b> An agreed build fee plus <b>&euro;15 per month</b> for your first year, then your plan moves to its standard rate. All prices are ex VAT.
-</div>
 <div class="plan-pick">
   <label><input type="radio" name="plan" value="basic_19"> Basic &euro;19</label>
   <label><input type="radio" name="plan" value="standard_25" checked> Standard &euro;25</label>
-  <label><input type="radio" name="plan" value="intro_15"> Introductory &euro;15 <span style="font-weight:400">(with build fee)</span></label>
   <label style="font-weight:400"><input type="checkbox" name="plan_annual"> Pay yearly (one month free)</label>
 </div>
 <p style="font-size:13.5px;color:var(--muted)">For less than it costs to build and host a site yourself on a DIY platform, we do the whole thing and keep it looked after. Move up or down whenever you like.</p>
+
+<div class="intro-wrap">
+  <div class="intro-badge">Introductory discount &middot; August 2026</div>
+  <div class="intro-body">
+    <b>&euro;4 a month off your plan for your first 12 months.</b>
+    Basic comes down to <b>&euro;15</b> a month and Standard to <b>&euro;21</b> a month.
+    After 12 months your plan reverts to the monthly plan you picked above.
+  </div>
+</div>
+
+<h3 class="payhead">Your build, three ways to pay</h3>
+<p class="paylead">The build is a one-off cost. Your monthly plan runs alongside it. Pick whichever suits your cash flow, you can change your mind before we start.</p>
+<div class="paygrid">
+  <label class="payopt">
+    <span class="pill best">Best value</span>
+    <input type="radio" name="build_fee" value="upfront_500">
+    <span class="pname">Pay in full</span>
+    <span class="pamt">&euro;500</span>
+    <span class="psub">one payment, up front</span>
+    <span class="ptot">Total &euro;500</span>
+  </label>
+  <label class="payopt">
+    <input type="radio" name="build_fee" value="months11_50">
+    <span class="pname">Spread over 11 months</span>
+    <span class="pamt">&euro;50<small> / month</small></span>
+    <span class="psub">for 11 months</span>
+    <span class="ptot">Total &euro;550</span>
+  </label>
+  <label class="payopt">
+    <span class="pill low">Lowest monthly</span>
+    <input type="radio" name="build_fee" value="months24_25">
+    <span class="pname">Spread over 24 months</span>
+    <span class="pamt">&euro;25<small> / month</small></span>
+    <span class="psub">for 24 months</span>
+    <span class="ptot">Total &euro;600</span>
+  </label>
+</div>
+<p class="paylead">All prices are ex VAT. The build payment is in addition to your monthly plan.</p>
+
 
 <h2><span class="s">&#10003;</span>Permissions &amp; go-ahead</h2>
 <div class="consent">
