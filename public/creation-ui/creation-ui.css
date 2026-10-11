@@ -1,0 +1,71 @@
+/* Avalia Creation UI v0.1 styles: mobile-first sheet over the paused viewer. UNTESTED on devices. */
+.acu-root { --navy:#061222; --panel:#0b1d33; --line:#23405f; --cream:#f5f1e8; --muted:#c3ccd8; --gold:#c9a84c; --err:#ffb8ab;
+  font-family:'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; color:var(--cream); }
+.acu-root *, .acu-root *::before, .acu-root *::after { box-sizing:border-box; }
+.acu-root h2 { font-family:'Cormorant Garamond', Georgia, serif; font-weight:600; font-size:1.6rem; line-height:1.15; margin:0; }
+.acu-root h2:focus { outline:none; }
+.acu-root button, .acu-root input, .acu-root textarea { font:inherit; }
+.acu-root :focus-visible { outline:3px solid var(--gold); outline-offset:2px; }
+.acu-sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+/* Buttons: 44px minimum touch target (WCAG 2.5.8 asks 24px; we hold 44). */
+.acu-btn { min-height:44px; min-width:44px; padding:10px 18px; border-radius:22px; border:1px solid var(--line);
+  background:transparent; color:var(--cream); cursor:pointer; }
+.acu-btn.primary { background:var(--gold); border-color:var(--gold); color:var(--navy); font-weight:600; }
+.acu-btn[disabled] { opacity:.5; cursor:not-allowed; }
+.acu-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+
+/* Viewfinder: non-modal, the viewer stays navigable through it. */
+.acu-vf { position:fixed; inset:0; z-index:60; pointer-events:none; }
+.acu-mask { position:absolute; background:rgba(6,18,34,.55); }
+.acu-frame { position:absolute; border:2px solid var(--cream); box-shadow:0 0 0 1px rgba(0,0,0,.4); }
+.acu-vf-bar { position:absolute; left:0; right:0; bottom:max(16px, env(safe-area-inset-bottom)); display:flex;
+  justify-content:center; flex-wrap:wrap; gap:10px; padding:0 12px; pointer-events:auto; }
+.acu-vf-bar .acu-btn { background:rgba(6,18,34,.85); }
+.acu-vf-bar .acu-btn.primary { background:var(--gold); }
+.acu-vf-bar [aria-pressed="true"] { border-color:var(--gold); color:var(--gold); }
+.acu-vf-hint { position:absolute; left:0; right:0; top:max(16px, env(safe-area-inset-top)); text-align:center; margin:0;
+  text-shadow:0 1px 3px #000; }
+
+/* Dialog: bottom sheet on phones, centred panel from 720px. */
+.acu-scrim { position:fixed; inset:0; z-index:70; background:rgba(6,18,34,.72); display:flex; align-items:flex-end; justify-content:center; }
+.acu-scrim[hidden] { display:none; }
+.acu-dialog { width:100%; max-height:92vh; overflow:auto; background:var(--panel); border:1px solid var(--line);
+  border-radius:18px 18px 0 0; padding:18px 18px calc(18px + env(safe-area-inset-bottom)); }
+@media (min-width:720px) { .acu-scrim { align-items:center; } .acu-dialog { max-width:640px; border-radius:18px; } }
+.acu-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.acu-body p { color:var(--muted); line-height:1.5; margin:8px 0; }
+.acu-status { min-height:1.4em; margin:12px 0 0; color:var(--muted); }
+.acu-status.err, .acu-err { color:var(--err); }
+.acu-thumb { width:100%; max-height:38vh; object-fit:contain; border-radius:10px; background:#000; display:block; }
+
+/* Choice and preset options */
+.acu-choice { display:grid; gap:10px; margin-top:14px; }
+.acu-choice .acu-btn { text-align:left; border-radius:14px; padding:14px 16px; }
+.acu-choice small { display:block; color:var(--muted); margin-top:4px; font-size:.9rem; }
+.acu-fs { border:0; padding:0; margin:12px 0 0; }
+.acu-fs legend { font-weight:600; margin-bottom:8px; }
+.acu-opt { display:flex; align-items:center; gap:12px; min-height:48px; padding:8px 12px; border:1px solid var(--line);
+  border-radius:12px; margin-bottom:8px; cursor:pointer; }
+.acu-opt input { width:22px; height:22px; accent-color:var(--gold); }
+.acu-opt:has(input:checked) { border-color:var(--gold); }
+.acu-text { width:100%; min-height:72px; margin-top:6px; padding:10px; border-radius:10px; border:1px solid var(--line);
+  background:var(--navy); color:var(--cream); }
+.acu-price { margin-top:8px; }
+
+/* Reveal: before/after compare. The label is never part of any chrome fade. */
+.acu-compare { position:relative; width:100%; background:#000; border-radius:10px; overflow:hidden; }
+.acu-compare img { display:block; width:100%; height:auto; }
+.acu-before { position:absolute; left:0; top:0; width:100%; }
+.acu-pane { position:absolute; top:8px; padding:4px 10px; border-radius:12px; background:rgba(6,18,34,.8); font-size:.85rem; }
+.acu-pane.l { left:8px; } .acu-pane.r { right:8px; }
+.acu-label { position:absolute; right:8px; bottom:8px; min-height:44px; padding:6px 12px; border-radius:12px; border:1px solid var(--cream);
+  background:rgba(6,18,34,.88); color:var(--cream); cursor:pointer; font-size:.85rem; }
+.acu-range { width:100%; min-height:44px; accent-color:var(--gold); margin-top:6px; }
+.acu-test { margin:10px 0 0; padding:10px; border:2px solid var(--err); color:var(--err); border-radius:10px; font-weight:600; }
+.acu-reveal { opacity:0; transition:opacity .45s ease; }
+.acu-reveal.in { opacity:1; }
+@media (prefers-reduced-motion: reduce) {
+  .acu-reveal { transition:none; opacity:1; }
+  .acu-root * { animation:none !important; transition:none !important; }
+}
