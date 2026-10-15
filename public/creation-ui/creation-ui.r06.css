@@ -1,0 +1,125 @@
+/* Avalia Creation UI R06 styles (2026-10-11-2151): the July create rail, wait state, reveal and paywall as a mobile-first sheet over the paused viewer. Tokens v0.2 (gold #C9A96E). UNTESTED on devices. */
+.acu-root { --navy:#061222; --panel:#0b1d33; --line:#23405f; --cream:#f5f1e8; --muted:#c3ccd8; --gold:#C9A96E; --gold-light:#E8D5A3;
+  --sel:rgba(201,169,110,.16); --err:#ffb8ab;
+  font-family:'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; color:var(--cream); }
+.acu-root *, .acu-root *::before, .acu-root *::after { box-sizing:border-box; }
+.acu-root h2 { font-family:'Cormorant Garamond', Georgia, serif; font-weight:600; font-size:1.6rem; line-height:1.15; margin:0; }
+.acu-root h2:focus { outline:none; }
+.acu-root button, .acu-root input, .acu-root textarea { font:inherit; }
+.acu-root :focus-visible { outline:3px solid var(--gold); outline-offset:2px; }
+.acu-sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+/* Buttons: 44px minimum target (WCAG 2.5.8 asks 24px; we hold 44). */
+.acu-btn { min-height:44px; min-width:44px; padding:10px 18px; border-radius:22px; border:1px solid var(--line);
+  background:transparent; color:var(--cream); cursor:pointer; }
+.acu-btn.primary { background:var(--gold); border-color:var(--gold); color:var(--navy); font-weight:600; }
+@media (hover:hover) { .acu-btn.primary:hover { background:var(--gold-light); border-color:var(--gold-light); } }
+.acu-btn[disabled], .acu-btn[aria-disabled="true"] { opacity:.5; cursor:not-allowed; }
+.acu-btn[aria-pressed="true"] { border-color:var(--gold); color:var(--gold); background:var(--sel); }
+.acu-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+.acu-link { background:none; border:0; color:var(--gold); text-decoration:underline; text-underline-offset:3px; min-height:44px; padding:0 4px; cursor:pointer; }
+
+/* Viewfinder: non-modal, the viewer stays navigable through it. */
+.acu-vf { position:fixed; inset:0; z-index:60; pointer-events:none; }
+.acu-mask { position:absolute; background:rgba(6,18,34,.55); }
+.acu-frame { position:absolute; border:2px solid var(--cream); box-shadow:0 0 0 1px rgba(0,0,0,.4); }
+.acu-vf-bar { position:absolute; left:0; right:0; bottom:max(16px, env(safe-area-inset-bottom)); display:flex;
+  justify-content:center; flex-wrap:wrap; gap:10px; padding:0 12px; pointer-events:auto; }
+.acu-vf-bar .acu-btn { background:rgba(6,18,34,.85); }
+.acu-vf-bar .acu-btn.primary { background:var(--gold); }
+.acu-vf-hint { position:absolute; left:0; right:0; top:max(16px, env(safe-area-inset-top)); text-align:center; margin:0;
+  padding:0 12px; text-shadow:0 1px 3px #000; }
+.acu-seg { display:inline-flex; gap:6px; }
+
+/* Dialog: bottom sheet on phones, centred panel from 720px. Above viewer chrome (<=30) and the viewfinder (60);
+   below the page's sign-in / share scrims (150), so "Confirm it's me" and the sign-in card sit on top. */
+.acu-scrim { position:fixed; inset:0; z-index:70; background:rgba(6,18,34,.72); display:flex; align-items:flex-end; justify-content:center; }
+.acu-scrim[hidden] { display:none; }
+.acu-dialog { width:100%; max-height:92vh; overflow:auto; background:var(--panel); border:1px solid var(--line);
+  border-radius:18px 18px 0 0; padding:18px 18px calc(18px + env(safe-area-inset-bottom)); }
+@media (min-width:720px) { .acu-scrim { align-items:center; } .acu-dialog { max-width:640px; border-radius:18px; } }
+.acu-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.acu-body p { color:var(--muted); line-height:1.5; margin:8px 0; }
+.acu-status { min-height:1.4em; margin:12px 0 0; color:var(--muted); }
+.acu-status.err, .acu-err { color:var(--err) !important; }
+.acu-thumb { width:100%; max-height:30vh; object-fit:contain; border-radius:10px; background:#000; display:block; }
+
+/* Create rail (v0.9 l.330-404) */
+.acu-tabs { display:flex; gap:8px; margin-top:14px; }
+.acu-tab { flex:1; }
+.acu-intro { font-size:.92rem; }
+.acu-fs { border:0; padding:0; margin:12px 0 0; min-width:0; }
+.acu-legend { font-family:'Cormorant Garamond', Georgia, serif; font-weight:600; font-size:1.1rem; margin-bottom:8px; padding:0; }
+.acu-pills { display:flex; flex-wrap:wrap; gap:8px; }
+.acu-pill { position:relative; display:inline-flex; flex-direction:column; justify-content:center; min-height:44px; padding:8px 14px;
+  border:1px solid var(--line); border-radius:22px; cursor:pointer; }
+.acu-pill input { position:absolute; opacity:0; width:1px; height:1px; }
+.acu-pill:has(input:checked) { border-color:var(--gold); background:var(--sel); color:var(--gold); }
+.acu-pill:has(input:focus-visible) { outline:3px solid var(--gold); outline-offset:2px; }
+.acu-pill.off { opacity:.55; cursor:not-allowed; }
+.acu-dim { font-size:.78rem; color:var(--muted); }
+.acu-sub { display:block; font-size:.8rem; color:var(--muted); margin-top:2px; }
+.acu-testtag { display:block; font-size:.72rem; font-weight:600; color:var(--err); margin-top:2px; }
+.acu-chip { min-height:44px; padding:8px 14px; }
+.acu-slot { margin-top:10px; padding:10px 12px; border:1px dashed var(--line); border-radius:12px; }
+.acu-slot-h { margin:0 !important; color:var(--cream) !important; font-weight:600; }
+.acu-text { width:100%; min-height:44px; margin-top:8px; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+  background:var(--navy); color:var(--cream); }
+.acu-acc { border-top:1px solid var(--line); margin-top:10px; }
+.acu-acc-h { width:100%; display:flex; align-items:center; gap:10px; justify-content:space-between; border:0; border-radius:0; padding:10px 2px; text-align:left; }
+.acu-acc-h .acu-sel { margin-left:auto; color:var(--gold); font-size:.85rem; }
+.acu-acc-h .acu-pm { font-size:1.2rem; color:var(--gold); }
+.acu-acc-p { padding:0 0 8px; max-height:40vh; overflow:auto; }
+.acu-hint { color:var(--cream) !important; }
+.acu-readout { font-size:.85rem; }
+.acu-walletrow { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:12px; font-size:.85rem; }
+.acu-free { color:var(--muted); }
+.acu-wallet { display:inline-flex; align-items:center; gap:8px; }
+/* P21: Credits in gold Cormorant; the per-creation price in Spectral (BB l.125). */
+.acu-bal { font-family:'Cormorant Garamond', Georgia, serif; font-weight:600; font-size:1.15rem; color:var(--gold); }
+.acu-go { width:100%; margin-top:12px; display:flex; justify-content:center; align-items:baseline; gap:12px; }
+.acu-price { font-family:'Spectral', Georgia, serif; font-weight:500; font-size:.95rem; }
+.acu-why { min-height:0; color:var(--err) !important; }
+
+/* Image Shape preview overlay */
+.acu-preview { position:fixed; inset:0; z-index:80; background:rgba(6,18,34,.96); display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:16px; }
+.acu-preview img { max-width:100%; max-height:80vh; object-fit:contain; border:1px solid var(--line); }
+
+/* Wait state (TS F9): the tidbit container has a FIXED height so nothing below it moves; content slot empty (Flynn). */
+.acu-bar { height:3px; background:rgba(245,241,232,.12); border-radius:2px; overflow:hidden; margin-top:14px; }
+.acu-bar-fill { height:100%; width:35%; background:var(--gold); animation:acu-slide 1.6s ease-in-out infinite; }
+@keyframes acu-slide { 0% { transform:translateX(-100%); } 100% { transform:translateX(300%); } }
+.acu-tidbit { height:4.5em; margin-top:14px; overflow:hidden; }
+
+/* Reveal: before/after compare follows the output aspect; the label is never part of any chrome fade. */
+.acu-compare { position:relative; width:100%; max-height:60vh; margin:0 auto; background:#000; border-radius:10px; overflow:hidden; }
+.acu-compare > img, .acu-before img { display:block; width:100%; height:100%; object-fit:cover; }
+.acu-before { position:absolute; inset:0; }
+.acu-pane { position:absolute; top:8px; padding:4px 10px; border-radius:12px; background:rgba(6,18,34,.8); font-size:.85rem; }
+.acu-pane.l { left:8px; } .acu-pane.r { right:8px; }
+.acu-side { position:absolute; top:44px; display:flex; flex-direction:column; gap:6px; }
+.acu-side.l { left:8px; }
+.acu-spark { width:44px; height:44px; border-radius:50%; border:1px solid var(--line); background:rgba(6,18,34,.85); color:var(--gold); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; padding:0; }
+.acu-spark svg { width:20px; height:20px; fill:currentColor; }
+.acu-label { position:absolute; right:8px; bottom:8px; min-height:44px; padding:6px 12px; border-radius:12px; border:1px solid var(--cream);
+  background:rgba(6,18,34,.88); color:var(--cream); cursor:pointer; font-size:.85rem; }
+.acu-exp { color:var(--cream) !important; }
+.acu-range { width:100%; min-height:44px; accent-color:var(--gold); margin-top:6px; }
+.acu-chiplabel { text-align:center; color:var(--gold) !important; font-size:.85rem; }
+.acu-test { margin:10px 0 0; padding:10px; border:2px solid var(--err); color:var(--err) !important; border-radius:10px; font-weight:600; }
+.acu-reveal { opacity:0; transition:opacity .45s ease; }
+.acu-reveal.in { opacity:1; }
+
+/* Paywall (TS 4) */
+.acu-pack { display:flex; align-items:center; gap:12px; min-height:48px; padding:8px 14px; border:1px solid var(--line); border-radius:12px; margin-bottom:8px; cursor:pointer; }
+.acu-pack input { width:22px; height:22px; accent-color:var(--gold); }
+.acu-pack:has(input:checked) { border-color:var(--gold); background:var(--sel); }
+.acu-pack-t { font-family:'Spectral', Georgia, serif; }
+
+@media (prefers-reduced-motion: reduce) {
+  .acu-reveal { transition:none; opacity:1; }
+  .acu-bar-fill { animation:none; width:100%; opacity:.5; }
+  .acu-root * { animation:none !important; transition:none !important; }
+}
